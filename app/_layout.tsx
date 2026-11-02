@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SplashView } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { useProfileStore } from '@/shared/state/profileStore';
 import { useSettingsStore } from '@/shared/state/settingsStore';
 import { useAlarmSync } from '@/features/alarm/useAlarmSync';
 import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
+
+const SPLASH_MIN_MS = 900;
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,16 +30,32 @@ export default function RootLayout() {
     hydrateSettings();
   }, [hydrateProfile, hydrateSettings]);
 
-  const ready = fontsLoaded && profileHydrated && settingsHydrated;
+  // Keep the branded splash on screen for a moment so it does not flash by on fast launches.
+  const [holding, setHolding] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setHolding(false), SPLASH_MIN_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const ready = fontsLoaded && profileHydrated && settingsHydrated && !holding;
 
   useAlarmSync(settingsHydrated ? profile : null, settings);
   useNotificationRouting(ready && hasProfile);
 
+  // The native splash image has no text, so hand over to the in-app splash as soon as fonts exist.
   useEffect(() => {
-    if (ready) SplashScreen.hideAsync();
-  }, [ready]);
+    if (fontsLoaded) SplashScreen.hideAsync();
+  }, [fontsLoaded]);
 
-  if (!ready) return null;
+  if (!fontsLoaded) return null;
+
+  if (!ready) {
+    return (
+      <SafeAreaProvider>
+        <SplashView />
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <SafeAreaProvider>

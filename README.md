@@ -28,6 +28,8 @@ Scan the QR code with Expo Go. No API keys or backend are needed.
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint (expo config) |
 | `npm test` | Jest (`jest-expo`), pure logic only |
+| `node scripts/generate-icons.js` | Redraw app, splash and notification icons from `src/shared/ui/logo.json` |
+| `node scripts/generate-sounds.js` | Regenerate the alarm tones in `assets/sounds/` |
 
 ## Folder map
 

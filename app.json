@@ -10,12 +10,7 @@
     "backgroundColor": "#F7F5F0",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.salah.prayertracker",
-      "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ]
-      }
+      "bundleIdentifier": "app.salah.prayertracker"
     },
     "android": {
       "package": "app.salah.prayertracker",
@@ -30,6 +25,15 @@
       ]
     },
     "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#10241E",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain"
+        }
+      ],
       "expo-router",
       "expo-font",
       "expo-sqlite",
@@ -54,10 +58,12 @@
             "./assets/sounds/chime.wav",
             "./assets/sounds/bell.wav",
             "./assets/sounds/soft.wav"
-          ]
+          ],
+          "icon": "./assets/notification-icon.png"
         }
       ],
       "expo-audio"
-    ]
+    ],
+    "description": "A calm prayer tracker: five daily prayer times, an alarm that stops with proof of prayer, and a year at a glance."
   }
 }

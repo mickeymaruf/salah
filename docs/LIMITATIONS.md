@@ -71,3 +71,9 @@
 - "Location" refreshes on tap without a confirmation step. It overwrites the saved coordinates and city.
 - The Help screen has no feedback channel because the project has no contact address. Add one in `HelpScreen.tsx`.
 - The name can be edited. The photo avatar is the first letter of the name.
+
+## Branding
+
+- `sharp` is a dev dependency used only by `scripts/generate-icons.js`. It is not in the app bundle.
+- The icon files were checked as images, not on a device or in a store listing. Android adaptive masks differ by
+  launcher; the mark stays inside the safe zone.

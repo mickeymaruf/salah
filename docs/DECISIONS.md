@@ -152,3 +152,23 @@ Format: date, title, context, decision, consequence.
 - Context: the brief allows static text screens.
 - Decision: write them from what the app does today: no account, no analytics, on-device photos.
 - Consequence: the text must be updated when behavior changes, for example if a verifier ever sent data off the device.
+
+## 2026-11-02 Logo redrawn in code
+
+- Context: Figma asset downloads were blocked, so the logo SVG could not be fetched.
+- Decision: redraw the mark (arch with a crescent) from the Figma screenshot as two SVG paths in `logo.json`.
+  The crescent is a true path (outer circle minus inner circle) so it can be cut out for monochrome icons.
+- Consequence: proportions match the Figma board closely, but the curves are not pixel-identical. Replace
+  `logo.json` with the exported paths when the original SVG is available.
+
+## 2026-11-02 Splash mark is centered, not the whole lockup
+
+- Context: Figma centers mark and wordmark together. The native splash can only show an image without text.
+- Decision: center the mark box on the screen in both splashes and place the wordmark below it.
+- Consequence: no jump between native and in-app splash. The mark sits about 40 px above where Figma puts it.
+
+## 2026-11-02 No background audio mode
+
+- Context: the scaffold configured iOS background audio for the alarm.
+- Decision: removed. The alarm sound plays only while the app is open; closed apps rely on notification sounds.
+- Consequence: fewer App Store review questions.

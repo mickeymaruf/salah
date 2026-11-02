@@ -96,3 +96,13 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Every change writes to a zustand store. `useAlarmSync` sees the new profile or settings and reschedules, and
   Today and Progress recompute from the new profile.
 - Extend: add a row in `SettingsScreen.tsx`. For a list of choices add a label map to `options.ts` and an `OptionSheet`.
+
+## Splash and branding
+
+- What: a native splash (dark green with the mark and two rings) that hands over to an in-app splash with the
+  "Salah" wordmark and the tagline, held for at least 0.9 s. App icon, Android adaptive and monochrome icons,
+  notification icon and favicon are drawn from the same logo geometry.
+- Owns: `src/shared/ui/logo.json` (geometry), `LogoMark.tsx`, `SplashView.tsx`, `scripts/generate-icons.js`,
+  `assets/*.png`, the splash and notification entries in `app.json`, the splash hold in `app/_layout.tsx`.
+- Extend: change the shape in `logo.json`, then run `node scripts/generate-icons.js` to rewrite every PNG.
+  The adaptive icon background is a color in `app.json`, so there is no background image.

@@ -1,7 +1,9 @@
 export { Button } from './Button';
 export { Card } from './Card';
+export { LogoMark } from './LogoMark';
 export { Screen } from './Screen';
 export { ScreenHeader } from './ScreenHeader';
+export { SplashView } from './SplashView';
 export { Text } from './Text';
 export { Toggle } from './Toggle';
 export { UserButton } from './UserButton';
