@@ -51,3 +51,20 @@ presentational and take those values as props.
 `getDb()` opens `salah.db` once and applies `MIGRATIONS` in order, tracked by `PRAGMA user_version`.
 Screens never hold log data globally. `usePrayedOn(date)` queries the day and runs again when the
 `revision` in `prayerLogStore` changes, which happens after every `mark`.
+
+## Alarm and notification flow
+
+```
+profile + settings + log --> planAlarms (pure) --> scheduleNotificationAsync x N
+                                                          |
+   notification fires -> tap (or foreground receive) -> useNotificationRouting
+                                                          |
+                                                    /alarm?prayer&date --> sound loop
+                                                          |
+                                         Take photo -> /proof -> markPrayed -> log revision++
+                                                                                    |
+                                                              useAlarmSync reschedules without that prayer
+```
+
+`planAlarms` keeps every prayer alarm for the 7 days and fills the remaining budget with reminders and
+follow-ups, soonest first. The budget is 60 on iOS (the OS keeps 64) and 250 on Android.

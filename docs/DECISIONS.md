@@ -85,3 +85,27 @@ Format: date, title, context, decision, consequence.
 - Decision: `INSERT OR IGNORE` on the `(date, prayer)` key.
 - Consequence: completion time and proof photo never change after the first write. SQLite also skips
   rows that violate the CHECK constraint instead of raising an error.
+
+## 2026-11-02 Synthesized alarm sounds
+
+- Context: no network to fetch audio and no licensed adhan recording in the repository.
+- Decision: generate three 4-second tones (chime, bell, soft) with a script. Default is `chime`.
+- Consequence: the alarm works offline in all environments. The Figma label "Adhan" is replaced by the tone names.
+
+## 2026-11-02 Cancel and reschedule on every change
+
+- Context: ids are deterministic, but cancelling individual follow-ups is fragile when settings change.
+- Decision: `syncAlarms` cancels all scheduled notifications and rebuilds the plan. Runs are queued.
+- Consequence: a few dozen native calls per sync. Simple and always consistent with the log and settings.
+
+## 2026-11-02 Alarm cannot be dismissed without proof
+
+- Context: the brief says the alarm continues until proof is shown.
+- Decision: the alarm screen blocks Android back and iOS swipe-down. Sound keeps playing under the camera.
+- Consequence: the only exits are proof, "Require photo proof" off, or closing the app.
+
+## 2026-11-02 Notification permission is requested in onboarding
+
+- Context: the alarm needs it from day one, and the onboarding copy already explains the alarm.
+- Decision: ask right after location is confirmed. A refusal does not block the app.
+- Consequence: a denied permission is handled in the polish pass (banner on Today and in Settings).

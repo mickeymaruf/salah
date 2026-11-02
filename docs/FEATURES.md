@@ -40,3 +40,18 @@ Shipped features, what they do, who owns the code, how to extend them.
 - API: `markPrayed(date, prayer, proofUri)` keeps the first completion. `getDay`, `getRange`, `getYear(year)`.
   Writes go through `usePrayerLogStore().mark(...)` so open screens re-query.
 - Extend: append a SQL string to `MIGRATIONS`. Never edit an existing entry.
+
+## Alarm
+
+- What: schedules local notifications for each prayer for 7 days, with a reminder before and up to 5
+  follow-ups every 3 minutes. Tapping a prayer or follow-up opens `/alarm`, a full-screen dark screen that
+  loops a sound until the prayer is marked. With "Require photo proof" on, the only action is "Take photo".
+  With it off, the action is "Mark as prayed".
+- Owns: `src/features/alarm/` (`schedule.ts` planner, `scheduler.ts` native scheduling, `channels.ts`,
+  `permission.ts`, `useAlarmSync.ts`, `useNotificationRouting.ts`, `useAlarmSound.ts`, `AlarmScreen.tsx`),
+  `src/shared/state/settings.ts` and `settingsStore.ts`, `assets/sounds/`, `scripts/generate-sounds.js`, `app/alarm.tsx`.
+- When it syncs: app start, profile or settings change, every log write, every return to the foreground.
+  Each sync cancels everything and schedules again. Ids are `<date>-<prayer>-<kind><n>`.
+- Extend: change counts or spacing in `schedule.ts` (`DAYS_AHEAD`, `FOLLOW_UP_COUNT`, `FOLLOW_UP_MINUTES`).
+  Add a sound by adding it to `generate-sounds.js`, `ALARM_SOUNDS`, `SOURCES` in `useAlarmSound.ts`, and the
+  `sounds` list of the notifications plugin in `app.json`.

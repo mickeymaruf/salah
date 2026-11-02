@@ -6,20 +6,31 @@ import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-goog
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from '@/shared/theme';
 import { useProfileStore } from '@/shared/state/profileStore';
+import { useSettingsStore } from '@/shared/state/settingsStore';
+import { useAlarmSync } from '@/features/alarm/useAlarmSync';
+import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold });
-  const hydrated = useProfileStore((state) => state.hydrated);
-  const hasProfile = useProfileStore((state) => state.profile !== null);
-  const hydrate = useProfileStore((state) => state.hydrate);
+  const profile = useProfileStore((state) => state.profile);
+  const profileHydrated = useProfileStore((state) => state.hydrated);
+  const hydrateProfile = useProfileStore((state) => state.hydrate);
+  const settings = useSettingsStore((state) => state.settings);
+  const settingsHydrated = useSettingsStore((state) => state.hydrated);
+  const hydrateSettings = useSettingsStore((state) => state.hydrate);
+  const hasProfile = profile !== null;
 
   useEffect(() => {
-    hydrate();
-  }, [hydrate]);
+    hydrateProfile();
+    hydrateSettings();
+  }, [hydrateProfile, hydrateSettings]);
 
-  const ready = fontsLoaded && hydrated;
+  const ready = fontsLoaded && profileHydrated && settingsHydrated;
+
+  useAlarmSync(settingsHydrated ? profile : null, settings);
+  useNotificationRouting(ready && hasProfile);
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -36,6 +47,7 @@ export default function RootLayout() {
         </Stack.Protected>
         <Stack.Protected guard={hasProfile}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="alarm" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />
         </Stack.Protected>
       </Stack>
     </SafeAreaProvider>

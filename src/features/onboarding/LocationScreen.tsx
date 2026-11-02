@@ -7,6 +7,7 @@ import { colors } from '@/shared/theme';
 import { now } from '@/shared/lib/date';
 import { DEFAULT_ASR_METHOD, DEFAULT_CALCULATION_METHOD } from '@/shared/state/profile';
 import { useProfileStore } from '@/shared/state/profileStore';
+import { requestNotificationPermission } from '@/features/alarm/permission';
 import { getDayTimes } from '@/features/prayer-times/calculate';
 import { formatPlace } from '@/features/prayer-times/location';
 import { LocationCard } from './components/LocationCard';
@@ -45,6 +46,8 @@ export function LocationScreen() {
 
   const finish = async () => {
     if (!place) return;
+    // Denying notifications does not block onboarding; Today explains what is missing.
+    await requestNotificationPermission();
     await saveProfile({
       name: name ?? '',
       ...place,

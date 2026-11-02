@@ -12,7 +12,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "app.salah.prayertracker",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "android": {
@@ -22,7 +24,10 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -30,7 +35,9 @@
       "expo-sqlite",
       [
         "expo-location",
-        { "locationWhenInUsePermission": "Salah uses your location only to calculate the five daily prayer times on your device." }
+        {
+          "locationWhenInUsePermission": "Salah uses your location only to calculate the five daily prayer times on your device."
+        }
       ],
       [
         "expo-camera",
@@ -39,7 +46,17 @@
           "recordAudioAndroid": false
         }
       ],
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "color": "#1F4D3F",
+          "sounds": [
+            "./assets/sounds/chime.wav",
+            "./assets/sounds/bell.wav",
+            "./assets/sounds/soft.wav"
+          ]
+        }
+      ],
       "expo-audio"
     ]
   }

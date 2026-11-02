@@ -21,6 +21,8 @@ export const colors = {
     missed: '#CC7361',
   },
   heat: ['#ECE8E0', '#C7D8CA', '#94B6A0', '#57856E', '#336654', '#1F4D3F'],
+  // Concentric rings on the alarm screen, outer to inner.
+  ring: ['rgba(243,241,234,0.14)', 'rgba(243,241,234,0.3)', 'rgba(243,241,234,0.5)'],
   camera: {
     background: '#0A0D0B',
     gradientTop: '#29332E',

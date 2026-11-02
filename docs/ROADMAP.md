@@ -8,7 +8,7 @@ Status: done, next, todo.
 | 1 | Onboarding: name, location, profile, route guard | done |
 | 2 | Prayer times and Today screen | done |
 | 3 | SQLite prayer log | done |
-| 4 | Alarm: notifications, alarm screen, sound | todo |
+| 4 | Alarm: notifications, alarm screen, sound | done |
 | 5 | Proof: camera, live-capture verifier, verified screen | todo |
 | 6 | Progress: year grid, stats, day detail | todo |
 | 7 | Settings | todo |
