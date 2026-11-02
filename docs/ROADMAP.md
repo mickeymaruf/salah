@@ -7,7 +7,7 @@ Status: done, next, todo.
 | 0 | Scaffold: Expo, strict TS, Router, theme, base UI, Jest | done |
 | 1 | Onboarding: name, location, profile, route guard | done |
 | 2 | Prayer times and Today screen | done |
-| 3 | SQLite prayer log | todo |
+| 3 | SQLite prayer log | done |
 | 4 | Alarm: notifications, alarm screen, sound | todo |
 | 5 | Proof: camera, live-capture verifier, verified screen | todo |
 | 6 | Progress: year grid, stats, day detail | todo |

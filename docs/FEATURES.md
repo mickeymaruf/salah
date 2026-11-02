@@ -30,3 +30,13 @@ Shipped features, what they do, who owns the code, how to extend them.
   The next prayer is the first one strictly in the future, or tomorrow's Fajr after Isha.
 - Extend: a new calculation option goes in `calculate.ts` and `src/shared/state/profile.ts`.
   `useTodayPrayers(profile, prayed)` takes the set of prayed names from the log.
+
+## Prayer log (SQLite)
+
+- What: stores one row per completed prayer. Missed prayers are derived, never stored.
+- Owns: `src/shared/db/` (`database.ts` opens one connection and runs migrations, `migrations.ts`),
+  `src/features/prayer-times/data/` (`prayerLog.ts` queries, `prayerLogStore.ts` revision counter,
+  `usePrayedOn.ts` hook).
+- API: `markPrayed(date, prayer, proofUri)` keeps the first completion. `getDay`, `getRange`, `getYear(year)`.
+  Writes go through `usePrayerLogStore().mark(...)` so open screens re-query.
+- Extend: append a SQL string to `MIGRATIONS`. Never edit an existing entry.

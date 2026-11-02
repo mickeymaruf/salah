@@ -45,3 +45,9 @@ onboarding, prayer-times and settings, so they are shared rather than owned by o
 `useTodayPrayers` combines the profile, the clock (`useNow`, 10 s tick and on foreground) and the set of
 prayed names. It returns times, per-prayer states, the next prayer and the countdown. Components are
 presentational and take those values as props.
+
+## Prayer log
+
+`getDb()` opens `salah.db` once and applies `MIGRATIONS` in order, tracked by `PRAGMA user_version`.
+Screens never hold log data globally. `usePrayedOn(date)` queries the day and runs again when the
+`revision` in `prayerLogStore` changes, which happens after every `mark`.

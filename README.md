@@ -7,7 +7,7 @@ A year view shows how consistent the user has been.
 
 ## Requirements
 
-- Node 20 or newer, npm 10 or newer.
+- Node 22.5 or newer (the schema test uses the built-in `node:sqlite`), npm 10 or newer.
 - Expo Go (SDK 58) on a phone, or an Android emulator / iOS simulator.
 - A development build for the optional ML Kit photo check (see below).
 

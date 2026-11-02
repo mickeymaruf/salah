@@ -71,3 +71,17 @@ Format: date, title, context, decision, consequence.
 - Context: typed routes need generated `.expo/types`, which break `tsc` on a fresh clone before `expo start`.
 - Decision: leave `experiments.typedRoutes` off.
 - Consequence: hrefs are plain strings.
+
+## 2026-11-02 Log queries live in the prayer-times feature
+
+- Context: the brief puts only "sqlite open + migrations" in `shared/db`.
+- Decision: connection and migrations stay in `shared/db`. Prayer log queries sit in
+  `features/prayer-times/data` because they depend on `PrayerName`.
+- Consequence: proof and progress import log functions from the prayer-times feature.
+
+## 2026-11-02 First completion wins
+
+- Context: a notification can be tapped twice, or proof retaken.
+- Decision: `INSERT OR IGNORE` on the `(date, prayer)` key.
+- Consequence: completion time and proof photo never change after the first write. SQLite also skips
+  rows that violate the CHECK constraint instead of raising an error.
