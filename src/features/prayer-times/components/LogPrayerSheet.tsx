@@ -21,54 +21,50 @@ export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onCl
   const [choice, setChoice] = useState<LogChoice>(initial);
   const [saving, setSaving] = useState(false);
 
-  const save = async () => {
+  // The button stays disabled while the sheet slides out, so a second tap cannot save twice.
+  const save = async (close: () => void) => {
     setSaving(true);
     try {
       await onSave(choice);
     } finally {
-      setSaving(false);
-      onClose();
+      close();
     }
   };
 
   return (
     <BottomSheet onClose={onClose}>
-        <Text variant="confirm" style={styles.name} accessibilityRole="header">
-          {PRAYER_LABELS[prayer]}
-        </Text>
-        <Text variant="label" color="muted" style={styles.subtitle}>
-          {subtitle}
-        </Text>
-        <Text variant="row" style={styles.question}>
-          How did it go?
-        </Text>
-        <View style={styles.options}>
-          <Option
-            kind="prayed"
-            title="Prayed"
-            description="I prayed it on time"
-            selected={choice === 'prayed'}
-            enabled={allowed.includes('prayed')}
-            onPress={() => setChoice('prayed')}
-          />
-          <Option
-            kind="missed"
-            title="Missed"
-            description="I did not pray it"
-            selected={choice === 'missed'}
-            enabled={allowed.includes('missed')}
-            onPress={() => setChoice('missed')}
-          />
-        </View>
-        <View style={styles.note}>
-          <View style={styles.noteMark}>
-            <Check size={10} color={colors.brand.green} strokeWidth={3} />
-          </View>
-          <Text variant="caption" color="muted" style={styles.noteText}>
-            Logged by you, so it shows an outlined check. Photo-verified prayers get a filled one.
+      {(close) => (
+        <>
+          <Text variant="confirm" style={styles.name} accessibilityRole="header">
+            {PRAYER_LABELS[prayer]}
           </Text>
-        </View>
-        <Button label="Save" onPress={save} disabled={saving} style={styles.save} />
+          <Text variant="label" color="muted" style={styles.subtitle}>
+            {subtitle}
+          </Text>
+          <Text variant="row" style={styles.question}>
+            How did it go?
+          </Text>
+          <View style={styles.options}>
+            <Option
+              kind="prayed"
+              title="Prayed"
+              description="I prayed it on time"
+              selected={choice === 'prayed'}
+              enabled={allowed.includes('prayed')}
+              onPress={() => setChoice('prayed')}
+            />
+            <Option
+              kind="missed"
+              title="Missed"
+              description="I did not pray it"
+              selected={choice === 'missed'}
+              enabled={allowed.includes('missed')}
+              onPress={() => setChoice('missed')}
+            />
+          </View>
+          <Button label="Save" onPress={() => save(close)} disabled={saving} style={styles.save} />
+        </>
+      )}
     </BottomSheet>
   );
 }
@@ -123,16 +119,5 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.45 },
   mark: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   optionTitle: { fontSize: 18 },
-  note: { marginTop: 16, flexDirection: 'row', gap: 8, alignItems: 'flex-start' },
-  noteMark: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 1.5,
-    borderColor: colors.brand.green,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  noteText: { flex: 1 },
-  save: { marginTop: 20 },
+  save: { marginTop: 24 },
 });

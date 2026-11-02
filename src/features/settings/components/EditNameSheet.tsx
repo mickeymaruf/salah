@@ -16,29 +16,33 @@ export function EditNameSheet({ initialName, onSave, onClose }: EditNameSheetPro
 
   return (
     <BottomSheet onClose={onClose}>
-      <Text variant="title">Your name</Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        autoFocus
-        autoCapitalize="words"
-        autoComplete="given-name"
-        autoCorrect={false}
-        maxLength={30}
-        accessibilityLabel="First name"
-        selectionColor={colors.brand.green}
-        style={styles.input}
-      />
-      <View style={styles.underline} />
-      <Button
-        label="Save"
-        disabled={!trimmed}
-        onPress={() => {
-          onSave(trimmed);
-          onClose();
-        }}
-        style={styles.save}
-      />
+      {(close) => (
+        <>
+          <Text variant="title">Your name</Text>
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            autoFocus
+            autoCapitalize="words"
+            autoComplete="given-name"
+            autoCorrect={false}
+            maxLength={30}
+            accessibilityLabel="First name"
+            selectionColor={colors.brand.green}
+            style={styles.input}
+          />
+          <View style={styles.underline} />
+          <Button
+            label="Save"
+            disabled={!trimmed}
+            onPress={() => {
+              onSave(trimmed);
+              close();
+            }}
+            style={styles.save}
+          />
+        </>
+      )}
     </BottomSheet>
   );
 }

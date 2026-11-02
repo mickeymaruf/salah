@@ -145,6 +145,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   derived. A prayer whose time has not come cannot be marked Missed. Existing photo-verified rows are kept when
   Prayed is saved again.
 - Marks: a prayer logged by hand (no photo) shows an outlined green check. A photo-verified prayer shows a filled check.
+  The sheet does not explain this (the note in the Figma frame was removed on request).
   The year chart uses the same colors for both, since it shows only prayed, missed and upcoming.
 - Owns: `src/features/prayer-times/components/LogPrayerSheet.tsx`, `logChoice.ts`, `data/useSaveChoice.ts`,
   `removePrayed` and `unmark` in the log, `manual` on `DayCell` in `src/features/progress/model.ts`.
@@ -155,4 +156,5 @@ Shipped features, what they do, who owns the code, how to extend them.
 - `BottomSheet` in `src/shared/ui/BottomSheet.tsx` is the one sheet used by the log-a-prayer sheet and the two
   Settings pickers. It is translucent under the status bar and navigation bar, so its scrim covers the whole
   window on any device. The scrim sits behind the sheet, so the rounded 32 px top corners show dimmed content, not
-  the page. Mount it to open and unmount it to close. It slides up and the scrim fades in.
+  the page. Mount it to open. Its children receive `close`, which slides the sheet out (200 ms) before the parent unmounts it;
+  opening takes 280 ms. One native-driven value moves the sheet by its measured height and fades the scrim.

@@ -12,27 +12,37 @@ interface OptionSheetProps<T extends string | number> {
 }
 
 // Mount it to open, unmount it to close.
-export function OptionSheet<T extends string | number>({ title, options, selected, onSelect, onClose }: OptionSheetProps<T>) {
+export function OptionSheet<T extends string | number>({
+  title,
+  options,
+  selected,
+  onSelect,
+  onClose,
+}: OptionSheetProps<T>) {
   return (
     <BottomSheet onClose={onClose}>
-      <Text variant="title" style={styles.title}>
-        {title}
-      </Text>
-      {options.map((option) => (
-        <Pressable
-          key={option.value}
-          accessibilityRole="radio"
-          accessibilityState={{ selected: option.value === selected }}
-          onPress={() => {
-            onSelect(option.value);
-            onClose();
-          }}
-          style={styles.option}
-        >
-          <Text variant="body">{option.label}</Text>
-          {option.value === selected ? <Check size={20} color={colors.brand.green} strokeWidth={2} /> : null}
-        </Pressable>
-      ))}
+      {(close) => (
+        <>
+          <Text variant="title" style={styles.title}>
+            {title}
+          </Text>
+          {options.map((option) => (
+            <Pressable
+              key={option.value}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: option.value === selected }}
+              onPress={() => {
+                onSelect(option.value);
+                close();
+              }}
+              style={styles.option}
+            >
+              <Text variant="body">{option.label}</Text>
+              {option.value === selected ? <Check size={20} color={colors.brand.green} strokeWidth={2} /> : null}
+            </Pressable>
+          ))}
+        </>
+      )}
     </BottomSheet>
   );
 }
