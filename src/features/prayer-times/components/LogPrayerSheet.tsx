@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: radii.viewfinder,
     paddingTop: 12,
     paddingHorizontal: 24,
+    overflow: 'hidden',
   },
   grabber: { alignSelf: 'center', width: 40, height: 4, borderRadius: 2, backgroundColor: colors.line.soft },
   name: { marginTop: 20 },

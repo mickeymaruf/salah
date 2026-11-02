@@ -59,8 +59,9 @@ const styles = StyleSheet.create({
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: colors.backdrop },
   sheet: {
     backgroundColor: colors.bg.surface,
-    borderTopLeftRadius: radii.card,
-    borderTopRightRadius: radii.card,
+    borderTopLeftRadius: radii.viewfinder,
+    overflow: 'hidden',
+    borderTopRightRadius: radii.viewfinder,
     padding: 24,
     paddingBottom: 32,
     gap: 12,

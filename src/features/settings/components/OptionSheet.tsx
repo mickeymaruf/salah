@@ -53,8 +53,9 @@ const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: colors.backdrop },
   sheet: {
     backgroundColor: colors.bg.surface,
-    borderTopLeftRadius: radii.card,
-    borderTopRightRadius: radii.card,
+    borderTopLeftRadius: radii.viewfinder,
+    overflow: 'hidden',
+    borderTopRightRadius: radii.viewfinder,
     paddingTop: 20,
     paddingHorizontal: 24,
   },
