@@ -28,3 +28,14 @@ A prayer is prayed when a log row exists, missed when its time passed without a 
 upcoming otherwise. Missed rows are not stored.
 
 This document is extended as each feature lands.
+
+## Routing and the guard
+
+`app/_layout.tsx` loads fonts and hydrates the profile store before rendering any route.
+`Stack.Protected` exposes `(onboarding)` when there is no profile and `(tabs)` when there is one.
+`app/index.tsx` redirects to the right side. Saving a profile flips the guard.
+
+## Shared state
+
+`src/shared/state/` holds the zustand stores for profile (and later settings). They are used by
+onboarding, prayer-times and settings, so they are shared rather than owned by one feature.

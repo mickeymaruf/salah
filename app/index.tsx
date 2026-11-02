@@ -1,9 +1,7 @@
-import { Screen, Text } from '@/shared/ui';
+import { Redirect } from 'expo-router';
+import { useProfileStore } from '@/shared/state/profileStore';
 
 export default function Index() {
-  return (
-    <Screen>
-      <Text variant="heading">Salah</Text>
-    </Screen>
-  );
+  const hasProfile = useProfileStore((state) => state.profile !== null);
+  return <Redirect href={hasProfile ? '/today' : '/name'} />;
 }

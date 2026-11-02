@@ -5,7 +5,7 @@ Status: done, next, todo.
 | # | Feature | Status |
 |---|---|---|
 | 0 | Scaffold: Expo, strict TS, Router, theme, base UI, Jest | done |
-| 1 | Onboarding: name, location, profile, route guard | todo |
+| 1 | Onboarding: name, location, profile, route guard | done |
 | 2 | Prayer times and Today screen | todo |
 | 3 | SQLite prayer log | todo |
 | 4 | Alarm: notifications, alarm screen, sound | todo |
@@ -18,6 +18,7 @@ Status: done, next, todo.
 
 ## Later
 
+- Manual city entry when location is denied
 - Home screen widgets
 - Qibla direction
 - Dark mode

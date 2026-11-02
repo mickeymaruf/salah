@@ -50,3 +50,24 @@ Format: date, title, context, decision, consequence.
   `#1A211C`) are taken from the Proof camera and Verified frames.
 - Consequence: components never contain hex values.
   Figma file: https://www.figma.com/design/TjJtgEU8HFJ3FEVaLqtNQX/
+
+## 2026-11-02 Profile state lives in `src/shared/state/`
+
+- Context: onboarding writes the profile, prayer-times and settings read it.
+- Decision: zustand stores for profile (and later settings) sit in `src/shared/state/`, with pure
+  parsing in `profile.ts` so it can be tested without AsyncStorage.
+- Consequence: features import the store from shared, never from each other.
+
+## 2026-11-02 Onboarding location is two taps
+
+- Context: Figma shows the detected city and times on the same screen as the permission button.
+- Decision: the first tap requests permission and detects. The card then shows the city and times and
+  the button becomes "Continue". If permission was already granted, detection starts on mount.
+- Consequence: the user sees their times before committing. Denied and blocked states show a retry or an
+  "Open settings" button.
+
+## 2026-11-02 Typed routes off
+
+- Context: typed routes need generated `.expo/types`, which break `tsc` on a fresh clone before `expo start`.
+- Decision: leave `experiments.typedRoutes` off.
+- Consequence: hrefs are plain strings.
