@@ -50,7 +50,7 @@ export function OptionSheet<T extends string | number>({
 }
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(16,36,30,0.4)' },
+  backdrop: { flex: 1, backgroundColor: colors.backdrop },
   sheet: {
     backgroundColor: colors.bg.surface,
     borderTopLeftRadius: radii.card,

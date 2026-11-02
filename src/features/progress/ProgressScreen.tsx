@@ -38,7 +38,7 @@ function Progress({ profile }: { profile: Profile }) {
       <View style={styles.summary}>
         <Text variant="stat">{stats.percentKept === null ? '—' : `${stats.percentKept}%`}</Text>
         <Text variant="label" color="muted" style={styles.summaryLabel}>
-          of prayers kept
+          {stats.percentKept === null ? 'Pray today to start your year' : 'of prayers kept'}
         </Text>
       </View>
       <View style={styles.stats}>

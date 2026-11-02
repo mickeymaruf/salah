@@ -14,11 +14,15 @@ Status: done, next, todo.
 | 7 | Settings | done |
 | 8 | Splash and branding | done |
 | 9 | ML Kit verifier (dev build only) | done |
-| 10 | Polish pass | todo |
+| 10 | Polish pass | done |
 
 ## Later
 
 - Manual city entry when location is denied
+- Darker muted text color (contrast, see `docs/LIMITATIONS.md`)
+- Visual check of every screen against Figma on a device
+- Reduce-motion support for the alarm pulse
+- Android full-screen alarm intent (needs native code)
 - Home screen widgets
 - Qibla direction
 - Dark mode

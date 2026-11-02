@@ -11,6 +11,8 @@ import { useSettingsStore } from '@/shared/state/settingsStore';
 import { useAlarmSync } from '@/features/alarm/useAlarmSync';
 import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
 
+export { ErrorBoundary } from 'expo-router';
+
 const SPLASH_MIN_MS = 900;
 
 SplashScreen.preventAutoHideAsync();

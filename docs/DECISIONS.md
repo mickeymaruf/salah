@@ -184,3 +184,15 @@ Format: date, title, context, decision, consequence.
 - Context: the brief lists prayer mats, rugs, mosques, carpet, floor, room.
 - Decision: match whole words from that list with confidence 0.5 or more.
 - Consequence: low false rejections for real prayer spaces and a loose check overall. See `docs/LIMITATIONS.md`.
+
+## 2026-11-02 Figma layout kept over safe-area padding
+
+- Context: earlier screens added 8 px under the status bar. The Figma bodies start right under it.
+- Decision: remove the extra padding and let each screen's own top row provide spacing as in Figma.
+- Consequence: spacing under the status bar now follows the design on every device.
+
+## 2026-11-02 Muted color kept despite contrast
+
+- Context: the brief says to extract real values from Figma and also asks for readable contrast.
+- Decision: keep the Figma value and document the ratio.
+- Consequence: a known accessibility gap with a roadmap item. It is a one-token change in `colors.ts`.

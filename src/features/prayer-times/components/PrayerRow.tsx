@@ -53,7 +53,7 @@ function StatusMark({ state, isNext }: { state: PrayerState; isNext: boolean }) 
 
 const styles = StyleSheet.create({
   row: {
-    height: sizes.prayerRowHeight,
+    minHeight: sizes.prayerRowHeight,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',

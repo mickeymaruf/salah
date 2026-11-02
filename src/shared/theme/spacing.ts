@@ -21,5 +21,6 @@ export const sizes = {
   rowHeight: 50,
   prayerRowHeight: 56,
   iconButton: 44,
-  tabBarHeight: 88,
+  // Tab bar height above the bottom safe-area inset. Figma: 88 = 54 + 34 on an iPhone.
+  tabBarContent: 54,
 } as const;

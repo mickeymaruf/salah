@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   overline: { opacity: 0.6, letterSpacing: 1.68, marginTop: 28 },
   name: { marginTop: 8 },
   time: { flexDirection: 'row', alignItems: 'flex-end', gap: 6 },
-  meridiem: { fontSize: 22, opacity: 0.6, paddingBottom: 14 },
+  meridiem: { fontSize: 22, opacity: 0.6 },
   rings: { marginTop: 20 },
   prompt: { marginTop: 16, textAlign: 'center' },
   hint: { opacity: 0.55, marginTop: 14, textAlign: 'center' },

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { Screen, ScreenHeader, Toggle } from '@/shared/ui';
 import type { AsrMethod, CalculationMethodId, Profile } from '@/shared/state/profile';
@@ -7,6 +7,7 @@ import { useProfileStore } from '@/shared/state/profileStore';
 import { ALARM_SOUNDS, REMINDER_OPTIONS, type AlarmSoundId } from '@/shared/state/settings';
 import { useSettingsStore } from '@/shared/state/settingsStore';
 import { previewSound } from '@/features/alarm/previewSound';
+import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
 import { EditNameSheet } from './components/EditNameSheet';
 import { OptionSheet } from './components/OptionSheet';
 import { ProfileCard } from './components/ProfileCard';
@@ -33,6 +34,7 @@ function Settings({ profile }: { profile: Profile }) {
   const settings = useSettingsStore((state) => state.settings);
   const updateSettings = useSettingsStore((state) => state.update);
   const { refresh, busy } = useRefreshLocation();
+  const notifications = useNotificationStatus();
   const [sheet, setSheet] = useState<Sheet>(null);
   const close = () => setSheet(null);
 
@@ -51,6 +53,11 @@ function Settings({ profile }: { profile: Profile }) {
           <SettingsRow label="Asr calculation" value={ASR_METHOD_LABELS[profile.asrMethod]} onPress={() => setSheet('asr')} />
         </SettingsGroup>
         <SettingsGroup title="Alarm">
+          <SettingsRow
+            label="Notifications"
+            value={notifications.status === 'denied' ? 'Off' : 'On'}
+            onPress={notifications.status === 'denied' ? notifications.fix : () => Linking.openSettings()}
+          />
           <SettingsRow label="Alarm sound" value={ALARM_SOUND_LABELS[settings.alarmSound]} onPress={() => setSheet('sound')} />
           <SettingsRow
             label="Require photo proof"

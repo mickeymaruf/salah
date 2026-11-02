@@ -116,3 +116,13 @@ Shipped features, what they do, who owns the code, how to extend them.
   `mlKitLabels.ts` (label matching), `getVerifier()` in `verifier.ts`.
 - Order of checks: live-capture first, then labels. If the labeler throws, the live result stands.
 - Extend: edit `KEYWORDS` and `MIN_CONFIDENCE` in `mlKitLabels.ts`. Another model goes behind the same `ImageLabeler` type.
+
+## Polish
+
+- Notifications denied: Today shows an "Alarms are off" notice that asks again or opens system settings.
+  Settings has a "Notifications" row with the same behavior. The status is re-checked when the app returns to the foreground.
+- Permission states elsewhere: location (denied, blocked, error) in onboarding and Settings, camera (allow or open settings).
+- Empty states: Progress shows a dash and "Pray today to start your year" before anything is tracked.
+- Errors: `ErrorBoundary` from Expo Router on the root layout, and `app/+not-found.tsx` sends unknown links to `/`.
+- Layout: top padding follows the safe area exactly as in the Figma frames. The tab bar is 54 plus the bottom inset.
+  Prayer rows use a minimum height so large system text grows them. Display texts cap font scaling at 1.1, others at 1.4.

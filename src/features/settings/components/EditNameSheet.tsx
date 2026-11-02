@@ -56,7 +56,7 @@ export function EditNameSheet({ visible, initialName, onSave, onClose }: EditNam
 
 const styles = StyleSheet.create({
   fill: { flex: 1, justifyContent: 'flex-end' },
-  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(16,36,30,0.4)' },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: colors.backdrop },
   sheet: {
     backgroundColor: colors.bg.surface,
     borderTopLeftRadius: radii.card,

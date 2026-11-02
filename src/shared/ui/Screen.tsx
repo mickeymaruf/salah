@@ -23,7 +23,7 @@ export function Screen({ children, tone = 'light', scroll = false, bottomInset =
   const insets = useSafeAreaInsets();
   const background = BACKGROUNDS[tone];
   const padding = {
-    paddingTop: insets.top + spacing.sm,
+    paddingTop: insets.top,
     paddingBottom: bottomInset ? Math.max(insets.bottom, spacing.lg) : 0,
   };
 

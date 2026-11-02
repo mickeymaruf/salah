@@ -18,7 +18,7 @@ export function NextPrayerBlock({ next, countdownMs }: NextPrayerBlockProps) {
       </Text>
       <View style={styles.title}>
         <Text variant="display">{PRAYER_LABELS[next.name]}</Text>
-        <Text variant="time" color="muted" style={styles.time}>
+        <Text variant="time" color="muted">
           {next.isTomorrow ? `Tomorrow ${time}` : time}
         </Text>
       </View>
@@ -32,5 +32,4 @@ export function NextPrayerBlock({ next, countdownMs }: NextPrayerBlockProps) {
 const styles = StyleSheet.create({
   block: { gap: 4 },
   title: { flexDirection: 'row', alignItems: 'flex-end', gap: 12 },
-  time: { paddingBottom: 10 },
 });

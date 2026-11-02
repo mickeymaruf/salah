@@ -3,6 +3,8 @@ import { Screen, Text, UserButton } from '@/shared/ui';
 import { formatLongDate } from '@/shared/lib/date';
 import { useProfileStore } from '@/shared/state/profileStore';
 import type { Profile } from '@/shared/state/profile';
+import { AlarmsOffNotice } from '@/features/alarm/components/AlarmsOffNotice';
+import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
 import { DayProgress } from './components/DayProgress';
 import { NextPrayerBlock } from './components/NextPrayerBlock';
 import { PrayerList } from './components/PrayerList';
@@ -15,6 +17,7 @@ export function TodayScreen() {
 
 function Today({ profile }: { profile: Profile }) {
   const { at, times, states, next, countdownMs, prayedCount } = useTodayPrayers(profile);
+  const notifications = useNotificationStatus();
 
   return (
     <Screen scroll bottomInset={false}>
@@ -27,6 +30,11 @@ function Today({ profile }: { profile: Profile }) {
         </View>
         <UserButton />
       </View>
+      {notifications.status === 'denied' ? (
+        <View style={styles.notice}>
+          <AlarmsOffNotice onFix={notifications.fix} />
+        </View>
+      ) : null}
       <View style={styles.next}>
         <NextPrayerBlock next={next} countdownMs={countdownMs} />
       </View>
@@ -43,6 +51,7 @@ function Today({ profile }: { profile: Profile }) {
 const styles = StyleSheet.create({
   top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   greeting: { flex: 1, gap: 4, paddingVertical: 8 },
+  notice: { marginTop: 16 },
   next: { marginTop: 32 },
   progress: { marginTop: 24 },
   list: { marginTop: 28, marginBottom: 24 },

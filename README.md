@@ -36,9 +36,11 @@ Scan the QR code with Expo Go. No API keys or backend are needed.
 ```
 app/                 Expo Router routes (thin, they compose feature screens)
 src/features/        One folder per feature (onboarding, prayer-times, alarm, proof, progress, settings)
-src/shared/ui/       Button, Card, Screen, Text, Toggle
+src/shared/ui/       Button, Card, Screen, ScreenHeader, Text, Toggle, UserButton, LogoMark, SplashView
 src/shared/theme/    Colors, spacing, radii, type styles (the only place for hex values)
-src/shared/lib/      Date helpers (all "today" logic goes through date.ts)
+src/shared/lib/      Date helpers (all "today" logic goes through date.ts), useNow
+src/shared/state/    Profile and settings stores (zustand + AsyncStorage)
+scripts/             Icon and sound generators
 src/shared/db/       SQLite open and migrations
 docs/                Architecture, decisions, roadmap, limitations, features
 ```

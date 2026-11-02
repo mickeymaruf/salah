@@ -86,3 +86,13 @@
 - ML Kit's base model has about 400 labels and has no "prayer mat" label. The check accepts rug-like or room-like
   labels, so a rug, a carpet, a floor or a room all pass. A photo of an unrelated carpet passes too.
 - Labeling runs on the device. No photo leaves the phone.
+
+## Accessibility and visual checks
+
+- Muted text (`ink/muted` #8A867D on `bg/base` #F7F5F0) has a contrast ratio of about 3.3:1, below the 4.5:1 WCAG AA
+  level for small text. The color comes from the Figma file and was kept. Darkening it is on the roadmap.
+- Layout values were taken from the Figma frames and the code was type-checked and bundled. No screen was rendered on a
+  device, emulator or simulator, so no screen was compared with its Figma frame by eye. The icons and splash image were
+  rendered and looked at.
+- Expo Go on Android prints a warning when `expo-notifications` loads (remote push was removed from Expo Go).
+  Local notifications are what this app uses and are not affected.

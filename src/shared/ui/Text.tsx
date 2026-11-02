@@ -6,6 +6,15 @@ interface TextProps extends RNTextProps {
   color?: TextColor;
 }
 
+// Display sizes are already large, so they scale less than body text before the layout breaks.
+const DISPLAY_VARIANTS: readonly TypeVariant[] = ['clock', 'display', 'splash', 'hero', 'confirm', 'stat', 'input'];
+
 export function Text({ variant = 'body', color = 'primary', style, ...rest }: TextProps) {
-  return <RNText style={[typography[variant], { color: textColors[color] }, style]} {...rest} />;
+  return (
+    <RNText
+      maxFontSizeMultiplier={DISPLAY_VARIANTS.includes(variant) ? 1.1 : 1.4}
+      style={[typography[variant], { color: textColors[color] }, style]}
+      {...rest}
+    />
+  );
 }
