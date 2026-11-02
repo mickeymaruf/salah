@@ -50,6 +50,9 @@ export default function RootLayout() {
           <Stack.Screen name="alarm" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />
           <Stack.Screen name="proof" options={{ gestureEnabled: false }} />
           <Stack.Screen name="verified" options={{ gestureEnabled: false, animation: 'fade' }} />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="privacy" />
+          <Stack.Screen name="help" />
         </Stack.Protected>
       </Stack>
     </SafeAreaProvider>

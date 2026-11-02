@@ -84,3 +84,15 @@ Shipped features, what they do, who owns the code, how to extend them.
   all five prayed.
 - Dev seed: in `__DEV__` builds two links under the detail card fill this year with sample data or clear the log.
 - Extend: a new state needs a color in `DayBar.tsx`, a case in `model.ts`, and a mark in `DayDetail.tsx`.
+
+## Settings
+
+- What: reached from the user icon on Today and Progress. Profile card with name edit. Prayer times: refresh
+  location, calculation method, Asr method. Alarm: sound (plays a 2.5 s preview), require photo proof,
+  reminder before. About: Privacy and Help pages (static text).
+- Owns: `src/features/settings/` (`SettingsScreen.tsx`, `options.ts` labels, `useRefreshLocation.ts`,
+  `components/`, `PrivacyScreen.tsx`, `HelpScreen.tsx`), `src/shared/ui/ScreenHeader.tsx`,
+  `src/features/alarm/previewSound.ts`, `app/settings.tsx`, `app/privacy.tsx`, `app/help.tsx`.
+- Every change writes to a zustand store. `useAlarmSync` sees the new profile or settings and reschedules, and
+  Today and Progress recompute from the new profile.
+- Extend: add a row in `SettingsScreen.tsx`. For a list of choices add a label map to `options.ts` and an `OptionSheet`.

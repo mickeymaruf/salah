@@ -64,3 +64,10 @@
   saved before this field existed fall back to the first logged day, or to today.
 - The chart was not rendered on a device or emulator. Layout numbers (14 px bars, 3 px gaps, 19 px rows) come from
   the Figma frame.
+
+## Settings
+
+- Changing the calculation method or location changes today's times immediately. Logged prayers are kept as they are.
+- "Location" refreshes on tap without a confirmation step. It overwrites the saved coordinates and city.
+- The Help screen has no feedback channel because the project has no contact address. Add one in `HelpScreen.tsx`.
+- The name can be edited. The photo avatar is the first letter of the name.

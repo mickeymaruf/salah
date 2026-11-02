@@ -140,3 +140,15 @@ Format: date, title, context, decision, consequence.
 - Context: Figma shows a selected day (Fri, 23 Oct) but does not say how the default is chosen.
 - Decision: default to today, switch to the tapped day, and outline the selected bar.
 - Consequence: the card is useful on first open and stays on the tapped day after that.
+
+## 2026-11-02 Pickers are bottom sheets
+
+- Context: Figma shows rows with a chevron and a value but no picker design.
+- Decision: rows open a bottom sheet with radio options. Name editing uses a small sheet with a text field.
+- Consequence: one `OptionSheet` serves four settings. No new dependency.
+
+## 2026-11-02 Privacy and Help text
+
+- Context: the brief allows static text screens.
+- Decision: write them from what the app does today: no account, no analytics, on-device photos.
+- Consequence: the text must be updated when behavior changes, for example if a verifier ever sent data off the device.
