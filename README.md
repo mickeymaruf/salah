@@ -54,15 +54,35 @@ Tests cover pure functions only: date helpers, prayer scheduling, progress stats
 ## Development build
 
 Expo Go cannot load custom native modules. Features that need one fall back
-automatically (see `docs/LIMITATIONS.md`). To build a development client:
+automatically (see `docs/LIMITATIONS.md`). Two things only work in a development build:
+
+- The ML Kit photo check (`@react-native-ml-kit/image-labeling`).
+- Custom alarm sounds in notifications and the notification icon color.
+
+Build a development client locally (Android needs the Android SDK, iOS needs a Mac with Xcode):
 
 ```bash
 npx expo prebuild
-npx expo run:android      # or run:ios on macOS
+npx expo run:android      # or: npx expo run:ios
+```
+
+After the first build, start the dev server for the installed client:
+
+```bash
 npx expo start --dev-client
 ```
 
-Or with EAS: `npx eas-cli@latest build --profile development --platform android`.
+Or build in the cloud with EAS (requires an Expo account):
+
+```bash
+npx eas-cli@latest build --profile development --platform android
+```
+
+`ios/` and `android/` are generated and ignored by git. Re-run `npx expo prebuild --clean`
+after changing `app.json` plugins.
+
+To confirm the ML Kit check is active, take a photo of a wall: it is rejected, and a photo of a rug or
+floor is accepted with a label such as "Carpet detected". In Expo Go any live photo is accepted.
 
 ## More
 

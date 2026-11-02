@@ -172,3 +172,15 @@ Format: date, title, context, decision, consequence.
 - Context: the scaffold configured iOS background audio for the alarm.
 - Decision: removed. The alarm sound plays only while the app is open; closed apps rely on notification sounds.
 - Consequence: fewer App Store review questions.
+
+## 2026-11-02 ML Kit failure never blocks a prayer
+
+- Context: the labeler is a native module that could fail to load or crash on a device model.
+- Decision: if the labeler throws, accept the photo on the live-capture result.
+- Consequence: a broken model weakens the check but never traps the user in the alarm.
+
+## 2026-11-02 Broad label list
+
+- Context: the brief lists prayer mats, rugs, mosques, carpet, floor, room.
+- Decision: match whole words from that list with confidence 0.5 or more.
+- Consequence: low false rejections for real prayer spaces and a loose check overall. See `docs/LIMITATIONS.md`.

@@ -106,3 +106,13 @@ Shipped features, what they do, who owns the code, how to extend them.
   `assets/*.png`, the splash and notification entries in `app.json`, the splash hold in `app/_layout.tsx`.
 - Extend: change the shape in `logo.json`, then run `node scripts/generate-icons.js` to rewrite every PNG.
   The adaptive icon background is a color in `app.json`, so there is no background image.
+
+## ML Kit verifier
+
+- What: on-device image labeling. A live photo is accepted when ML Kit returns a label such as Carpet, Floor,
+  Room, Mosque, Place of worship, Rug or Mat with confidence 0.5 or more. The label appears on the verified screen
+  ("Carpet detected"). Without the native module the live-capture verifier is used.
+- Owns: `src/features/proof/mlKit.ts` (module detection), `mlKitVerifier.ts` (composition and fallback),
+  `mlKitLabels.ts` (label matching), `getVerifier()` in `verifier.ts`.
+- Order of checks: live-capture first, then labels. If the labeler throws, the live result stands.
+- Extend: edit `KEYWORDS` and `MIN_CONFIDENCE` in `mlKitLabels.ts`. Another model goes behind the same `ImageLabeler` type.

@@ -13,7 +13,7 @@ Status: done, next, todo.
 | 6 | Progress: year grid, stats, day detail | done |
 | 7 | Settings | done |
 | 8 | Splash and branding | done |
-| 9 | ML Kit verifier (dev build only) | todo |
+| 9 | ML Kit verifier (dev build only) | done |
 | 10 | Polish pass | todo |
 
 ## Later

@@ -77,3 +77,12 @@
 - `sharp` is a dev dependency used only by `scripts/generate-icons.js`. It is not in the app bundle.
 - The icon files were checked as images, not on a device or in a store listing. Android adaptive masks differ by
   launcher; the mark stays inside the safe zone.
+
+## ML Kit verifier
+
+- Needs a development build. The package is a legacy `NativeModules` bridge module. React Native 0.88 runs only the
+  new architecture and loads such modules through its interop layer. This was not built or run here. If the
+  module fails to load, `getVerifier()` returns the live-capture verifier and the app keeps working.
+- ML Kit's base model has about 400 labels and has no "prayer mat" label. The check accepts rug-like or room-like
+  labels, so a rug, a carpet, a floor or a room all pass. A photo of an unrelated carpet passes too.
+- Labeling runs on the device. No photo leaves the phone.

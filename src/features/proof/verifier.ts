@@ -1,3 +1,6 @@
+import { getImageLabeler } from './mlKit';
+import { createMlKitVerifier } from './mlKitVerifier';
+
 export interface ProofVerifier {
   verify(photoUri: string): Promise<{ ok: boolean; label?: string }>;
 }
@@ -16,6 +19,8 @@ export const liveCaptureVerifier: ProofVerifier = {
   },
 };
 
+// ML Kit labeling is used only when its native module is present, otherwise live capture alone.
 export function getVerifier(): ProofVerifier {
-  return liveCaptureVerifier;
+  const labeler = getImageLabeler();
+  return labeler ? createMlKitVerifier(labeler, liveCaptureVerifier) : liveCaptureVerifier;
 }
