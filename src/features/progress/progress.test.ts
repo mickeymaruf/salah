@@ -1,7 +1,6 @@
 import { PRAYER_NAMES, type PrayerName } from '@/features/prayer-times/calculate';
 import type { PrayerState } from '@/features/prayer-times/schedule';
 import { buildYear, countPrayed, type YearGrid } from './model';
-import { buildSeedRows } from './seed';
 import { computeStats, formatStreak } from './stats';
 
 const todayStates = (state: PrayerState, overrides: Partial<Record<PrayerName, PrayerState>> = {}) =>
@@ -88,23 +87,5 @@ describe('formatStreak', () => {
   it('pluralizes', () => {
     expect(formatStreak(1)).toBe('1 day');
     expect(formatStreak(7)).toBe('7 days');
-  });
-});
-
-describe('buildSeedRows', () => {
-  const today = new Date(2026, 9, 26, 12);
-
-  it('only covers January 1 up to yesterday', () => {
-    const rows = buildSeedRows(2026, today);
-    expect(rows[0].date >= '2026-01-01').toBe(true);
-    expect(rows.every((row) => row.date <= '2026-10-25')).toBe(true);
-  });
-
-  it('is deterministic and mostly prayed with some gaps', () => {
-    const rows = buildSeedRows(2026, today);
-    expect(buildSeedRows(2026, today)).toEqual(rows);
-    const share = rows.length / (298 * 5);
-    expect(share).toBeGreaterThan(0.75);
-    expect(share).toBeLessThan(0.95);
   });
 });

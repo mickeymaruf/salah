@@ -260,3 +260,15 @@ Format: date, title, context, decision, consequence.
 - Context: the user wants to swipe between Today and Progress as well as tap, and have both feel instant.
 - Decision: use Expo Router's built-in top tabs (pager) with the bar at the bottom, animation off for taps, lazy with a one-page preload.
 - Consequence: adds `react-native-pager-view`, which is included in Expo Go.
+
+## 2026-11-02 Dev seed removed
+
+- Context: the brief asked for a `__DEV__` seed to preview the chart. The user did not want the dev links on the screen.
+- Decision: removed the seed, its test and the store's `invalidate`.
+- Consequence: the chart can only be previewed with real or hand-logged data.
+
+## 2026-11-02 Day bar segments overlap by 1 px
+
+- Context: five segments of 3.8 px left a faint light line between them on some screens.
+- Decision: each segment is positioned absolutely and extends 1 px under the next one.
+- Consequence: no seams. Colors still change at the same boundaries.

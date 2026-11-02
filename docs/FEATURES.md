@@ -76,13 +76,12 @@ Shipped features, what they do, who owns the code, how to extend them.
   scrollbar and opens with today at the right edge. Month letters stay fixed on the left. Tapping a day shows its
   five prayers in the detail card. Above the grid: percent kept, prayed, missed, best streak.
 - Owns: `src/features/progress/` (`model.ts` builds the grid, `stats.ts`, `useYearProgress.ts`,
-  `ProgressScreen.tsx`, `components/`, `seed.ts` and `DevTools.tsx` for development), `app/(tabs)/progress.tsx`.
+  `ProgressScreen.tsx`, `components/`), `app/(tabs)/progress.tsx`.
 - Data: one query for the year (`getYear`). Past days need no prayer times: not logged means missed. Only today
   uses the clock. Days before the start date are "untracked": drawn pale and excluded from every number.
   The start date is `profile.startedOn`, or the first logged day if that is earlier.
 - Stats count prayed and missed prayers whose time passed. Best streak is the longest run of consecutive days with
   all five prayed.
-- Dev seed: in `__DEV__` builds two links under the detail card fill this year with sample data or clear the log.
 - Extend: a new state needs a color in `DayBar.tsx`, a case in `model.ts`, and a mark in `DayDetail.tsx`.
 
 ## Settings

@@ -11,8 +11,6 @@ interface PrayerLogState {
   overrides: Overrides;
   mark: (date: string, prayer: PrayerName, proofUri: string | null) => Promise<void>;
   unmark: (date: string, prayer: PrayerName) => Promise<void>;
-  // For writes made outside `mark` and `unmark`, such as the dev seed.
-  invalidate: () => void;
 }
 
 export const usePrayerLogStore = create<PrayerLogState>((set, get) => {
@@ -42,6 +40,5 @@ export const usePrayerLogStore = create<PrayerLogState>((set, get) => {
         markPrayed(date, prayer, proofUri),
       ),
     unmark: (date, prayer) => apply(overrideKey(date, prayer), null, () => removePrayed(date, prayer)),
-    invalidate: () => set((state) => ({ overrides: {}, revision: state.revision + 1 })),
   };
 });

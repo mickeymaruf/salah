@@ -9,6 +9,7 @@ export const DAY_GAP = 3;
 export const DAY_STEP = DAY_WIDTH + DAY_GAP;
 export const ROW_HEIGHT = 19;
 export const ROW_GAP = 3;
+const SEGMENT = ROW_HEIGHT / 5;
 
 const SEGMENT_COLORS: Record<CellState, string> = {
   prayed: colors.brand.green,
@@ -35,7 +36,15 @@ function DayBarBase({ cell, selected, onSelect }: DayBarProps) {
       style={styles.day}
     >
       {cell.states.map((state, index) => (
-        <View key={index} style={[styles.segment, { backgroundColor: SEGMENT_COLORS[state] }]} />
+        <View
+          key={index}
+          style={[
+            styles.segment,
+            // Each segment runs 1 px under the next one. Five fractional heights otherwise leave a faint
+            // light line between segments on screens where the boundary lands between two pixels.
+            { top: index * SEGMENT, height: SEGMENT + 1, backgroundColor: SEGMENT_COLORS[state] },
+          ]}
+        />
       ))}
       {selected ? <View pointerEvents="none" style={styles.selection} /> : null}
     </Pressable>
@@ -54,7 +63,7 @@ export const DayBar = memo(
 
 const styles = StyleSheet.create({
   day: { width: DAY_WIDTH, height: ROW_HEIGHT, borderRadius: 3, overflow: 'hidden' },
-  segment: { flex: 1 },
+  segment: { position: 'absolute', left: 0, right: 0 },
   selection: {
     position: 'absolute',
     top: 0,

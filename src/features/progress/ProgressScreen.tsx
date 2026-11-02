@@ -11,7 +11,6 @@ import { initialChoice, isEditableDay, sheetSubtitle } from '@/features/prayer-t
 import { DayDetail } from './components/DayDetail';
 import { StatCard } from './components/StatCard';
 import { YearGrid } from './components/YearGrid';
-import { DevTools } from './DevTools';
 import { formatStreak } from './stats';
 import { useYearProgress } from './useYearProgress';
 
@@ -84,7 +83,6 @@ function Progress({ profile }: { profile: Profile }) {
           onClose={() => setLogging(null)}
         />
       ) : null}
-      {__DEV__ ? <DevTools /> : null}
     </Screen>
   );
 }
