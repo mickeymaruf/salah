@@ -44,3 +44,14 @@
   bundled because no licensed audio could be obtained offline. The Figma frame shows "Adhan" as the default
   sound. Drop a recording into `assets/sounds/` and register it as described in `docs/FEATURES.md`.
 - The alarm opens even when the prayer is long past, as long as it has not been marked.
+
+## Proof
+
+- The default verifier proves that a photo was taken with the in-app camera during this session. It does not
+  check what the photo shows. Pointing the camera at a wall passes. The ML Kit verifier (dev build only)
+  narrows this but is still a heuristic.
+- A camera denied permanently leads to an "Open settings" button. Without the camera the alarm cannot be silenced,
+  except by turning off "Require photo proof".
+- Proof photos are stored in the app document directory and never uploaded. Uninstalling the app deletes them.
+- The verified screen shows the proof photo from the log. If the file copy failed, the cache path is used and the
+  OS may clear it later.

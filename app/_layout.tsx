@@ -48,6 +48,8 @@ export default function RootLayout() {
         <Stack.Protected guard={hasProfile}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="alarm" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />
+          <Stack.Screen name="proof" options={{ gestureEnabled: false }} />
+          <Stack.Screen name="verified" options={{ gestureEnabled: false, animation: 'fade' }} />
         </Stack.Protected>
       </Stack>
     </SafeAreaProvider>

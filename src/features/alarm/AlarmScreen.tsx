@@ -10,7 +10,7 @@ import { useProfileStore } from '@/shared/state/profileStore';
 import { useSettingsStore } from '@/shared/state/settingsStore';
 import { getDayTimes, PRAYER_LABELS, type PrayerName } from '@/features/prayer-times/calculate';
 import { usePrayerLogStore } from '@/features/prayer-times/data/prayerLogStore';
-import { usePrayedOn } from '@/features/prayer-times/data/usePrayedOn';
+import { usePrayedOn } from '@/features/prayer-times/data/useDayLog';
 import { PulseRings } from './components/PulseRings';
 import { isDateKey, isPrayerName } from './notificationData';
 import { useAlarmSound } from './useAlarmSound';
@@ -35,7 +35,7 @@ function Alarm({ profile, prayer, date }: AlarmProps) {
   const prayed = usePrayedOn(date);
   const done = prayed.has(prayer);
 
-  useAlarmSound(settings.alarmSound);
+  useAlarmSound(settings.alarmSound, !done);
 
   // The alarm must not be dismissable with the back button while proof is required.
   useFocusEffect(
@@ -45,7 +45,12 @@ function Alarm({ profile, prayer, date }: AlarmProps) {
     }, []),
   );
 
-  if (done) return <Redirect href="/today" />;
+  // Marked while another screen (proof, verified) is on top: stop the sound now and leave when we are shown again.
+  useFocusEffect(
+    useCallback(() => {
+      if (done) router.dismissTo('/today');
+    }, [done]),
+  );
 
   const time = formatTime(getDayTimes(profile, parseDateKey(date))[prayer]);
   const [clock, meridiem] = time.split(' ');

@@ -6,16 +6,22 @@ import { colors, spacing } from '@/shared/theme';
 
 interface ScreenProps {
   children: ReactNode;
-  tone?: 'light' | 'dark';
+  tone?: 'light' | 'dark' | 'camera';
   scroll?: boolean;
   // Tab screens leave the bottom inset to the tab bar.
   bottomInset?: boolean;
   style?: StyleProp<ViewStyle>;
 }
 
+const BACKGROUNDS = {
+  light: colors.bg.base,
+  dark: colors.brand.greenDark,
+  camera: colors.camera.background,
+} as const;
+
 export function Screen({ children, tone = 'light', scroll = false, bottomInset = true, style }: ScreenProps) {
   const insets = useSafeAreaInsets();
-  const background = tone === 'dark' ? colors.brand.greenDark : colors.bg.base;
+  const background = BACKGROUNDS[tone];
   const padding = {
     paddingTop: insets.top + spacing.sm,
     paddingBottom: bottomInset ? Math.max(insets.bottom, spacing.lg) : 0,
@@ -23,7 +29,7 @@ export function Screen({ children, tone = 'light', scroll = false, bottomInset =
 
   return (
     <View style={[styles.root, { backgroundColor: background }]}>
-      <StatusBar style={tone === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style={tone === 'light' ? 'dark' : 'light'} />
       {scroll ? (
         <ScrollView
           contentContainerStyle={[styles.content, padding, style]}

@@ -68,3 +68,10 @@ profile + settings + log --> planAlarms (pure) --> scheduleNotificationAsync x N
 
 `planAlarms` keeps every prayer alarm for the 7 days and fills the remaining budget with reminders and
 follow-ups, soonest first. The budget is 60 on iOS (the OS keeps 64) and 250 on Android.
+
+## Proof flow
+
+`AlarmScreen -> /proof (CameraView) -> takePictureAsync -> registerLiveCapture -> verifier.verify ->
+saveProof (copy to documents) -> prayerLogStore.mark -> /verified -> Done -> dismissTo(/today)`.
+The alarm screen stays mounted under the proof screens. It stops its own sound when the day log shows the prayer
+as prayed, and leaves when it regains focus.

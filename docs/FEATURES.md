@@ -55,3 +55,16 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Extend: change counts or spacing in `schedule.ts` (`DAYS_AHEAD`, `FOLLOW_UP_COUNT`, `FOLLOW_UP_MINUTES`).
   Add a sound by adding it to `generate-sounds.js`, `ALARM_SOUNDS`, `SOURCES` in `useAlarmSound.ts`, and the
   `sounds` list of the notifications plugin in `app.json`.
+
+## Proof
+
+- What: the live camera screen (`/proof`), a verifier, and the confirmation screen (`/verified`).
+  A photo taken in the session is accepted, copied to the document directory, and the prayer is logged
+  with its path. Logging bumps the log revision, which reschedules alarms without that prayer and stops the
+  alarm sound. "Done" returns to Today.
+- Owns: `src/features/proof/` (`verifier.ts`, `proofStorage.ts`, `useProofSubmit.ts`, `ProofCameraScreen.tsx`,
+  `VerifiedScreen.tsx`, `components/`), `app/proof.tsx`, `app/verified.tsx`.
+- The interface: `ProofVerifier.verify(photoUri) => { ok, label? }`. `getVerifier()` picks the implementation.
+- No gallery access exists anywhere. The camera screen registers each capture with `registerLiveCapture`,
+  and `liveCaptureVerifier` accepts only registered URIs.
+- Extend: add a verifier and return it from `getVerifier()`. A rejected photo shows a retry hint on the camera screen.

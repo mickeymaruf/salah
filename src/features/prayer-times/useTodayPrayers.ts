@@ -3,7 +3,7 @@ import { addDays, parseDateKey, toDateKey } from '@/shared/lib/date';
 import { useNow } from '@/shared/lib/useNow';
 import type { Profile } from '@/shared/state/profile';
 import { getDayTimes } from './calculate';
-import { usePrayedOn } from './data/usePrayedOn';
+import { usePrayedOn } from './data/useDayLog';
 import { getDayStates, getNextPrayer } from './schedule';
 
 export function useTodayPrayers(profile: Profile) {

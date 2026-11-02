@@ -8,9 +8,10 @@ const SOURCES: Record<AlarmSoundId, number> = {
   soft: require('../../../assets/sounds/soft.wav'),
 };
 
-// Loops while the calling screen is mounted and stops when it unmounts.
-export function useAlarmSound(sound: AlarmSoundId): void {
+// Loops while `active` and the calling screen is mounted.
+export function useAlarmSound(sound: AlarmSoundId, active: boolean): void {
   useEffect(() => {
+    if (!active) return;
     setAudioModeAsync({ playsInSilentMode: true, interruptionMode: 'duckOthers' }).catch(() => undefined);
     const player = createAudioPlayer(SOURCES[sound]);
     player.loop = true;
@@ -19,5 +20,5 @@ export function useAlarmSound(sound: AlarmSoundId): void {
       player.pause();
       player.remove();
     };
-  }, [sound]);
+  }, [sound, active]);
 }

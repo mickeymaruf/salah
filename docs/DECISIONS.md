@@ -109,3 +109,16 @@ Format: date, title, context, decision, consequence.
 - Context: the alarm needs it from day one, and the onboarding copy already explains the alarm.
 - Decision: ask right after location is confirmed. A refusal does not block the app.
 - Consequence: a denied permission is handled in the polish pass (banner on Today and in Settings).
+
+## 2026-11-02 "Live" means registered by the camera screen
+
+- Context: the brief forbids gallery picking and wants a photo taken live in this session.
+- Decision: no image picker is installed. The camera screen registers every URI it creates and the live verifier
+  accepts only those.
+- Consequence: route params and stored URIs cannot be used to fake proof. The check is app-level, not tamper-proof.
+
+## 2026-11-02 Verified screen reads the log
+
+- Context: the verified screen needs the completion time and the stored photo.
+- Decision: it reads the day's log entry. Only the verifier label travels as a route param, because the log has no column for it.
+- Consequence: the table matches the data model in the brief.
