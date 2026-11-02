@@ -21,7 +21,7 @@ export function TodayScreen() {
 }
 
 function Today({ profile }: { profile: Profile }) {
-  const { at, dayKey, times, states, manual, next, countdownMs, prayedCount } = useTodayPrayers(profile);
+  const { at, dayKey, times, states, next, countdownMs, prayedCount } = useTodayPrayers(profile);
   const [logging, setLogging] = useState<PrayerName | null>(null);
   const saveChoice = useSaveChoice();
   const notifications = useNotificationStatus();
@@ -53,7 +53,6 @@ function Today({ profile }: { profile: Profile }) {
           times={times}
           states={states}
           nextName={next.isTomorrow ? null : next.name}
-          manual={manual}
           onSelect={setLogging}
         />
       </View>
@@ -63,7 +62,7 @@ function Today({ profile }: { profile: Profile }) {
           prayer={logging}
           subtitle={sheetSubtitle(times[logging], dayKey, dayKey)}
           status={states[logging]}
-          initial={initialChoice(states[logging], false)}
+          initial={initialChoice(states[logging])}
           onSave={(choice) => saveChoice(dayKey, logging, choice)}
           onClose={() => setLogging(null)}
         />

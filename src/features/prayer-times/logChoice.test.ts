@@ -10,11 +10,11 @@ describe('availableChoices', () => {
 });
 
 describe('initialChoice', () => {
-  it('preselects Prayed unless asked to show a current miss', () => {
-    expect(initialChoice('missed', false)).toBe('prayed');
-    expect(initialChoice('missed', true)).toBe('missed');
-    expect(initialChoice('prayed', true)).toBe('prayed');
-    expect(initialChoice('upcoming', true)).toBe('prayed');
+  it('opens on the current state', () => {
+    expect(initialChoice('missed')).toBe('missed');
+    expect(initialChoice('prayed')).toBe('prayed');
+    expect(initialChoice('upcoming')).toBe('prayed');
+    expect(initialChoice('untracked')).toBe('prayed');
   });
 });
 

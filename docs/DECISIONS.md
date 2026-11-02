@@ -246,3 +246,17 @@ Format: date, title, context, decision, consequence.
 - Context: Today used an empty terracotta ring for missed prayers, which did not look like a choice the user made.
 - Decision: missed prayers show a filled terracotta circle with a cross, like the day card.
 - Consequence: Today and Progress use the same mark for missed.
+
+## 2026-11-02 One check style, current state preselected
+
+- Context: the outlined check for hand-logged prayers was confusing in use, and reopening a missed prayer showed Prayed selected.
+- Decision: all prayed prayers show a filled check. The sheet opens on the prayer's current state. The today bar
+  shows missed prayers in red.
+- Consequence: the log no longer drives any visual difference between photo and manual entries. The `proof_uri` column is
+  still stored. This overrides the outlined-check part of the Figma flow note.
+
+## 2026-11-02 Swipeable tabs
+
+- Context: the user wants to swipe between Today and Progress as well as tap, and have both feel instant.
+- Decision: use Expo Router's built-in top tabs (pager) with the bar at the bottom, animation off for taps, lazy with a one-page preload.
+- Consequence: adds `react-native-pager-view`, which is included in Expo Go.

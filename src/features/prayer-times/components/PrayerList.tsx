@@ -8,11 +8,10 @@ interface PrayerListProps {
   times: DayTimes;
   states: Record<PrayerName, PrayerState>;
   nextName: PrayerName | null;
-  manual: ReadonlySet<PrayerName>;
   onSelect: (name: PrayerName) => void;
 }
 
-export function PrayerList({ times, states, nextName, manual, onSelect }: PrayerListProps) {
+export function PrayerList({ times, states, nextName, onSelect }: PrayerListProps) {
   return (
     <Card style={styles.card}>
       <View>
@@ -23,7 +22,6 @@ export function PrayerList({ times, states, nextName, manual, onSelect }: Prayer
             time={times[name]}
             state={states[name]}
             isNext={name === nextName}
-            manual={manual.has(name)}
             onPress={states[name] === 'prayed' ? undefined : () => onSelect(name)}
           />
         ))}

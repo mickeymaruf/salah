@@ -1,37 +1,24 @@
-import { Tabs } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChartColumn, Clock } from 'lucide-react-native';
-import { colors, fontFamily, sizes } from '@/shared/theme';
+import { TopTabs, type MaterialTopTabBarProps } from 'expo-router/js-top-tabs';
+import { TabBar } from '@/shared/ui';
+import { colors } from '@/shared/theme';
 
+// Today and Progress sit in a pager: swipe sideways or tap the bottom bar. Taps switch without animation
+// so they feel instant, and the next screen is prepared ahead so a swipe never shows an empty page.
 export default function TabsLayout() {
-  const insets = useSafeAreaInsets();
   return (
-    <Tabs
+    <TopTabs
+      tabBarPosition="bottom"
+      tabBar={(props: MaterialTopTabBarProps) => <TabBar {...props} />}
       screenOptions={{
-        headerShown: false,
+        swipeEnabled: true,
+        animationEnabled: false,
+        lazy: true,
+        lazyPreloadDistance: 1,
         sceneStyle: { backgroundColor: colors.bg.base },
-        tabBarActiveTintColor: colors.brand.green,
-        tabBarInactiveTintColor: colors.ink.muted,
-        tabBarLabelStyle: { fontFamily: fontFamily.semiBold, fontSize: 12 },
-        tabBarStyle: {
-          height: sizes.tabBarContent + insets.bottom,
-          backgroundColor: colors.bg.surface,
-          borderTopColor: colors.line.soft,
-          paddingTop: 8,
-        },
       }}
     >
-      <Tabs.Screen
-        name="today"
-        options={{ title: 'Today', tabBarIcon: ({ color }) => <Clock size={24} color={color} strokeWidth={1.75} /> }}
-      />
-      <Tabs.Screen
-        name="progress"
-        options={{
-          title: 'Progress',
-          tabBarIcon: ({ color }) => <ChartColumn size={24} color={color} strokeWidth={1.75} />,
-        }}
-      />
-    </Tabs>
+      <TopTabs.Screen name="today" options={{ title: 'Today' }} />
+      <TopTabs.Screen name="progress" options={{ title: 'Progress' }} />
+    </TopTabs>
   );
 }

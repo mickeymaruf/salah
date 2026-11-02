@@ -79,7 +79,7 @@ function Progress({ profile }: { profile: Profile }) {
             dayKey,
           )}
           status={selected.states[logging]}
-          initial={initialChoice(selected.states[logging], true)}
+          initial={initialChoice(selected.states[logging])}
           onSave={(choice) => saveChoice(selected.date, PRAYER_NAMES[logging], choice)}
           onClose={() => setLogging(null)}
         />

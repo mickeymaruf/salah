@@ -9,10 +9,10 @@ export function availableChoices(status: Status): LogChoice[] {
   return status === 'upcoming' ? ['prayed'] : ['prayed', 'missed'];
 }
 
-// Logging a forgotten prayer is the common case, so Prayed is preselected. Only an existing miss
-// preselects Missed, which makes Save a no-op until the user changes it.
-export function initialChoice(status: Status, preferCurrent: boolean): LogChoice {
-  return preferCurrent && status === 'missed' ? 'missed' : 'prayed';
+// The sheet opens on what the prayer currently is, so reopening a missed prayer shows Missed.
+// A prayer that has not started yet can only be Prayed.
+export function initialChoice(status: Status): LogChoice {
+  return status === 'missed' ? 'missed' : 'prayed';
 }
 
 export function sheetSubtitle(time: Date, dateKey: string, todayKey: string): string {

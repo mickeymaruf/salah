@@ -5,6 +5,7 @@ export { LogoMark } from './LogoMark';
 export { Screen } from './Screen';
 export { ScreenHeader } from './ScreenHeader';
 export { SplashView } from './SplashView';
+export { TabBar } from './TabBar';
 export { Text } from './Text';
 export { Toggle } from './Toggle';
 export { UserButton } from './UserButton';

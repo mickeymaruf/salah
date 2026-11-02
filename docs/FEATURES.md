@@ -144,9 +144,10 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Rules (`logChoice.ts`): Prayed is stored as a log row without a photo. Missed removes the row, because missed is
   derived. A prayer whose time has not come cannot be marked Missed. Existing photo-verified rows are kept when
   Prayed is saved again.
-- Marks: a prayer logged by hand (no photo) shows an outlined green check. A photo-verified prayer shows a filled check.
-  The sheet does not explain this (the note in the Figma frame was removed on request).
-  The year chart uses the same colors for both, since it shows only prayed, missed and upcoming.
+- Marks: every prayed prayer shows a filled green check, whether it was logged by hand or verified with a photo.
+  Missed shows a filled terracotta cross. The outlined check from the Figma flow was dropped on request, along with
+  the explanatory note in the sheet.
+- The sheet opens on the prayer's current state, so a missed prayer opens with Missed selected.
 - Owns: `src/features/prayer-times/components/LogPrayerSheet.tsx`, `logChoice.ts`, `data/useSaveChoice.ts`,
   `removePrayed` and `unmark` in the log, `manual` on `DayCell` in `src/features/progress/model.ts`.
 - Hint under the day card: "Tap a prayer to mark it done or missed".
@@ -158,3 +159,10 @@ Shipped features, what they do, who owns the code, how to extend them.
   window on any device. The scrim sits behind the sheet, so the rounded 32 px top corners show dimmed content, not
   the page. Mount it to open. Its children receive `close`, which slides the sheet out (200 ms) before the parent unmounts it;
   opening takes 280 ms. One native-driven value moves the sheet by its measured height and fades the scrim.
+
+## Tab swiping
+
+- Today and Progress are pages of one pager (`expo-router/js-top-tabs`, `react-native-pager-view`). Swipe sideways or tap
+  the bottom bar. Taps switch with no animation and the neighbouring page is rendered ahead, so both feel instant.
+- Owns: `app/(tabs)/_layout.tsx`, `src/shared/ui/TabBar.tsx` (the bar, drawn like the Figma tab bar).
+- On Progress, dragging on the year chart scrolls the chart. Drag anywhere else to swipe back to Today.

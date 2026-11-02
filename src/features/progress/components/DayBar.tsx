@@ -42,7 +42,15 @@ function DayBarBase({ cell, selected, onSelect }: DayBarProps) {
   );
 }
 
-export const DayBar = memo(DayBarBase);
+// Compares the five states, not the cell object, so a change to one day does not re-render the other 364.
+export const DayBar = memo(
+  DayBarBase,
+  (before, after) =>
+    before.cell.date === after.cell.date &&
+    before.selected === after.selected &&
+    before.onSelect === after.onSelect &&
+    before.cell.states.every((state, i) => state === after.cell.states[i]),
+);
 
 const styles = StyleSheet.create({
   day: { width: DAY_WIDTH, height: ROW_HEIGHT, borderRadius: 3, overflow: 'hidden' },

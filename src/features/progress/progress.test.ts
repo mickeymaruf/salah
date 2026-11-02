@@ -7,11 +7,10 @@ import { computeStats, formatStreak } from './stats';
 const todayStates = (state: PrayerState, overrides: Partial<Record<PrayerName, PrayerState>> = {}) =>
   ({ ...Object.fromEntries(PRAYER_NAMES.map((n) => [n, state])), ...overrides }) as Record<PrayerName, PrayerState>;
 
-const PHOTO = 'file:///proof.jpg';
-const all = (date: string, proofUri: string | null = PHOTO) => PRAYER_NAMES.map((prayer) => ({ date, prayer, proofUri }));
+const all = (date: string) => PRAYER_NAMES.map((prayer) => ({ date, prayer }));
 
 const build = (
-  entries: { date: string; prayer: PrayerName; proofUri: string | null }[],
+  entries: { date: string; prayer: PrayerName }[],
   todayKey = '2026-03-10',
   startKey = '2026-03-01',
   today = todayStates('upcoming'),
@@ -26,7 +25,7 @@ describe('buildYear', () => {
   });
 
   it('marks logged prayers prayed and the rest of a past day missed', () => {
-    const cell = build([{ date: '2026-03-05', prayer: 'fajr', proofUri: PHOTO }])[2][4];
+    const cell = build([{ date: '2026-03-05', prayer: 'fajr' }])[2][4];
     expect(cell.date).toBe('2026-03-05');
     expect(cell.states).toEqual(['prayed', 'missed', 'missed', 'missed', 'missed']);
   });
@@ -41,19 +40,6 @@ describe('buildYear', () => {
     const grid = build([]);
     expect(grid[0][0].states.every((s) => s === 'untracked')).toBe(true);
     expect(grid[2][0].states.every((s) => s === 'missed')).toBe(true);
-  });
-
-  it('flags prayers logged without a photo as manual', () => {
-    const entries = [{ date: '2026-03-05', prayer: 'dhuhr' as const, proofUri: null }, ...all('2026-03-06', 'file:///p.jpg')];
-    const grid = build(entries);
-    expect(grid[2][4].manual).toEqual([false, true, false, false, false]);
-    expect(grid[2][5].manual.every((flag) => !flag)).toBe(true);
-  });
-
-  it('never marks a missed or upcoming prayer as manual', () => {
-    const grid = build([]);
-    expect(grid[2][4].manual.every((flag) => !flag)).toBe(true);
-    expect(grid[2][20].manual.every((flag) => !flag)).toBe(true);
   });
 
   it('counts prayed prayers in a cell', () => {
@@ -72,7 +58,7 @@ describe('computeStats', () => {
   });
 
   it('computes prayed, missed and percent from past days and passed prayers today', () => {
-    const entries = [...all('2026-03-01'), ...all('2026-03-02'), { date: '2026-03-03', prayer: 'fajr' as const, proofUri: PHOTO }];
+    const entries = [...all('2026-03-01'), ...all('2026-03-02'), { date: '2026-03-03', prayer: 'fajr' as const }];
     const today = todayStates('upcoming', { fajr: 'prayed', dhuhr: 'missed' });
     const stats = computeStats(build(entries, '2026-03-10', '2026-03-01', today));
     // Days Mar 1-9 = 45 prayers, 11 prayed. Today adds 1 prayed and 1 missed.

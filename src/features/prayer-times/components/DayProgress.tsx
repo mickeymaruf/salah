@@ -9,15 +9,19 @@ interface DayProgressProps {
   prayedCount: number;
 }
 
+// Prayed is green, missed is red, and anything not due yet stays pale.
+const BAR_COLORS = {
+  prayed: colors.brand.green,
+  missed: colors.state.missed,
+  upcoming: colors.heat[0],
+} as const;
+
 export function DayProgress({ states, prayedCount }: DayProgressProps) {
   return (
     <View style={styles.block}>
       <View style={styles.bars}>
         {PRAYER_NAMES.map((name) => (
-          <View
-            key={name}
-            style={[styles.bar, { backgroundColor: states[name] === 'prayed' ? colors.brand.green : colors.heat[0] }]}
-          />
+          <View key={name} style={[styles.bar, { backgroundColor: BAR_COLORS[states[name]] }]} />
         ))}
       </View>
       <Text variant="label" color="muted" style={styles.caption}>

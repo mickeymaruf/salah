@@ -11,19 +11,18 @@ interface PrayerRowProps {
   time: Date;
   state: PrayerState;
   isNext: boolean;
-  manual: boolean;
   // Set for rows that can be logged by hand.
   onPress?: () => void;
 }
 
-export function PrayerRow({ name, time, state, isNext, manual, onPress }: PrayerRowProps) {
+export function PrayerRow({ name, time, state, isNext, onPress }: PrayerRowProps) {
   const prayed = state === 'prayed';
   const muted = !prayed && !isNext;
   const label = `${PRAYER_LABELS[name]}, ${formatTime(time)}, ${isNext ? 'next' : state}`;
 
   const content = (
     <>
-      <StatusMark state={state} isNext={isNext} manual={manual} />
+      <StatusMark state={state} isNext={isNext} />
       <Text variant={isNext ? 'bodyStrong' : 'bodyMedium'} color={muted ? 'muted' : 'primary'}>
         {PRAYER_LABELS[name]}
       </Text>
@@ -54,14 +53,7 @@ export function PrayerRow({ name, time, state, isNext, manual, onPress }: Prayer
   );
 }
 
-function StatusMark({ state, isNext, manual }: { state: PrayerState; isNext: boolean; manual: boolean }) {
-  if (state === 'prayed' && manual) {
-    return (
-      <View style={[styles.mark, styles.ring, { borderColor: colors.brand.green }]}>
-        <Check size={14} color={colors.brand.green} strokeWidth={3} />
-      </View>
-    );
-  }
+function StatusMark({ state, isNext }: { state: PrayerState; isNext: boolean }) {
   if (state === 'prayed') {
     return (
       <View style={[styles.mark, styles.filled]}>

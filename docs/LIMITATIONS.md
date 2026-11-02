@@ -108,7 +108,7 @@
 
 ## Manual logging
 
-- A prayer logged by hand cannot be told apart from an honest one. It is shown as an outlined check for that reason.
+- A prayer logged by hand looks the same as a photo-verified one. Only the stored photo path differs.
 - Logging a prayer on a day before the first use moves the start date back to that day. Every day from there to the
   first use then counts as missed in the percentage, because nothing was logged on them.
 - Choosing Missed on a photo-verified prayer deletes its log row. The photo file stays in the app storage.

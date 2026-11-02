@@ -9,8 +9,6 @@ export interface DayCell {
   date: string;
   // Same order as PRAYER_NAMES: Fajr first.
   states: CellState[];
-  // True where the prayer was logged by hand (no photo). Shown as an outlined check.
-  manual: boolean[];
 }
 
 // Indexed [month 0-11][day 0-30]. A month row has only as many cells as the month has days.
@@ -18,7 +16,7 @@ export type YearGrid = DayCell[][];
 
 interface BuildInput {
   year: number;
-  entries: readonly { date: string; prayer: PrayerName; proofUri: string | null }[];
+  entries: readonly { date: string; prayer: PrayerName }[];
   todayKey: string;
   todayStates: Record<PrayerName, PrayerState>;
   startKey: string;
@@ -27,24 +25,16 @@ interface BuildInput {
 // Past days need no prayer times: whatever is not logged is missed. Only today needs the clock.
 export function buildYear({ year, entries, todayKey, todayStates, startKey }: BuildInput): YearGrid {
   const prayedByDate = new Map<string, Set<PrayerName>>();
-  const manualByDate = new Map<string, Set<PrayerName>>();
-  for (const { date, prayer, proofUri } of entries) {
+  for (const { date, prayer } of entries) {
     const prayed = prayedByDate.get(date) ?? new Set<PrayerName>();
     prayed.add(prayer);
     prayedByDate.set(date, prayed);
-    if (proofUri === null) {
-      const manual = manualByDate.get(date) ?? new Set<PrayerName>();
-      manual.add(prayer);
-      manualByDate.set(date, manual);
-    }
   }
 
   return Array.from({ length: 12 }, (_, month) =>
     Array.from({ length: daysInMonth(year, month) }, (_, index): DayCell => {
       const date = toDateKey(new Date(year, month, index + 1));
-      const states = statesFor(date, prayedByDate.get(date), { todayKey, todayStates, startKey });
-      const manual = PRAYER_NAMES.map((name, i) => states[i] === 'prayed' && (manualByDate.get(date)?.has(name) ?? false));
-      return { date, states, manual };
+      return { date, states: statesFor(date, prayedByDate.get(date), { todayKey, todayStates, startKey }) };
     }),
   );
 }
