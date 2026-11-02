@@ -1,3 +1,4 @@
+export { BottomSheet } from './BottomSheet';
 export { Button } from './Button';
 export { Card } from './Card';
 export { LogoMark } from './LogoMark';

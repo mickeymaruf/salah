@@ -149,3 +149,10 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Owns: `src/features/prayer-times/components/LogPrayerSheet.tsx`, `logChoice.ts`, `data/useSaveChoice.ts`,
   `removePrayed` and `unmark` in the log, `manual` on `DayCell` in `src/features/progress/model.ts`.
 - Hint under the day card: "Tap a prayer to mark it done or missed".
+
+## Bottom sheets
+
+- `BottomSheet` in `src/shared/ui/BottomSheet.tsx` is the one sheet used by the log-a-prayer sheet and the two
+  Settings pickers. It is translucent under the status bar and navigation bar, so its scrim covers the whole
+  window on any device. The scrim sits behind the sheet, so the rounded 32 px top corners show dimmed content, not
+  the page. Mount it to open and unmount it to close. It slides up and the scrim fades in.

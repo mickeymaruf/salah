@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Check, X } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Text } from '@/shared/ui';
+import { BottomSheet, Button, Text } from '@/shared/ui';
 import { colors, fontFamily, radii } from '@/shared/theme';
 import { PRAYER_LABELS, type PrayerName } from '../calculate';
 import { availableChoices, type LogChoice } from '../logChoice';
@@ -18,7 +17,6 @@ interface LogPrayerSheetProps {
 
 // Mount it to open, unmount it to close. The choice starts from `initial` each time.
 export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onClose }: LogPrayerSheetProps) {
-  const insets = useSafeAreaInsets();
   const allowed = availableChoices(status);
   const [choice, setChoice] = useState<LogChoice>(initial);
   const [saving, setSaving] = useState(false);
@@ -34,10 +32,7 @@ export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onCl
   };
 
   return (
-    <Modal visible transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable accessibilityLabel="Close" style={styles.scrim} onPress={onClose} />
-      <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 16) + 18 }]}>
-        <View style={styles.grabber} />
+    <BottomSheet onClose={onClose}>
         <Text variant="confirm" style={styles.name} accessibilityRole="header">
           {PRAYER_LABELS[prayer]}
         </Text>
@@ -74,8 +69,7 @@ export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onCl
           </Text>
         </View>
         <Button label="Save" onPress={save} disabled={saving} style={styles.save} />
-      </View>
-    </Modal>
+    </BottomSheet>
   );
 }
 
@@ -121,16 +115,6 @@ function Option({ kind, title, description, selected, enabled, onPress }: Option
 }
 
 const styles = StyleSheet.create({
-  scrim: { flex: 1, backgroundColor: colors.scrim },
-  sheet: {
-    backgroundColor: colors.bg.base,
-    borderTopLeftRadius: radii.viewfinder,
-    borderTopRightRadius: radii.viewfinder,
-    paddingTop: 12,
-    paddingHorizontal: 24,
-    overflow: 'hidden',
-  },
-  grabber: { alignSelf: 'center', width: 40, height: 4, borderRadius: 2, backgroundColor: colors.line.soft },
   name: { marginTop: 20 },
   subtitle: { marginTop: 4 },
   question: { marginTop: 20, fontFamily: fontFamily.medium },

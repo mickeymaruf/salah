@@ -50,7 +50,11 @@ function Settings({ profile }: { profile: Profile }) {
             value={CALCULATION_METHOD_LABELS[profile.calculationMethod]}
             onPress={() => setSheet('method')}
           />
-          <SettingsRow label="Asr calculation" value={ASR_METHOD_LABELS[profile.asrMethod]} onPress={() => setSheet('asr')} />
+          <SettingsRow
+            label="Asr calculation"
+            value={ASR_METHOD_LABELS[profile.asrMethod]}
+            onPress={() => setSheet('asr')}
+          />
         </SettingsGroup>
         <SettingsGroup title="Alarm">
           <SettingsRow
@@ -58,7 +62,11 @@ function Settings({ profile }: { profile: Profile }) {
             value={notifications.status === 'denied' ? 'Off' : 'On'}
             onPress={notifications.status === 'denied' ? notifications.fix : () => Linking.openSettings()}
           />
-          <SettingsRow label="Alarm sound" value={ALARM_SOUND_LABELS[settings.alarmSound]} onPress={() => setSheet('sound')} />
+          <SettingsRow
+            label="Alarm sound"
+            value={ALARM_SOUND_LABELS[settings.alarmSound]}
+            onPress={() => setSheet('sound')}
+          />
           <SettingsRow
             label="Require photo proof"
             right={
@@ -81,47 +89,48 @@ function Settings({ profile }: { profile: Profile }) {
         </SettingsGroup>
       </View>
 
-      <EditNameSheet
-        visible={sheet === 'name'}
-        initialName={profile.name}
-        onSave={(name) => updateProfile({ name })}
-        onClose={close}
-      />
-      <OptionSheet<CalculationMethodId>
-        visible={sheet === 'method'}
-        title="Calculation method"
-        options={labelEntries(CALCULATION_METHOD_LABELS)}
-        selected={profile.calculationMethod}
-        onSelect={(calculationMethod) => updateProfile({ calculationMethod })}
-        onClose={close}
-      />
-      <OptionSheet<AsrMethod>
-        visible={sheet === 'asr'}
-        title="Asr calculation"
-        options={labelEntries(ASR_METHOD_LABELS)}
-        selected={profile.asrMethod}
-        onSelect={(asrMethod) => updateProfile({ asrMethod })}
-        onClose={close}
-      />
-      <OptionSheet<AlarmSoundId>
-        visible={sheet === 'sound'}
-        title="Alarm sound"
-        options={ALARM_SOUNDS.map((value) => ({ value, label: ALARM_SOUND_LABELS[value] }))}
-        selected={settings.alarmSound}
-        onSelect={(alarmSound) => {
-          previewSound(alarmSound);
-          updateSettings({ alarmSound });
-        }}
-        onClose={close}
-      />
-      <OptionSheet<number>
-        visible={sheet === 'reminder'}
-        title="Remind me before"
-        options={REMINDER_OPTIONS.map((value) => ({ value, label: formatReminder(value) }))}
-        selected={settings.reminderMinutesBefore}
-        onSelect={(reminderMinutesBefore) => updateSettings({ reminderMinutesBefore })}
-        onClose={close}
-      />
+      {sheet === 'name' ? (
+        <EditNameSheet initialName={profile.name} onSave={(name) => updateProfile({ name })} onClose={close} />
+      ) : null}
+      {sheet === 'method' ? (
+        <OptionSheet<CalculationMethodId>
+          title="Calculation method"
+          options={labelEntries(CALCULATION_METHOD_LABELS)}
+          selected={profile.calculationMethod}
+          onSelect={(calculationMethod) => updateProfile({ calculationMethod })}
+          onClose={close}
+        />
+      ) : null}
+      {sheet === 'asr' ? (
+        <OptionSheet<AsrMethod>
+          title="Asr calculation"
+          options={labelEntries(ASR_METHOD_LABELS)}
+          selected={profile.asrMethod}
+          onSelect={(asrMethod) => updateProfile({ asrMethod })}
+          onClose={close}
+        />
+      ) : null}
+      {sheet === 'sound' ? (
+        <OptionSheet<AlarmSoundId>
+          title="Alarm sound"
+          options={ALARM_SOUNDS.map((value) => ({ value, label: ALARM_SOUND_LABELS[value] }))}
+          selected={settings.alarmSound}
+          onSelect={(alarmSound) => {
+            previewSound(alarmSound);
+            updateSettings({ alarmSound });
+          }}
+          onClose={close}
+        />
+      ) : null}
+      {sheet === 'reminder' ? (
+        <OptionSheet<number>
+          title="Remind me before"
+          options={REMINDER_OPTIONS.map((value) => ({ value, label: formatReminder(value) }))}
+          selected={settings.reminderMinutesBefore}
+          onSelect={(reminderMinutesBefore) => updateSettings({ reminderMinutesBefore })}
+          onClose={close}
+        />
+      ) : null}
     </Screen>
   );
 }
