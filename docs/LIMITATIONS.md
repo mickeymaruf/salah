@@ -15,3 +15,8 @@
   device is in the time zone of the saved location. After travelling, refresh the location in Settings.
 - If reverse geocoding fails (offline), the city is shown as rounded coordinates.
 - Onboarding cannot continue without location permission. Manual city entry is on the roadmap.
+
+## Today
+
+- A prayer whose time has passed without a log row counts as missed immediately. There is no grace window.
+  The user can still mark it prayed through proof, which turns it into prayed.

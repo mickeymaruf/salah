@@ -19,3 +19,14 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Route guard: `Stack.Protected` in `app/_layout.tsx`. No profile means onboarding only. A profile means the app only.
 - Extend: add a profile field in `profile.ts` (type and `parseProfile`), then edit it from Settings.
   Permission states are `idle`, `detecting`, `ready`, `denied`, `blocked`, `error` in `useLocationStep`.
+
+## Prayer times and Today
+
+- What: computes today's five times offline and shows the next prayer, a live countdown,
+  a 5-segment day bar and the prayer list. The user icon opens Settings.
+- Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `useTodayPrayers.ts`,
+  `TodayScreen.tsx`, `components/`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
+- Rules in `schedule.ts`: prayed if logged, missed if the time passed without a log, otherwise upcoming.
+  The next prayer is the first one strictly in the future, or tomorrow's Fajr after Isha.
+- Extend: a new calculation option goes in `calculate.ts` and `src/shared/state/profile.ts`.
+  `useTodayPrayers(profile, prayed)` takes the set of prayed names from the log.

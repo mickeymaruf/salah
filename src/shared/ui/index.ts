@@ -3,3 +3,4 @@ export { Card } from './Card';
 export { Screen } from './Screen';
 export { Text } from './Text';
 export { Toggle } from './Toggle';
+export { UserButton } from './UserButton';

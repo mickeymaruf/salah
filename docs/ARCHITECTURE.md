@@ -39,3 +39,9 @@ This document is extended as each feature lands.
 
 `src/shared/state/` holds the zustand stores for profile (and later settings). They are used by
 onboarding, prayer-times and settings, so they are shared rather than owned by one feature.
+
+## Today screen
+
+`useTodayPrayers` combines the profile, the clock (`useNow`, 10 s tick and on foreground) and the set of
+prayed names. It returns times, per-prayer states, the next prayer and the countdown. Components are
+presentational and take those values as props.

@@ -1,11 +1,3 @@
-import { Screen, Text } from '@/shared/ui';
-import { useProfileStore } from '@/shared/state/profileStore';
+import { TodayScreen } from '@/features/prayer-times/TodayScreen';
 
-export default function Today() {
-  const name = useProfileStore((state) => state.profile?.name);
-  return (
-    <Screen>
-      <Text variant="heading">{`Assalamu alaikum, ${name}`}</Text>
-    </Screen>
-  );
-}
+export default TodayScreen;
