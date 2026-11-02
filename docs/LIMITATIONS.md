@@ -105,3 +105,11 @@
   only when the phone is in the same time zone as the saved location.
 - Start times are shown, not mosque (jamaat) times. Mosque times are set locally and are usually later.
 - Tables are cached by month. Changing location by more than about 1 km, the method or the Asr school downloads a new table.
+
+## Manual logging
+
+- A prayer logged by hand cannot be told apart from an honest one. It is shown as an outlined check for that reason.
+- Logging a prayer on a day before the first use moves the start date back to that day. Every day from there to the
+  first use then counts as missed in the percentage, because nothing was logged on them.
+- Choosing Missed on a photo-verified prayer deletes its log row. The photo file stays in the app storage.
+- The sheet was built from the Figma frames and type-checked. It was not rendered on a device.

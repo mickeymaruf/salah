@@ -2,6 +2,7 @@ import {
   addDays,
   daysInMonth,
   formatCountdown,
+  formatDayMonth,
   formatLongDate,
   formatShortDate,
   formatTime,
@@ -56,6 +57,7 @@ describe('formatting', () => {
   it('formats dates', () => {
     expect(formatLongDate(new Date(2026, 9, 26))).toBe('Monday, 26 October');
     expect(formatShortDate(new Date(2026, 9, 23))).toBe('Fri, 23 Oct');
+    expect(formatDayMonth(new Date(2026, 9, 26))).toBe('26 Oct');
   });
 
   it('formats countdowns, rounding up to the next minute', () => {

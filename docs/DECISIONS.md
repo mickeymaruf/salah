@@ -214,3 +214,22 @@ Format: date, title, context, decision, consequence.
 - Context: Standard Asr in Natore is about 3:00 pm and Hanafi about 3:47 pm. Bangladesh follows the Hanafi school.
 - Decision: onboarding picks Hanafi for Bangladesh, Pakistan, India, Afghanistan, Turkey, Uzbekistan and Tajikistan.
 - Consequence: existing profiles keep their saved value. Change it in Settings, Asr calculation.
+
+## 2026-11-02 Manual logging: Missed deletes the row
+
+- Context: the brief says missed prayers are derived and never stored. The Figma flow lets the user choose Missed.
+- Decision: Prayed writes a row with no photo. Missed deletes the row. Photo is the difference between outlined and filled.
+- Consequence: no schema change. A prayer cannot be marked Missed before its time. Choosing Missed for an
+  unlogged past prayer changes nothing, which matches how it is already shown.
+
+## 2026-11-02 Which choice is preselected
+
+- Context: Figma frame 10 preselects Prayed (today, unlogged) and frame 11 preselects Missed (a past day).
+- Decision: Today always preselects Prayed. Progress preselects the current state when it is missed, otherwise Prayed.
+- Consequence: logging a forgotten prayer is one tap plus Save; editing a miss shows it as it is.
+
+## 2026-11-02 Only unlogged rows open the sheet on Today
+
+- Context: the flow note says "tap any prayer that isn't logged".
+- Decision: prayed rows on Today are not tappable. Editing a logged prayer is done from Progress.
+- Consequence: no accidental changes on the main screen.

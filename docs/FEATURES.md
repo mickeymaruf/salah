@@ -135,3 +135,17 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Owns: `src/features/prayer-times/data/` (`aladhan.ts` URL and parsing, `timesMemory.ts` lookup,
   `timesCache.ts` storage and download, `useTimesSync.ts`), `calculateDayTimes` and `getDayTimes` in `calculate.ts`.
 - Extend: another provider needs a URL builder and a parser that returns `Record<dateKey, DayTimes>`.
+
+## Manual logging
+
+- What: one bottom sheet (`LogPrayerSheet`) with Prayed or Missed and Save. Two entry points:
+  Today (tap a prayer row that is not prayed) and Progress (tap a day in the chart, then a prayer in the day card).
+  Past days can be edited with no limit on how far back. Future days cannot.
+- Rules (`logChoice.ts`): Prayed is stored as a log row without a photo. Missed removes the row, because missed is
+  derived. A prayer whose time has not come cannot be marked Missed. Existing photo-verified rows are kept when
+  Prayed is saved again.
+- Marks: a prayer logged by hand (no photo) shows an outlined green check. A photo-verified prayer shows a filled check.
+  The year chart uses the same colors for both, since it shows only prayed, missed and upcoming.
+- Owns: `src/features/prayer-times/components/LogPrayerSheet.tsx`, `logChoice.ts`, `data/useSaveChoice.ts`,
+  `removePrayed` and `unmark` in the log, `manual` on `DayCell` in `src/features/progress/model.ts`.
+- Hint under the day card: "Tap a prayer to mark it done or missed".

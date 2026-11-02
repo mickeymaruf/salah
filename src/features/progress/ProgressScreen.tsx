@@ -4,6 +4,10 @@ import { Screen, Text, UserButton } from '@/shared/ui';
 import { parseDateKey } from '@/shared/lib/date';
 import type { Profile } from '@/shared/state/profile';
 import { useProfileStore } from '@/shared/state/profileStore';
+import { LogPrayerSheet } from '@/features/prayer-times/components/LogPrayerSheet';
+import { PRAYER_NAMES, getDayTimes } from '@/features/prayer-times/calculate';
+import { useSaveChoice } from '@/features/prayer-times/data/useSaveChoice';
+import { initialChoice, isEditableDay, sheetSubtitle } from '@/features/prayer-times/logChoice';
 import { DayDetail } from './components/DayDetail';
 import { StatCard } from './components/StatCard';
 import { YearGrid } from './components/YearGrid';
@@ -19,6 +23,8 @@ export function ProgressScreen() {
 function Progress({ profile }: { profile: Profile }) {
   const { year, dayKey, grid, stats } = useYearProgress(profile);
   const [picked, setPicked] = useState<string | null>(null);
+  const [logging, setLogging] = useState<number | null>(null);
+  const saveChoice = useSaveChoice();
 
   // Until the user taps a day, the detail card follows today (which changes at midnight).
   const selectedDate = picked ?? dayKey;
@@ -55,8 +61,29 @@ function Progress({ profile }: { profile: Profile }) {
         />
       </View>
       <View style={styles.detail}>
-        <DayDetail cell={selected} />
+        <DayDetail
+          cell={selected}
+          onSelectPrayer={isEditableDay(selected.date, dayKey) ? setLogging : undefined}
+        />
       </View>
+      <Text variant="caption" color="muted" style={styles.hint}>
+        Tap a prayer to mark it done or missed
+      </Text>
+      {logging !== null ? (
+        <LogPrayerSheet
+          key={`${selected.date}-${logging}`}
+          prayer={PRAYER_NAMES[logging]}
+          subtitle={sheetSubtitle(
+            getDayTimes(profile, parseDateKey(selected.date))[PRAYER_NAMES[logging]],
+            selected.date,
+            dayKey,
+          )}
+          status={selected.states[logging]}
+          initial={initialChoice(selected.states[logging], true)}
+          onSave={(choice) => saveChoice(selected.date, PRAYER_NAMES[logging], choice)}
+          onClose={() => setLogging(null)}
+        />
+      ) : null}
       {__DEV__ ? <DevTools /> : null}
     </Screen>
   );
@@ -70,4 +97,5 @@ const styles = StyleSheet.create({
   stats: { marginTop: 16, flexDirection: 'row', gap: 10 },
   chart: { marginTop: 14 },
   detail: { marginTop: 12 },
+  hint: { marginTop: 8, paddingHorizontal: 14 },
 });

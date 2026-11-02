@@ -25,6 +25,8 @@ export const colors = {
   ring: ['rgba(243,241,234,0.14)', 'rgba(243,241,234,0.3)', 'rgba(243,241,234,0.5)'],
   // Dimmed backdrop behind bottom sheets (brand/greenDark at 40%).
   backdrop: 'rgba(16,36,30,0.4)',
+  // Dark scrim behind the log-a-prayer sheet.
+  scrim: 'rgba(15,20,18,0.45)',
   camera: {
     background: '#0A0D0B',
     gradientTop: '#29332E',

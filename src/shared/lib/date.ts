@@ -57,6 +57,10 @@ export function formatShortDate(date: Date): string {
   return `${WEEKDAYS[date.getDay()].slice(0, 3)}, ${date.getDate()} ${MONTHS[date.getMonth()].slice(0, 3)}`;
 }
 
+export function formatDayMonth(date: Date): string {
+  return `${date.getDate()} ${MONTHS[date.getMonth()].slice(0, 3)}`;
+}
+
 export function formatCountdown(ms: number): string {
   const totalMinutes = Math.max(0, Math.ceil(ms / 60000));
   const hours = Math.floor(totalMinutes / 60);

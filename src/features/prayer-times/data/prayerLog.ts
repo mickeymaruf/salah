@@ -29,6 +29,12 @@ export async function markPrayed(date: string, prayer: PrayerName, proofUri: str
   );
 }
 
+// Missed is never stored, so choosing Missed deletes the row. The photo file, if any, is left on the device.
+export async function removePrayed(date: string, prayer: PrayerName): Promise<void> {
+  const db = await getDb();
+  await db.runAsync('DELETE FROM prayer_log WHERE date = ? AND prayer = ?', [date, prayer]);
+}
+
 export async function getDay(date: string): Promise<PrayerLogEntry[]> {
   const db = await getDb();
   const rows = await db.getAllAsync<Row>('SELECT * FROM prayer_log WHERE date = ?', [date]);

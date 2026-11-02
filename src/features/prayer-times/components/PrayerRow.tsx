@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { Text } from '@/shared/ui';
 import { colors, sizes } from '@/shared/theme';
@@ -11,16 +11,19 @@ interface PrayerRowProps {
   time: Date;
   state: PrayerState;
   isNext: boolean;
+  manual: boolean;
+  // Set for rows that can be logged by hand.
+  onPress?: () => void;
 }
 
-export function PrayerRow({ name, time, state, isNext }: PrayerRowProps) {
+export function PrayerRow({ name, time, state, isNext, manual, onPress }: PrayerRowProps) {
   const prayed = state === 'prayed';
   const muted = !prayed && !isNext;
   const label = `${PRAYER_LABELS[name]}, ${formatTime(time)}, ${isNext ? 'next' : state}`;
 
-  return (
-    <View accessible accessibilityLabel={label} style={[styles.row, isNext && styles.next]}>
-      <StatusMark state={state} isNext={isNext} />
+  const content = (
+    <>
+      <StatusMark state={state} isNext={isNext} manual={manual} />
       <Text variant={isNext ? 'bodyStrong' : 'bodyMedium'} color={muted ? 'muted' : 'primary'}>
         {PRAYER_LABELS[name]}
       </Text>
@@ -28,11 +31,37 @@ export function PrayerRow({ name, time, state, isNext }: PrayerRowProps) {
       <Text variant={isNext ? 'bodyStrong' : 'body'} color={muted ? 'muted' : 'primary'}>
         {formatTime(time)}
       </Text>
-    </View>
+    </>
+  );
+
+  if (!onPress) {
+    return (
+      <View accessible accessibilityLabel={label} style={[styles.row, isNext && styles.next]}>
+        {content}
+      </View>
+    );
+  }
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint="Opens a sheet to mark it prayed or missed"
+      onPress={onPress}
+      style={[styles.row, isNext && styles.next]}
+    >
+      {content}
+    </Pressable>
   );
 }
 
-function StatusMark({ state, isNext }: { state: PrayerState; isNext: boolean }) {
+function StatusMark({ state, isNext, manual }: { state: PrayerState; isNext: boolean; manual: boolean }) {
+  if (state === 'prayed' && manual) {
+    return (
+      <View style={[styles.mark, styles.ring, { borderColor: colors.brand.green }]}>
+        <Check size={14} color={colors.brand.green} strokeWidth={3} />
+      </View>
+    );
+  }
   if (state === 'prayed') {
     return (
       <View style={[styles.mark, styles.filled]}>

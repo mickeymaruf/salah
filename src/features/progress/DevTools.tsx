@@ -5,14 +5,17 @@ import { now } from '@/shared/lib/date';
 import { usePrayerLogStore } from '@/features/prayer-times/data/prayerLogStore';
 import { buildSeedRows } from './seed';
 
+// A non-null proof makes the sample prayers show a filled (photo-verified) check.
+const SAMPLE_PROOF = 'seed://sample';
+
 async function seed(): Promise<void> {
   const db = await getDb();
   const rows = buildSeedRows(now().getFullYear(), now());
   await db.withExclusiveTransactionAsync(async (txn) => {
     for (const { date, prayer } of rows) {
       await txn.runAsync(
-        'INSERT OR IGNORE INTO prayer_log (date, prayer, completed_at, proof_uri) VALUES (?, ?, ?, NULL)',
-        [date, prayer, `${date}T12:00:00.000Z`],
+        'INSERT OR IGNORE INTO prayer_log (date, prayer, completed_at, proof_uri) VALUES (?, ?, ?, ?)',
+        [date, prayer, `${date}T12:00:00.000Z`, SAMPLE_PROOF],
       );
     }
   });

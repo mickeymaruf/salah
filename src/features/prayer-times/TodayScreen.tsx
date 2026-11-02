@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Screen, Text, UserButton } from '@/shared/ui';
 import { formatLongDate } from '@/shared/lib/date';
@@ -6,8 +7,12 @@ import type { Profile } from '@/shared/state/profile';
 import { AlarmsOffNotice } from '@/features/alarm/components/AlarmsOffNotice';
 import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
 import { DayProgress } from './components/DayProgress';
+import { LogPrayerSheet } from './components/LogPrayerSheet';
 import { NextPrayerBlock } from './components/NextPrayerBlock';
 import { PrayerList } from './components/PrayerList';
+import type { PrayerName } from './calculate';
+import { useSaveChoice } from './data/useSaveChoice';
+import { initialChoice, sheetSubtitle } from './logChoice';
 import { useTodayPrayers } from './useTodayPrayers';
 
 export function TodayScreen() {
@@ -16,7 +21,9 @@ export function TodayScreen() {
 }
 
 function Today({ profile }: { profile: Profile }) {
-  const { at, times, states, next, countdownMs, prayedCount } = useTodayPrayers(profile);
+  const { at, dayKey, times, states, manual, next, countdownMs, prayedCount } = useTodayPrayers(profile);
+  const [logging, setLogging] = useState<PrayerName | null>(null);
+  const saveChoice = useSaveChoice();
   const notifications = useNotificationStatus();
 
   return (
@@ -42,8 +49,25 @@ function Today({ profile }: { profile: Profile }) {
         <DayProgress states={states} prayedCount={prayedCount} />
       </View>
       <View style={styles.list}>
-        <PrayerList times={times} states={states} nextName={next.isTomorrow ? null : next.name} />
+        <PrayerList
+          times={times}
+          states={states}
+          nextName={next.isTomorrow ? null : next.name}
+          manual={manual}
+          onSelect={setLogging}
+        />
       </View>
+      {logging ? (
+        <LogPrayerSheet
+          key={logging}
+          prayer={logging}
+          subtitle={sheetSubtitle(times[logging], dayKey, dayKey)}
+          status={states[logging]}
+          initial={initialChoice(states[logging], false)}
+          onSave={(choice) => saveChoice(dayKey, logging, choice)}
+          onClose={() => setLogging(null)}
+        />
+      ) : null}
     </Screen>
   );
 }

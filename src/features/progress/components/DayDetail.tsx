@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Check, X } from 'lucide-react-native';
 import { Card, Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
@@ -12,7 +12,13 @@ function summary(cell: DayCell): string {
   return `${countPrayed(cell)} of 5 prayed`;
 }
 
-export function DayDetail({ cell }: { cell: DayCell }) {
+interface DayDetailProps {
+  cell: DayCell;
+  // Called for prayers that can be edited. Omitted for future days.
+  onSelectPrayer?: (index: number) => void;
+}
+
+export function DayDetail({ cell, onSelectPrayer }: DayDetailProps) {
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
@@ -23,19 +29,39 @@ export function DayDetail({ cell }: { cell: DayCell }) {
       </View>
       <View style={styles.prayers}>
         {PRAYER_NAMES.map((name, index) => (
-          <View key={name} style={styles.prayer} accessible accessibilityLabel={`${PRAYER_LABELS[name]}, ${cell.states[index]}`}>
-            <Mark state={cell.states[index]} />
+          <Pressable
+            key={name}
+            disabled={!onSelectPrayer}
+            accessibilityRole={onSelectPrayer ? 'button' : undefined}
+            accessibilityLabel={`${PRAYER_LABELS[name]}, ${describe(cell, index)}`}
+            accessibilityHint={onSelectPrayer ? 'Opens a sheet to mark it prayed or missed' : undefined}
+            onPress={() => onSelectPrayer?.(index)}
+            style={styles.prayer}
+          >
+            <Mark state={cell.states[index]} manual={cell.manual[index]} />
             <Text variant="caption" color="muted" style={styles.name}>
               {PRAYER_LABELS[name]}
             </Text>
-          </View>
+          </Pressable>
         ))}
       </View>
     </Card>
   );
 }
 
-function Mark({ state }: { state: CellState }) {
+function describe(cell: DayCell, index: number): string {
+  if (cell.states[index] === 'prayed') return cell.manual[index] ? 'prayed, logged by you' : 'prayed, photo verified';
+  return cell.states[index];
+}
+
+function Mark({ state, manual }: { state: CellState; manual: boolean }) {
+  if (state === 'prayed' && manual) {
+    return (
+      <View style={[styles.mark, styles.outlined]}>
+        <Check size={14} color={colors.brand.green} strokeWidth={3} />
+      </View>
+    );
+  }
   if (state === 'prayed') {
     return (
       <View style={[styles.mark, { backgroundColor: colors.brand.green }]}>
@@ -60,5 +86,6 @@ const styles = StyleSheet.create({
   prayer: { flex: 1, alignItems: 'center', gap: 6 },
   mark: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   ring: { borderWidth: 2, borderColor: colors.line.soft },
+  outlined: { borderWidth: 2, borderColor: colors.brand.green },
   name: { fontSize: 12 },
 });

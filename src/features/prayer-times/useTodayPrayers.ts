@@ -3,14 +3,20 @@ import { addDays, parseDateKey, toDateKey } from '@/shared/lib/date';
 import { useNow } from '@/shared/lib/useNow';
 import type { Profile } from '@/shared/state/profile';
 import { getDayTimes } from './calculate';
-import { usePrayedOn } from './data/useDayLog';
+import { useDayLog } from './data/useDayLog';
 import { useTimesStore } from './data/useTimesSync';
 import { decodeStates, encodeStates, getDayStates, getNextPrayer } from './schedule';
 
 export function useTodayPrayers(profile: Profile) {
   const at = useNow(10_000);
   const dayKey = toDateKey(at);
-  const prayed = usePrayedOn(dayKey);
+  const entries = useDayLog(dayKey);
+  const prayed = useMemo(() => new Set(entries.map((entry) => entry.prayer)), [entries]);
+  // Prayers logged by hand have no photo. They show an outlined check instead of a filled one.
+  const manual = useMemo(
+    () => new Set(entries.filter((entry) => entry.proofUri === null).map((entry) => entry.prayer)),
+    [entries],
+  );
 
   // The revision changes when a downloaded month table arrives, which re-runs this hook with the new times.
   const timesRevision = useTimesStore((state) => state.revision);
@@ -29,6 +35,7 @@ export function useTodayPrayers(profile: Profile) {
     dayKey,
     times,
     states,
+    manual,
     next,
     countdownMs: next.time.getTime() - at.getTime(),
     prayedCount: Object.values(states).filter((state) => state === 'prayed').length,
