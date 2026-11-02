@@ -1,41 +1,57 @@
-This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+# Working agreement
 
-## Expo has changed — do not trust your training data
+Read `docs/ROADMAP.md` first. It says what is done and what is next.
+Read `docs/DECISIONS.md` before changing a stack or architecture choice.
 
-Expo ships breaking changes every SDK release. APIs you remember are likely renamed, moved, or removed. Before writing any code that touches an Expo, EAS, or React Native API:
+## Stack
 
-1. Read the major version of the `expo` package in `package.json`.
-2. Fetch the matching versioned docs: `https://docs.expo.dev/versions/v<major>.0.0/`
-3. For anything else, fetch https://docs.expo.dev/llms.txt — an index of all Expo docs with corrections to common LLM misconceptions. Follow its links to the specific page you need; never answer from memory.
+Expo SDK 58, TypeScript strict, Expo Router, plain `StyleSheet`, zustand (profile
+and settings only), `expo-sqlite` (prayer log), AsyncStorage (profile, settings),
+`adhan` (prayer times, offline), `expo-location`, `expo-notifications`,
+`expo-audio`, `expo-camera`, `lucide-react-native`, Inter via `@expo-google-fonts`.
+No backend, auth, analytics, i18n, Redux, or styling library.
 
-## Commands
+## Structure
 
-Use `bunx` instead of `npx` if the project uses bun (`bun.lock` present).
+- `app/` routes only. Keep files thin: import a screen from `src/features/*`.
+- `src/features/<name>/` holds screens, hooks, plain logic and tests for one feature.
+- `src/shared/` holds code used by two or more features (ui, theme, db, lib).
+- Business logic is plain functions with no React imports, so Jest can test it.
+
+## Conventions
+
+- Colors, spacing, radii and type come from `src/shared/theme`. No hex values in components.
+- "Now" and "today" come from `src/shared/lib/date.ts`. Never call `new Date()` elsewhere for that.
+- No `any`. No commented-out code. No TODO comments: put unfinished work in `docs/ROADMAP.md`.
+- Add a helper to `shared/` only when a second feature needs it.
+- Touch targets are at least 44px. Icon-only buttons have an `accessibilityLabel`.
+- Install packages with `npx expo install <pkg>` when the network allows it.
+  Otherwise use the version from `node_modules/expo/bundledNativeModules.json`.
+
+## Before every commit
 
 ```bash
-npx expo install <package>  # ALWAYS use instead of npm/yarn/pnpm/bun add — resolves SDK-compatible versions
-npx expo start              # start the dev server
-npx expo lint               # lint
-npx tsc --noEmit            # typecheck
-npx expo-doctor             # diagnose dependency and config issues
-npx expo install --fix      # fix incompatible package versions
+npx tsc --noEmit
+npm run lint
+npx jest
 ```
 
-Run lint and typecheck before declaring any task done.
+After dependency changes run `npx expo-doctor`. Before the final commit run
+`npx expo export --platform android` and confirm it bundles.
 
-## Navigation & Routing
+## Commits
 
-- Use **Expo Router** for all navigation. Routes live in `src/app/` — every file there is a screen, `_layout.tsx` files define navigators. Keep non-route code (components, hooks, utils) outside `src/app/`.
-- Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`.
-- Docs: https://docs.expo.dev/router/introduction.md
+One commit per finished feature (code, tests, docs together).
+Conventional subjects: `feat(alarm): ...`, `chore: ...`, `docs: ...`.
+Body: two or three plain lines on what and why. Do not rewrite history.
 
-## Building with EAS
+## Where to find what
 
-Use EAS to build, sign, and submit the app in the cloud (`eas build`, `eas submit`) and to ship over-the-air updates (`eas update`) — no local Xcode or Android Studio required. Run EAS CLI as `bunx eas-cli <command>` in Bun projects, or `npx eas-cli@latest <command>` otherwise; substitute that for bare `eas` in docs examples.
-Docs: https://docs.expo.dev/eas/index.md
-
-## Rules
-
-- If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
-- Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
-- Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+| Need | Look at |
+|---|---|
+| Design tokens | `src/shared/theme/` |
+| How pieces connect | `docs/ARCHITECTURE.md` |
+| Why a choice was made | `docs/DECISIONS.md` |
+| Platform limits | `docs/LIMITATIONS.md` |
+| What each feature owns | `docs/FEATURES.md` |
+| Design source | Figma file referenced in `docs/DECISIONS.md` |

@@ -1,25 +1,47 @@
 {
   "expo": {
-    "name": "salah",
+    "name": "Salah",
     "slug": "salah",
+    "scheme": "salah",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "backgroundColor": "#F7F5F0",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "app.salah.prayertracker",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"]
+      }
     },
     "android": {
+      "package": "app.salah.prayertracker",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#1F4D3F",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-sqlite",
+      [
+        "expo-location",
+        { "locationWhenInUsePermission": "Salah uses your location only to calculate the five daily prayer times on your device." }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Salah uses the camera to take a photo of your prayer space as proof of prayer. Photos stay on your device.",
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-notifications",
+      "expo-audio"
+    ],
+    "experiments": { "typedRoutes": true }
   }
 }
