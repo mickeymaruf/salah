@@ -4,7 +4,7 @@ import { useNow } from '@/shared/lib/useNow';
 import type { Profile } from '@/shared/state/profile';
 import { getDayTimes } from './calculate';
 import { usePrayedOn } from './data/useDayLog';
-import { getDayStates, getNextPrayer } from './schedule';
+import { decodeStates, encodeStates, getDayStates, getNextPrayer } from './schedule';
 
 export function useTodayPrayers(profile: Profile) {
   const at = useNow(10_000);
@@ -16,7 +16,9 @@ export function useTodayPrayers(profile: Profile) {
     return { times: getDayTimes(profile, day), tomorrowTimes: getDayTimes(profile, addDays(day, 1)) };
   }, [profile, dayKey]);
 
-  const states = getDayStates(times, prayed, at);
+  // The clock ticks every 10 s but the states rarely change, so keep one stable object for consumers.
+  const statesKey = encodeStates(getDayStates(times, prayed, at));
+  const states = useMemo(() => decodeStates(statesKey), [statesKey]);
   const next = getNextPrayer(times, tomorrowTimes, at);
 
   return {

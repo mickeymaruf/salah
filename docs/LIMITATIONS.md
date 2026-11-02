@@ -55,3 +55,12 @@
 - Proof photos are stored in the app document directory and never uploaded. Uninstalling the app deletes them.
 - The verified screen shows the proof photo from the log. If the file copy failed, the cache path is used and the
   OS may clear it later.
+
+## Progress
+
+- Each day bar is 14 px wide, below the 44 px touch target guideline. This is the design: 365 bars must fit in
+  one chart. Every bar has an accessibility label with its date and count.
+- Days before the first use are not counted as missed. The start date is stored when onboarding finishes. Profiles
+  saved before this field existed fall back to the first logged day, or to today.
+- The chart was not rendered on a device or emulator. Layout numbers (14 px bars, 3 px gaps, 19 px rows) come from
+  the Figma frame.

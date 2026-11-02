@@ -122,3 +122,21 @@ Format: date, title, context, decision, consequence.
 - Context: the verified screen needs the completion time and the stored photo.
 - Decision: it reads the day's log entry. Only the verifier label travels as a route param, because the log has no column for it.
 - Consequence: the table matches the data model in the brief.
+
+## 2026-11-02 Profile gets `startedOn`
+
+- Context: without a start date a new user sees about 300 missed days and a near-zero percentage.
+- Decision: add the optional field `startedOn` to the profile, set at the end of onboarding. Earlier days are untracked.
+- Consequence: a small addition to the data model in the brief. The progress numbers describe the time the app was used.
+
+## 2026-11-02 Past days are derived without prayer times
+
+- Context: computing 365 days of times on every render is wasteful.
+- Decision: a past day's unlogged prayers are missed. Future days are upcoming. Only today uses the live clock.
+- Consequence: one SQL query plus plain arrays. A prayer on the last evening of a day cannot be wrongly "upcoming".
+
+## 2026-11-02 Detail card follows today until a day is tapped
+
+- Context: Figma shows a selected day (Fri, 23 Oct) but does not say how the default is chosen.
+- Decision: default to today, switch to the tapped day, and outline the selected bar.
+- Consequence: the card is useful on first open and stays on the tapped day after that.

@@ -1,5 +1,5 @@
 import type { DayTimes } from './calculate';
-import { getDayStates, getNextPrayer, getPrayerState } from './schedule';
+import { decodeStates, encodeStates, getDayStates, getNextPrayer, getPrayerState } from './schedule';
 
 const at = (h: number, m = 0, day = 26) => new Date(2026, 9, day, h, m);
 
@@ -56,5 +56,12 @@ describe('getNextPrayer', () => {
       time: tomorrow.fajr,
       isTomorrow: true,
     });
+  });
+});
+
+describe('encodeStates', () => {
+  it('round-trips through decodeStates', () => {
+    const states = getDayStates(today, new Set(['fajr']), at(13));
+    expect(decodeStates(encodeStates(states))).toEqual(states);
   });
 });

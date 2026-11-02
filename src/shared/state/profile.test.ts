@@ -15,6 +15,11 @@ describe('parseProfile', () => {
     expect(parseProfile(JSON.stringify(valid))).toEqual(valid);
   });
 
+  it('accepts the optional start date', () => {
+    const withStart = { ...valid, startedOn: '2026-01-01' };
+    expect(parseProfile(JSON.stringify(withStart))).toEqual(withStart);
+  });
+
   it('returns null for missing, malformed or incomplete data', () => {
     expect(parseProfile(null)).toBeNull();
     expect(parseProfile('not json')).toBeNull();
@@ -22,5 +27,6 @@ describe('parseProfile', () => {
     expect(parseProfile(JSON.stringify({ ...valid, name: '' }))).toBeNull();
     expect(parseProfile(JSON.stringify({ ...valid, latitude: '23' }))).toBeNull();
     expect(parseProfile(JSON.stringify({ ...valid, asrMethod: 'maliki' }))).toBeNull();
+    expect(parseProfile(JSON.stringify({ ...valid, startedOn: 20260101 }))).toBeNull();
   });
 });

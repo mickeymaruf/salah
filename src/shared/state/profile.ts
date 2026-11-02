@@ -22,6 +22,8 @@ export interface Profile {
   country: string;
   calculationMethod: CalculationMethodId;
   asrMethod: AsrMethod;
+  // First day of tracking (YYYY-MM-DD). Days before it are not counted as missed.
+  startedOn?: string;
 }
 
 export const DEFAULT_CALCULATION_METHOD: CalculationMethodId = 'Karachi';
@@ -42,7 +44,8 @@ export function parseProfile(raw: string | null): Profile | null {
       typeof p.city === 'string' &&
       typeof p.country === 'string' &&
       typeof p.calculationMethod === 'string' &&
-      (p.asrMethod === 'standard' || p.asrMethod === 'hanafi');
+      (p.asrMethod === 'standard' || p.asrMethod === 'hanafi') &&
+      (p.startedOn === undefined || typeof p.startedOn === 'string');
     return valid ? (value as Profile) : null;
   } catch {
     return null;

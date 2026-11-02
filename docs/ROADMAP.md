@@ -10,7 +10,7 @@ Status: done, next, todo.
 | 3 | SQLite prayer log | done |
 | 4 | Alarm: notifications, alarm screen, sound | done |
 | 5 | Proof: camera, live-capture verifier, verified screen | done |
-| 6 | Progress: year grid, stats, day detail | todo |
+| 6 | Progress: year grid, stats, day detail | done |
 | 7 | Settings | todo |
 | 8 | Splash and branding | todo |
 | 9 | ML Kit verifier (dev build only) | todo |

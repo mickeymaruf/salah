@@ -75,3 +75,14 @@ follow-ups, soonest first. The budget is 60 on iOS (the OS keeps 64) and 250 on 
 saveProof (copy to documents) -> prayerLogStore.mark -> /verified -> Done -> dismissTo(/today)`.
 The alarm screen stays mounted under the proof screens. It stops its own sound when the day log shows the prayer
 as prayed, and leaves when it regains focus.
+
+## Progress data
+
+```
+getYear(year) --entries--> buildYear(entries, today's live states, start date) --> 12 x 28..31 DayCell
+                                                                                      |
+                                                              computeStats  <---------+---> YearGrid, DayDetail
+```
+
+`useYearProgress` re-queries when the log revision changes. `useTodayPrayers` keeps its `states` object stable
+between clock ticks so the grid is not rebuilt every 10 seconds.

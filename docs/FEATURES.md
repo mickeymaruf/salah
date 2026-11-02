@@ -68,3 +68,19 @@ Shipped features, what they do, who owns the code, how to extend them.
 - No gallery access exists anywhere. The camera screen registers each capture with `registerLiveCapture`,
   and `liveCaptureVerifier` accepts only registered URIs.
 - Extend: add a verifier and return it from `getVerifier()`. A rejected photo shows a retry hint on the camera screen.
+
+## Progress
+
+- What: one screen for the whole year. 12 month rows by up to 31 day columns, each day a bar of 5 segments
+  (Fajr on top): green prayed, terracotta missed, pale upcoming. The grid scrolls horizontally with a thin custom
+  scrollbar and opens with today at the right edge. Month letters stay fixed on the left. Tapping a day shows its
+  five prayers in the detail card. Above the grid: percent kept, prayed, missed, best streak.
+- Owns: `src/features/progress/` (`model.ts` builds the grid, `stats.ts`, `useYearProgress.ts`,
+  `ProgressScreen.tsx`, `components/`, `seed.ts` and `DevTools.tsx` for development), `app/(tabs)/progress.tsx`.
+- Data: one query for the year (`getYear`). Past days need no prayer times: not logged means missed. Only today
+  uses the clock. Days before the start date are "untracked": drawn pale and excluded from every number.
+  The start date is `profile.startedOn`, or the first logged day if that is earlier.
+- Stats count prayed and missed prayers whose time passed. Best streak is the longest run of consecutive days with
+  all five prayed.
+- Dev seed: in `__DEV__` builds two links under the detail card fill this year with sample data or clear the log.
+- Extend: a new state needs a color in `DayBar.tsx`, a case in `model.ts`, and a mark in `DayDetail.tsx`.

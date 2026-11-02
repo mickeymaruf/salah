@@ -30,3 +30,13 @@ export function getNextPrayer(today: DayTimes, tomorrow: DayTimes, at: Date): Ne
   if (upcoming) return { name: upcoming, time: today[upcoming], isTomorrow: false };
   return { name: 'fajr', time: tomorrow.fajr, isTomorrow: true };
 }
+
+// Lets hooks keep the same `states` object between ticks while nothing changed: encode to a string, compare, decode.
+export function encodeStates(states: Record<PrayerName, PrayerState>): string {
+  return PRAYER_NAMES.map((name) => states[name]).join(',');
+}
+
+export function decodeStates(key: string): Record<PrayerName, PrayerState> {
+  const parts = key.split(',') as PrayerState[];
+  return Object.fromEntries(PRAYER_NAMES.map((name, i) => [name, parts[i]])) as Record<PrayerName, PrayerState>;
+}

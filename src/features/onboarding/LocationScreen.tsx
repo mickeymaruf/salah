@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Bell } from 'lucide-react-native';
 import { Button, Screen, Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
-import { now } from '@/shared/lib/date';
+import { now, todayKey } from '@/shared/lib/date';
 import { DEFAULT_ASR_METHOD, DEFAULT_CALCULATION_METHOD } from '@/shared/state/profile';
 import { useProfileStore } from '@/shared/state/profileStore';
 import { requestNotificationPermission } from '@/features/alarm/permission';
@@ -53,6 +53,7 @@ export function LocationScreen() {
       ...place,
       calculationMethod: DEFAULT_CALCULATION_METHOD,
       asrMethod: DEFAULT_ASR_METHOD,
+      startedOn: todayKey(),
     });
     router.replace('/');
   };

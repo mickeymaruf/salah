@@ -1,9 +1,3 @@
-import { Screen, Text } from '@/shared/ui';
+import { ProgressScreen } from '@/features/progress/ProgressScreen';
 
-export default function Progress() {
-  return (
-    <Screen bottomInset={false}>
-      <Text variant="heading">Your year</Text>
-    </Screen>
-  );
-}
+export default ProgressScreen;
