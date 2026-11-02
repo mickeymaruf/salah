@@ -29,6 +29,13 @@ export interface Profile {
 export const DEFAULT_CALCULATION_METHOD: CalculationMethodId = 'Karachi';
 export const DEFAULT_ASR_METHOD: AsrMethod = 'standard';
 
+// Countries where the Hanafi school (later Asr) is the norm.
+const HANAFI_COUNTRIES = ['bangladesh', 'pakistan', 'india', 'afghanistan', 'turkey', 'türkiye', 'uzbekistan', 'tajikistan'];
+
+export function defaultAsrFor(country: string): AsrMethod {
+  return HANAFI_COUNTRIES.includes(country.trim().toLowerCase()) ? 'hanafi' : DEFAULT_ASR_METHOD;
+}
+
 // Stored JSON is untrusted: an old or corrupted value must not crash the app on launch.
 export function parseProfile(raw: string | null): Profile | null {
   if (!raw) return null;

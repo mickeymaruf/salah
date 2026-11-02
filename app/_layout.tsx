@@ -8,6 +8,7 @@ import { SplashView } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { useProfileStore } from '@/shared/state/profileStore';
 import { useSettingsStore } from '@/shared/state/settingsStore';
+import { useTimesSync } from '@/features/prayer-times/data/useTimesSync';
 import { useAlarmSync } from '@/features/alarm/useAlarmSync';
 import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
 
@@ -41,6 +42,7 @@ export default function RootLayout() {
 
   const ready = fontsLoaded && profileHydrated && settingsHydrated && !holding;
 
+  useTimesSync(profile);
   useAlarmSync(settingsHydrated ? profile : null, settings);
   useNotificationRouting(ready && hasProfile);
 

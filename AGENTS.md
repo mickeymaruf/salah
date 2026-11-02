@@ -7,9 +7,9 @@ Read `docs/DECISIONS.md` before changing a stack or architecture choice.
 
 Expo SDK 58, TypeScript strict, Expo Router, plain `StyleSheet`, zustand (profile
 and settings only), `expo-sqlite` (prayer log), AsyncStorage (profile, settings),
-`adhan` (prayer times, offline), `expo-location`, `expo-notifications`,
+Aladhan API with `adhan` as offline fallback (prayer times), `expo-location`, `expo-notifications`,
 `expo-audio`, `expo-camera`, `lucide-react-native`, Inter via `@expo-google-fonts`.
-No backend, auth, analytics, i18n, Redux, or styling library.
+No backend, auth, analytics, i18n, Redux, or styling library. The only network call is the Aladhan times API.
 
 ## Structure
 

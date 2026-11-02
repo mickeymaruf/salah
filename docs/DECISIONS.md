@@ -196,3 +196,21 @@ Format: date, title, context, decision, consequence.
 - Context: the brief says to extract real values from Figma and also asks for readable contrast.
 - Decision: keep the Figma value and document the ratio.
 - Consequence: a known accessibility gap with a roadmap item. It is a one-token change in `colors.ts`.
+
+## 2026-11-02 Prayer times from the Aladhan API, with offline fallback
+
+- Context: the first version used only the on-device `adhan` calculation. The user wanted a live, widely used source.
+  The calculation is not static data (it is astronomical, per date), but a published API is easier to compare with
+  other apps. The change also reverses the earlier "no network" stance for this one purpose.
+- Decision: `api.aladhan.com/v1/calendar/{year}/{month}` is called for this month and the next with the profile's
+  coordinates, calculation method and Asr school. Tables are cached in AsyncStorage per month, so later launches work
+  offline. If a table is missing (first launch offline, API down, malformed response) `adhan` calculates the times.
+- Consequence: no API key. With the same method and school the API and `adhan` use the same formulas, so times should
+  agree within a minute or two. Method and Asr choices in Settings pick a different table. The API call sends only
+  latitude, longitude, method and school.
+
+## 2026-11-02 Hanafi Asr by default in Bangladesh and similar countries
+
+- Context: Standard Asr in Natore is about 3:00 pm and Hanafi about 3:47 pm. Bangladesh follows the Hanafi school.
+- Decision: onboarding picks Hanafi for Bangladesh, Pakistan, India, Afghanistan, Turkey, Uzbekistan and Tajikistan.
+- Consequence: existing profiles keep their saved value. Change it in Settings, Asr calculation.

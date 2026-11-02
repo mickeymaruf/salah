@@ -23,7 +23,8 @@ profile (AsyncStorage) --> prayer-times (adhan) --> today's 5 times
                                                  Progress (year query)
 ```
 
-Prayer times are never stored. They are recomputed from the profile and a date.
+Prayer times are looked up from monthly tables downloaded from the Aladhan API (cached in AsyncStorage) and fall back
+to the `adhan` calculation. They are not part of the prayer log.
 A prayer is prayed when a log row exists, missed when its time passed without a row,
 upcoming otherwise. Missed rows are not stored.
 

@@ -126,3 +126,12 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Errors: `ErrorBoundary` from Expo Router on the root layout, and `app/+not-found.tsx` sends unknown links to `/`.
 - Layout: top padding follows the safe area exactly as in the Figma frames. The tab bar is 54 plus the bottom inset.
   Prayer rows use a minimum height so large system text grows them. Display texts cap font scaling at 1.1, others at 1.4.
+
+## Prayer time source
+
+- What: `getDayTimes` returns times from the downloaded monthly table when there is one, otherwise from `adhan`.
+  `useTimesSync` (started in `app/_layout.tsx`) loads this and next month on launch, profile change and foreground.
+  A new table bumps `useTimesStore.revision`, which recomputes Today, Progress and the alarm schedule.
+- Owns: `src/features/prayer-times/data/` (`aladhan.ts` URL and parsing, `timesMemory.ts` lookup,
+  `timesCache.ts` storage and download, `useTimesSync.ts`), `calculateDayTimes` and `getDayTimes` in `calculate.ts`.
+- Extend: another provider needs a URL builder and a parser that returns `Record<dateKey, DayTimes>`.

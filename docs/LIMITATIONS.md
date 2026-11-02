@@ -96,3 +96,12 @@
   rendered and looked at.
 - Expo Go on Android prints a warning when `expo-notifications` loads (remote push was removed from Expo Go).
   Local notifications are what this app uses and are not affected.
+
+## Prayer time source
+
+- The Aladhan API was not reachable from the build environment, so the download, parsing against a live response and
+  the comparison with `adhan` were not run. Parsing is tested against a sample shaped like the documented response.
+- The API returns times in the time zone of the coordinates and the app reads them as device local time. Both match
+  only when the phone is in the same time zone as the saved location.
+- Start times are shown, not mosque (jamaat) times. Mosque times are set locally and are usually later.
+- Tables are cached by month. Changing location by more than about 1 km, the method or the Asr school downloads a new table.

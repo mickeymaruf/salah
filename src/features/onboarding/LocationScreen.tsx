@@ -5,7 +5,7 @@ import { Bell } from 'lucide-react-native';
 import { Button, Screen, Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { now, todayKey } from '@/shared/lib/date';
-import { DEFAULT_ASR_METHOD, DEFAULT_CALCULATION_METHOD } from '@/shared/state/profile';
+import { DEFAULT_CALCULATION_METHOD, defaultAsrFor } from '@/shared/state/profile';
 import { useProfileStore } from '@/shared/state/profileStore';
 import { requestNotificationPermission } from '@/features/alarm/permission';
 import { getDayTimes } from '@/features/prayer-times/calculate';
@@ -36,7 +36,7 @@ export function LocationScreen() {
               latitude: place.latitude,
               longitude: place.longitude,
               calculationMethod: DEFAULT_CALCULATION_METHOD,
-              asrMethod: DEFAULT_ASR_METHOD,
+              asrMethod: defaultAsrFor(place.country),
             },
             now(),
           )
@@ -52,7 +52,7 @@ export function LocationScreen() {
       name: name ?? '',
       ...place,
       calculationMethod: DEFAULT_CALCULATION_METHOD,
-      asrMethod: DEFAULT_ASR_METHOD,
+      asrMethod: defaultAsrFor(place.country),
       startedOn: todayKey(),
     });
     router.replace('/');

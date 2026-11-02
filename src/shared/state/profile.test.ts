@@ -1,4 +1,4 @@
-import { parseProfile, type Profile } from './profile';
+import { defaultAsrFor, parseProfile, type Profile } from './profile';
 
 const valid: Profile = {
   name: 'Amina',
@@ -28,5 +28,14 @@ describe('parseProfile', () => {
     expect(parseProfile(JSON.stringify({ ...valid, latitude: '23' }))).toBeNull();
     expect(parseProfile(JSON.stringify({ ...valid, asrMethod: 'maliki' }))).toBeNull();
     expect(parseProfile(JSON.stringify({ ...valid, startedOn: 20260101 }))).toBeNull();
+  });
+});
+
+describe('defaultAsrFor', () => {
+  it('uses Hanafi in Bangladesh and Standard elsewhere', () => {
+    expect(defaultAsrFor('Bangladesh')).toBe('hanafi');
+    expect(defaultAsrFor(' pakistan ')).toBe('hanafi');
+    expect(defaultAsrFor('Saudi Arabia')).toBe('standard');
+    expect(defaultAsrFor('')).toBe('standard');
   });
 });

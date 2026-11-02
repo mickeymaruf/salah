@@ -18,7 +18,8 @@ npm install
 npx expo start
 ```
 
-Scan the QR code with Expo Go. No API keys or backend are needed.
+Scan the QR code with Expo Go. No API keys or backend are needed. Prayer times come from the public
+Aladhan API and are cached per month; offline, the app calculates them on the device.
 
 ## Scripts
 
