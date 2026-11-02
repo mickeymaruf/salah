@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Check } from 'lucide-react-native';
+import { Check, X } from 'lucide-react-native';
 import { Text } from '@/shared/ui';
 import { colors, sizes } from '@/shared/theme';
 import { formatTime } from '@/shared/lib/date';
@@ -76,8 +76,14 @@ function StatusMark({ state, isNext, manual }: { state: PrayerState; isNext: boo
       </View>
     );
   }
-  const borderColor = state === 'missed' ? colors.state.missed : colors.line.soft;
-  return <View style={[styles.mark, styles.ring, { borderColor }]} />;
+  if (state === 'missed') {
+    return (
+      <View style={[styles.mark, { backgroundColor: colors.state.missed }]}>
+        <X size={14} color={colors.brand.onDark} strokeWidth={3} />
+      </View>
+    );
+  }
+  return <View style={[styles.mark, styles.ring, { borderColor: colors.line.soft }]} />;
 }
 
 const styles = StyleSheet.create({

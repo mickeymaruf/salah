@@ -87,3 +87,10 @@ getYear(year) --entries--> buildYear(entries, today's live states, start date) -
 
 `useYearProgress` re-queries when the log revision changes. `useTodayPrayers` keeps its `states` object stable
 between clock ticks so the grid is not rebuilt every 10 seconds.
+
+## Instant updates
+
+`prayerLogStore.mark` and `unmark` first put the change in `overrides`, which `useDayLog` and `useYearProgress` layer
+over the database result (`optimistic.ts`). Screens update in the same frame. The write then runs, and a failed write
+is rolled back. The revision bump after the write triggers a re-query that agrees with the overrides.
+`invalidate()` (dev seed) clears them.

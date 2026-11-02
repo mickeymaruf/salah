@@ -11,7 +11,7 @@ interface LogPrayerSheetProps {
   subtitle: string;
   status: 'prayed' | 'missed' | 'upcoming' | 'untracked';
   initial: LogChoice;
-  onSave: (choice: LogChoice) => Promise<void>;
+  onSave: (choice: LogChoice) => void;
   onClose: () => void;
 }
 
@@ -19,16 +19,12 @@ interface LogPrayerSheetProps {
 export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onClose }: LogPrayerSheetProps) {
   const allowed = availableChoices(status);
   const [choice, setChoice] = useState<LogChoice>(initial);
-  const [saving, setSaving] = useState(false);
 
-  // The button stays disabled while the sheet slides out, so a second tap cannot save twice.
-  const save = async (close: () => void) => {
-    setSaving(true);
-    try {
-      await onSave(choice);
-    } finally {
-      close();
-    }
+  // The screens update at once, so the sheet does not wait for the write. Saving what is already true is skipped.
+  const save = (close: () => void) => {
+    const unchanged = choice === 'prayed' ? status === 'prayed' : status !== 'prayed';
+    if (!unchanged) onSave(choice);
+    close();
   };
 
   return (
@@ -62,7 +58,7 @@ export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onCl
               onPress={() => setChoice('missed')}
             />
           </View>
-          <Button label="Save" onPress={() => save(close)} disabled={saving} style={styles.save} />
+          <Button label="Save" onPress={() => save(close)} style={styles.save} />
         </>
       )}
     </BottomSheet>

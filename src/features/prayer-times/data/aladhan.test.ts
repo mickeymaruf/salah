@@ -1,7 +1,12 @@
 import type { CalculationInput } from '../calculate';
 import { buildCalendarUrl, parseCalendar } from './aladhan';
 
-const natore: CalculationInput = { latitude: 24.4206, longitude: 89, calculationMethod: 'Karachi', asrMethod: 'hanafi' };
+const natore: CalculationInput = {
+  latitude: 24.4206,
+  longitude: 89,
+  calculationMethod: 'Karachi',
+  asrMethod: 'hanafi',
+};
 
 const entry = (date: string, times: Record<string, string>) => ({ date: { gregorian: { date } }, timings: times });
 const day = {
@@ -17,9 +22,9 @@ describe('buildCalendarUrl', () => {
   it('maps method and Asr school to the API parameters', () => {
     const url = buildCalendarUrl(natore, 2026, 11);
     expect(url).toBe('https://api.aladhan.com/v1/calendar/2026/11?latitude=24.4206&longitude=89&method=1&school=1');
-    expect(buildCalendarUrl({ ...natore, calculationMethod: 'MuslimWorldLeague', asrMethod: 'standard' }, 2026, 1)).toContain(
-      'method=3&school=0',
-    );
+    expect(
+      buildCalendarUrl({ ...natore, calculationMethod: 'MuslimWorldLeague', asrMethod: 'standard' }, 2026, 1),
+    ).toContain('method=3&school=0');
   });
 });
 

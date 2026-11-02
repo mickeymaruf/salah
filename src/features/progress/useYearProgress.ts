@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Profile } from '@/shared/state/profile';
+import { applyOverrides } from '@/features/prayer-times/data/optimistic';
 import { getYear, type PrayerLogEntry } from '@/features/prayer-times/data/prayerLog';
 import { usePrayerLogStore } from '@/features/prayer-times/data/prayerLogStore';
 import { useTodayPrayers } from '@/features/prayer-times/useTodayPrayers';
@@ -10,7 +11,8 @@ export function useYearProgress(profile: Profile) {
   const { at, dayKey, states } = useTodayPrayers(profile);
   const year = at.getFullYear();
   const revision = usePrayerLogStore((state) => state.revision);
-  const [entries, setEntries] = useState<PrayerLogEntry[]>([]);
+  const overrides = usePrayerLogStore((state) => state.overrides);
+  const [stored, setEntries] = useState<PrayerLogEntry[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -25,6 +27,11 @@ export function useYearProgress(profile: Profile) {
       cancelled = true;
     };
   }, [year, revision]);
+
+  const entries = useMemo(
+    () => applyOverrides(stored, overrides, (date) => date.startsWith(`${year}-`)),
+    [stored, overrides, year],
+  );
 
   return useMemo(() => {
     const firstLogged = entries[0]?.date;

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { PrayerName } from '../calculate';
+import { applyOverrides } from './optimistic';
 import { getDay, type PrayerLogEntry } from './prayerLog';
 import { usePrayerLogStore } from './prayerLogStore';
 
@@ -8,7 +9,8 @@ const NONE: PrayerLogEntry[] = [];
 // Entries for one day, re-read after every write to the log.
 export function useDayLog(date: string): PrayerLogEntry[] {
   const revision = usePrayerLogStore((state) => state.revision);
-  const [entries, setEntries] = useState<PrayerLogEntry[]>(NONE);
+  const overrides = usePrayerLogStore((state) => state.overrides);
+  const [stored, setEntries] = useState<PrayerLogEntry[]>(NONE);
 
   useEffect(() => {
     let cancelled = false;
@@ -24,7 +26,7 @@ export function useDayLog(date: string): PrayerLogEntry[] {
     };
   }, [date, revision]);
 
-  return entries;
+  return useMemo(() => applyOverrides(stored, overrides, (key) => key === date), [stored, overrides, date]);
 }
 
 export function usePrayedOn(date: string): ReadonlySet<PrayerName> {

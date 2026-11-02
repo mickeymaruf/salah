@@ -8,6 +8,8 @@ export function useSaveChoice() {
   const mark = usePrayerLogStore((state) => state.mark);
   const unmark = usePrayerLogStore((state) => state.unmark);
 
-  return (date: string, prayer: PrayerName, choice: LogChoice): Promise<void> =>
-    choice === 'prayed' ? mark(date, prayer, null) : unmark(date, prayer);
+  return (date: string, prayer: PrayerName, choice: LogChoice): void => {
+    if (choice === 'prayed') mark(date, prayer, null);
+    else unmark(date, prayer);
+  };
 }

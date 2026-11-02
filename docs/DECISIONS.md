@@ -233,3 +233,16 @@ Format: date, title, context, decision, consequence.
 - Context: the flow note says "tap any prayer that isn't logged".
 - Decision: prayed rows on Today are not tappable. Editing a logged prayer is done from Progress.
 - Consequence: no accidental changes on the main screen.
+
+## 2026-11-02 Optimistic log updates
+
+- Context: waiting for the database write and a re-query made a saved prayer appear after a visible delay.
+- Decision: the store applies the change immediately and writes behind it, rolling back on failure.
+  The sheet closes without waiting, and saving the state a prayer already has is skipped.
+- Consequence: the UI is instant. If a write fails the screen briefly shows the change and then reverts.
+
+## 2026-11-02 Missed shows a cross on Today
+
+- Context: Today used an empty terracotta ring for missed prayers, which did not look like a choice the user made.
+- Decision: missed prayers show a filled terracotta circle with a cross, like the day card.
+- Consequence: Today and Progress use the same mark for missed.
