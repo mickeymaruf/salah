@@ -164,4 +164,6 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Today and Progress are pages of one pager (`expo-router/js-top-tabs`, `react-native-pager-view`). Swipe sideways or tap
   the bottom bar. Taps switch with no animation and the neighbouring page is rendered ahead, so both feel instant.
 - Owns: `app/(tabs)/_layout.tsx`, `src/shared/ui/TabBar.tsx` (the bar, drawn like the Figma tab bar).
+- Needs both `react-native-tab-view` and `react-native-pager-view`. Expo Router loads the first one inside a try/catch, so a
+  missing package builds fine and only fails when the app starts. Check with `npx expo export --no-bytecode` and search the bundle.
 - On Progress, dragging on the year chart scrolls the chart. Drag anywhere else to swipe back to Today.
