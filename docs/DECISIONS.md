@@ -287,9 +287,3 @@ Format: date, title, context, decision, consequence.
 - Context: choosing Prayed or Missed and then tapping Save was an extra step.
 - Decision: tapping an option saves it and closes the sheet. The Save button was removed. Tapping the option that is already true just closes it.
 - Consequence: one tap per change. A mistaken tap is fixed by reopening the sheet. This overrides the Save button in the Figma log sheet.
-
-## 2026-11-03 Tapping Prayed again undoes it
-
-- Context: with tap-to-save, there was no way to take back a Prayed without choosing Missed.
-- Decision: in the log sheet, tapping Prayed on a prayed prayer removes the log row and closes. Missed is derived from the missing row, so tapping Missed only closes.
-- Consequence: an undone prayer shows as upcoming before its time and missed after it.
