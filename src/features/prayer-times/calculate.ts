@@ -1,7 +1,8 @@
 import { CalculationMethod, Coordinates, HighLatitudeRule, Madhab, PrayerTimes } from 'adhan';
 import { toDateKey } from '@/shared/lib/date';
-import type { AsrMethod, CalculationMethodId } from '@/shared/state/profile';
+import type { AsrMethod, CalculationMethodId, ManualTimes } from '@/shared/state/profile';
 import { lookupTimes } from './data/timesMemory';
+import { applyManualTimes } from './manualTimes';
 
 export type PrayerName = 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
 
@@ -22,10 +23,16 @@ export interface CalculationInput {
   longitude: number;
   calculationMethod: CalculationMethodId;
   asrMethod: AsrMethod;
+  manualTimes?: ManualTimes;
 }
 
 // Times from the API when this month was downloaded, otherwise the on-device calculation.
+// Hand-set times replace those per prayer. Every screen and the alarm planner read times through here.
 export function getDayTimes(input: CalculationInput, date: Date): DayTimes {
+  return applyManualTimes(getAutomaticTimes(input, date), input.manualTimes, date);
+}
+
+export function getAutomaticTimes(input: CalculationInput, date: Date): DayTimes {
   return lookupTimes(input, toDateKey(date)) ?? calculateDayTimes(input, date);
 }
 

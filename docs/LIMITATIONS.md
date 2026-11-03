@@ -113,3 +113,12 @@
   first use then counts as missed in the percentage, because nothing was logged on them.
 - Choosing Missed on a photo-verified prayer deletes its log row. The photo file stays in the app storage.
 - The sheet was built from the Figma frames and type-checked. It was not rendered on a device.
+
+## Manual prayer times
+
+- An edit is one fixed clock time for every day. Calculated times move by a minute or so each day, so edit again when the
+  masjid changes its timetable. Seasonal or per-day timetables and jamaat times are not supported.
+- Edits are in the phone's clock. If the phone is in a different time zone from the saved location, the edited time is
+  read as phone time.
+- Edits are stored only on the device (no backup).
+- Not yet checked on a device: the wheel feel, the sheet over the Adjust times screen, and the Figma match.

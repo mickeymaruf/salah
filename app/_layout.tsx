@@ -74,6 +74,7 @@ export default function RootLayout() {
           <Stack.Screen name="proof" options={{ gestureEnabled: false }} />
           <Stack.Screen name="verified" options={{ gestureEnabled: false, animation: 'fade' }} />
           <Stack.Screen name="settings" />
+          <Stack.Screen name="edit-times" />
           <Stack.Screen name="privacy" />
           <Stack.Screen name="help" />
         </Stack.Protected>

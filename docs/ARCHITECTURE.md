@@ -41,6 +41,12 @@ This document is extended as each feature lands.
 `src/shared/state/` holds the zustand stores for profile (and later settings). They are used by
 onboarding, prayer-times and settings, so they are shared rather than owned by one feature.
 
+## Manual prayer times
+
+`getDayTimes` = `getAutomaticTimes` (API table or `adhan`) with `profile.manualTimes` applied by `applyManualTimes`.
+Every reader goes through it. Settings writes the profile; `useAlarmSync` depends on the profile, so alarms are rebuilt.
+During onboarding the profile does not exist yet, so `onboarding/draftStore.ts` holds the detected place and the edits.
+
 ## Today screen
 
 `useTodayPrayers` combines the profile, the clock (`useNow`, 10 s tick and on foreground) and the set of

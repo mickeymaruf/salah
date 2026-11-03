@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Bell } from 'lucide-react-native';
@@ -10,6 +10,8 @@ import { useProfileStore } from '@/shared/state/profileStore';
 import { requestNotificationPermission } from '@/features/alarm/permission';
 import { getDayTimes } from '@/features/prayer-times/calculate';
 import { formatPlace } from '@/features/prayer-times/location';
+import { hasManualTimes } from '@/features/prayer-times/manualTimes';
+import { useOnboardingDraft } from './draftStore';
 import { LocationCard } from './components/LocationCard';
 import { StepDots } from './components/StepDots';
 import { useLocationStep, type LocationStatus } from './useLocationStep';
@@ -27,6 +29,15 @@ export function LocationScreen() {
   const { name } = useLocalSearchParams<{ name: string }>();
   const saveProfile = useProfileStore((state) => state.save);
   const { status, place, detect } = useLocationStep();
+  const draftTimes = useOnboardingDraft((state) => state.manualTimes);
+  const setDraftPlace = useOnboardingDraft((state) => state.setPlace);
+  const setDraftTimes = useOnboardingDraft((state) => state.setManualTimes);
+
+  // A new place has new calculated times, so hand-set ones from a previous place no longer apply.
+  useEffect(() => {
+    setDraftPlace(place);
+    setDraftTimes({});
+  }, [place, setDraftPlace, setDraftTimes]);
 
   const times = useMemo(
     () =>
@@ -37,11 +48,12 @@ export function LocationScreen() {
               longitude: place.longitude,
               calculationMethod: DEFAULT_CALCULATION_METHOD,
               asrMethod: defaultAsrFor(place.country),
+              manualTimes: draftTimes,
             },
             now(),
           )
         : null,
-    [place],
+    [place, draftTimes],
   );
 
   const finish = async () => {
@@ -53,6 +65,7 @@ export function LocationScreen() {
       ...place,
       calculationMethod: DEFAULT_CALCULATION_METHOD,
       asrMethod: defaultAsrFor(place.country),
+      ...(hasManualTimes(draftTimes) ? { manualTimes: draftTimes } : {}),
       startedOn: todayKey(),
     });
     router.replace('/');
@@ -91,6 +104,7 @@ export function LocationScreen() {
           title={place ? formatPlace(place) : 'Your location'}
           subtitle={SUBTITLES[status]}
           times={times}
+          onEditTimes={() => router.push('/adjust-times')}
         />
       </View>
       <View style={styles.note}>

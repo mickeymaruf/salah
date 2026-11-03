@@ -2,17 +2,19 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { Text } from '@/shared/ui';
+import type { TextColor } from '@/shared/theme';
 import { colors, sizes } from '@/shared/theme';
 
 interface SettingsRowProps {
   label: string;
   value?: string;
+  valueColor?: TextColor;
   onPress?: () => void;
   // Replaces the value and chevron, for example with a toggle.
   right?: ReactNode;
 }
 
-export function SettingsRow({ label, value, onPress, right }: SettingsRowProps) {
+export function SettingsRow({ label, value, valueColor = 'muted', onPress, right }: SettingsRowProps) {
   const content = (
     <>
       <Text variant="row">{label}</Text>
@@ -20,7 +22,7 @@ export function SettingsRow({ label, value, onPress, right }: SettingsRowProps) 
       {right ?? (
         <>
           {value ? (
-            <Text variant="label" color="muted" style={styles.value}>
+            <Text variant="label" color={valueColor} style={styles.value}>
               {value}
             </Text>
           ) : null}

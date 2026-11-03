@@ -35,3 +35,25 @@ describe('getDayTimes', () => {
     expect(PRAYER_NAMES.every((name) => Number.isFinite(times[name].getTime()))).toBe(true);
   });
 });
+
+describe('getDayTimes with manual times', () => {
+  const day = new Date(2026, 9, 26, 12);
+
+  it('replaces only the edited prayers', () => {
+    const automatic = getDayTimes(dhaka, day);
+    const edited = getDayTimes({ ...dhaka, manualTimes: { fajr: '04:55', isha: '20:10' } }, day);
+    expect([edited.fajr.getHours(), edited.fajr.getMinutes()]).toEqual([4, 55]);
+    expect([edited.isha.getHours(), edited.isha.getMinutes()]).toEqual([20, 10]);
+    expect(edited.dhuhr.getTime()).toBe(automatic.dhuhr.getTime());
+    expect(edited.asr.getTime()).toBe(automatic.asr.getTime());
+  });
+
+  it('puts the edit on whichever local day is asked for', () => {
+    const next = getDayTimes({ ...dhaka, manualTimes: { fajr: '04:55' } }, new Date(2026, 9, 27, 12));
+    expect([next.fajr.getDate(), next.fajr.getHours(), next.fajr.getMinutes()]).toEqual([27, 4, 55]);
+  });
+
+  it('gives the automatic times when nothing is edited', () => {
+    expect(getDayTimes({ ...dhaka, manualTimes: {} }, day)).toEqual(getDayTimes(dhaka, day));
+  });
+});

@@ -272,3 +272,12 @@ Format: date, title, context, decision, consequence.
 - Context: five segments of 3.8 px left a faint light line between them on some screens.
 - Decision: each segment is positioned absolutely and extends 1 px under the next one.
 - Consequence: no seams. Colors still change at the same boundaries.
+
+## 2026-11-03 Manual prayer times are fixed clock times in the profile
+
+- Context: calculated times can differ from the local masjid by a few minutes, and the app has no per-region method.
+- Decision: one optional override per prayer, stored in the profile as "HH:mm", applied inside `getDayTimes` on top of the
+  API or `adhan` time. Saving a time equal to the calculated minute removes the override. Screens follow Figma
+  `2b`, `2c` and `8b` (file Mft9G21t5JL72MOzbkuGo3). Settings has no Save button, as in `8b`; onboarding has one, as in `2b`.
+- Consequence: one place decides the time, so nothing else needs to know about edits. An edit is the same clock time every
+  day, so it will drift from a masjid timetable through the year (see `docs/LIMITATIONS.md`). Changing the city asks to keep or reset.

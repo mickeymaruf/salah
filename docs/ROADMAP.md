@@ -15,10 +15,12 @@ Status: done, next, todo.
 | 8 | Splash and branding | done |
 | 9 | ML Kit verifier (dev build only) | done |
 | 10 | Polish pass | done |
+| 11 | Manual prayer times | done |
 
 ## Later
 
 - Manual city entry when location is denied
+- Per-day or seasonal manual times (edits are one fixed time today)
 - Darker muted text color (contrast, see `docs/LIMITATIONS.md`)
 - Visual check of every screen against Figma on a device
 - Reduce-motion support for the alarm pulse

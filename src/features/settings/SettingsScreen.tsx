@@ -6,6 +6,7 @@ import type { AsrMethod, CalculationMethodId, Profile } from '@/shared/state/pro
 import { useProfileStore } from '@/shared/state/profileStore';
 import { ALARM_SOUNDS, REMINDER_OPTIONS, type AlarmSoundId } from '@/shared/state/settings';
 import { useSettingsStore } from '@/shared/state/settingsStore';
+import { hasManualTimes } from '@/features/prayer-times/manualTimes';
 import { previewSound } from '@/features/alarm/previewSound';
 import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
 import { EditNameSheet } from './components/EditNameSheet';
@@ -54,6 +55,11 @@ function Settings({ profile }: { profile: Profile }) {
             label="Asr calculation"
             value={ASR_METHOD_LABELS[profile.asrMethod]}
             onPress={() => setSheet('asr')}
+          />
+          <SettingsRow
+            label="Edit prayer times"
+            value={hasManualTimes(profile.manualTimes) ? 'Custom' : 'Automatic'}
+            onPress={() => router.push('/edit-times')}
           />
         </SettingsGroup>
         <SettingsGroup title="Alarm">

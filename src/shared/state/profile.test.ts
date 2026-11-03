@@ -20,6 +20,18 @@ describe('parseProfile', () => {
     expect(parseProfile(JSON.stringify(withStart))).toEqual(withStart);
   });
 
+  it('keeps valid manual times', () => {
+    const edited = { ...valid, manualTimes: { fajr: '04:55', isha: '20:10' } };
+    expect(parseProfile(JSON.stringify(edited))).toEqual(edited);
+  });
+
+  it('drops damaged manual times but keeps the profile', () => {
+    expect(parseProfile(JSON.stringify({ ...valid, manualTimes: { fajr: '25:00' } }))).toEqual(valid);
+    expect(parseProfile(JSON.stringify({ ...valid, manualTimes: { zuhr: '12:00' } }))).toEqual(valid);
+    expect(parseProfile(JSON.stringify({ ...valid, manualTimes: 'x' }))).toEqual(valid);
+    expect(parseProfile(JSON.stringify({ ...valid, manualTimes: {} }))).toEqual(valid);
+  });
+
   it('returns null for missing, malformed or incomplete data', () => {
     expect(parseProfile(null)).toBeNull();
     expect(parseProfile('not json')).toBeNull();

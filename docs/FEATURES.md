@@ -167,3 +167,18 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Needs both `react-native-tab-view` and `react-native-pager-view`. Expo Router loads the first one inside a try/catch, so a
   missing package builds fine and only fails when the app starts. Check with `npx expo export --no-bytecode` and search the bundle.
 - On Progress, dragging on the year chart scrolls the chart. Drag anywhere else to swipe back to Today.
+
+## Manual prayer times
+
+- What: times are always calculated from the location. If they do not match the local masjid, the user can set any of
+  the five by hand. No switch, no per-masjid choice, no Adhan or Jama'ah times. A prayer with no edit keeps its calculated time.
+- Where: Location step of onboarding (small "Edit times" link on the card, opens "Adjust your times" with a Save times
+  button) and Settings, Prayer times, "Edit prayer times" (Automatic or Custom, opens "Edit times"). Tapping a time opens
+  a sheet with an hour, minute and AM/PM wheel. Both screens have "Reset to automatic times".
+- Settings applies each edit when Done is tapped (Figma 8b has no Save button). Onboarding keeps edits until Save times.
+- Edits are stored as `profile.manualTimes` (`{ fajr: "04:55" }`, 24-hour clock). `getDayTimes` applies them, so Today, the
+  countdown, the day bar, Progress and the alarm planner all use them. Saving rewrites the profile, which reschedules every alarm.
+- Times must stay in order (Fajr, Dhuhr, Asr, Maghrib, Isha). An out-of-order pick is refused with a message.
+- Changing the location from Settings to a different city asks whether to keep the edits or reset them. Reset is the default.
+- Owns: `src/features/adjust-times/` (screens, wheel, sheet), `src/features/prayer-times/manualTimes.ts` (pure logic),
+  `src/features/onboarding/draftStore.ts`.

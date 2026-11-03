@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { MapPin } from 'lucide-react-native';
 import { Card, Text } from '@/shared/ui';
 import { colors, fontFamily } from '@/shared/theme';
@@ -9,9 +9,11 @@ interface LocationCardProps {
   title: string;
   subtitle: string;
   times: DayTimes | null;
+  // Shown at the top right once times exist.
+  onEditTimes?: () => void;
 }
 
-export function LocationCard({ title, subtitle, times }: LocationCardProps) {
+export function LocationCard({ title, subtitle, times, onEditTimes }: LocationCardProps) {
   return (
     <Card style={styles.card}>
       <View style={styles.city}>
@@ -24,6 +26,13 @@ export function LocationCard({ title, subtitle, times }: LocationCardProps) {
             {subtitle}
           </Text>
         </View>
+        {times && onEditTimes ? (
+          <Pressable accessibilityRole="button" hitSlop={8} onPress={onEditTimes} style={styles.edit}>
+            <Text variant="label" color="brand">
+              Edit times
+            </Text>
+          </Pressable>
+        ) : null}
       </View>
       <View style={styles.divider} />
       {PRAYER_NAMES.map((name) => (
@@ -50,6 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cityText: { flex: 1, gap: 2 },
+  edit: { minHeight: 44, justifyContent: 'center', alignSelf: 'flex-start', marginTop: -4 },
   divider: { height: 1, backgroundColor: colors.line.soft },
   row: { height: 28, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   time: { fontFamily: fontFamily.medium },
