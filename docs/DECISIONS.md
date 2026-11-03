@@ -281,3 +281,9 @@ Format: date, title, context, decision, consequence.
   `2b`, `2c` and `8b` (file Mft9G21t5JL72MOzbkuGo3). Settings has no Save button, as in `8b`; onboarding has one, as in `2b`.
 - Consequence: one place decides the time, so nothing else needs to know about edits. An edit is the same clock time every
   day, so it will drift from a masjid timetable through the year (see `docs/LIMITATIONS.md`). Changing the city asks to keep or reset.
+
+## 2026-11-03 Log sheet saves on tap
+
+- Context: choosing Prayed or Missed and then tapping Save was an extra step.
+- Decision: tapping an option saves it and closes the sheet. The Save button was removed. Tapping the option that is already true just closes it.
+- Consequence: one tap per change. A mistaken tap is fixed by reopening the sheet. This overrides the Save button in the Figma log sheet.

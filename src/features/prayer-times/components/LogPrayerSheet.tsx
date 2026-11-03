@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Check, X } from 'lucide-react-native';
-import { BottomSheet, Button, Text } from '@/shared/ui';
+import { BottomSheet, Text } from '@/shared/ui';
 import { colors, fontFamily, radii } from '@/shared/theme';
 import { PRAYER_LABELS, type PrayerName } from '../calculate';
 import { availableChoices, type LogChoice } from '../logChoice';
@@ -16,14 +16,16 @@ interface LogPrayerSheetProps {
 }
 
 // Mount it to open, unmount it to close. The choice starts from `initial` each time.
+// Tapping an option saves it and closes the sheet, so there is no separate Save button.
 export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onClose }: LogPrayerSheetProps) {
   const allowed = availableChoices(status);
   const [choice, setChoice] = useState<LogChoice>(initial);
 
   // The screens update at once, so the sheet does not wait for the write. Saving what is already true is skipped.
-  const save = (close: () => void) => {
-    const unchanged = choice === 'prayed' ? status === 'prayed' : status !== 'prayed';
-    if (!unchanged) onSave(choice);
+  const choose = (next: LogChoice, close: () => void) => {
+    setChoice(next);
+    const unchanged = next === 'prayed' ? status === 'prayed' : status !== 'prayed';
+    if (!unchanged) onSave(next);
     close();
   };
 
@@ -47,7 +49,7 @@ export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onCl
               description="I prayed it on time"
               selected={choice === 'prayed'}
               enabled={allowed.includes('prayed')}
-              onPress={() => setChoice('prayed')}
+              onPress={() => choose('prayed', close)}
             />
             <Option
               kind="missed"
@@ -55,10 +57,9 @@ export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onCl
               description="I did not pray it"
               selected={choice === 'missed'}
               enabled={allowed.includes('missed')}
-              onPress={() => setChoice('missed')}
+              onPress={() => choose('missed', close)}
             />
           </View>
-          <Button label="Save" onPress={() => save(close)} style={styles.save} />
         </>
       )}
     </BottomSheet>
@@ -115,5 +116,4 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.45 },
   mark: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   optionTitle: { fontSize: 18 },
-  save: { marginTop: 24 },
 });

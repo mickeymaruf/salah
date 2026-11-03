@@ -137,7 +137,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Manual logging
 
-- What: one bottom sheet (`LogPrayerSheet`) with Prayed or Missed and Save. Two entry points:
+- What: one bottom sheet (`LogPrayerSheet`) with Prayed or Missed. Tapping one saves it and closes the sheet (no Save button). Two entry points:
   Today (tap a prayer row that is not prayed) and Progress (tap a day in the chart, then a prayer in the day card).
   Past days can be edited with no limit on how far back. Future days cannot.
 - Rules (`logChoice.ts`): Prayed is stored as a log row without a photo. Missed removes the row, because missed is
