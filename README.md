@@ -87,6 +87,29 @@ after changing `app.json` plugins.
 To confirm the ML Kit check is active, take a photo of a wall: it is rejected, and a photo of a rug or
 floor is accepted with a label such as "Carpet detected". In Expo Go any live photo is accepted.
 
+## Install on your phone (standalone APK)
+
+Expo Go needs your computer running. For daily use, build an APK that runs on its own. You need a free
+Expo account (https://expo.dev/signup). Run these once from the project folder:
+
+```bash
+npx eas-cli@latest login
+npx eas-cli@latest init
+npm run build:apk
+```
+
+`init` links the project to your account and adds a `projectId` to `app.json`; commit that change. The build runs in
+Expo's cloud for 10 to 20 minutes and ends with a link and a QR code. Open the link on the phone, download the
+`.apk`, and allow "Install unknown apps" for your browser when Android asks. Then:
+
+1. Allow notifications and location.
+2. Turn on "Alarms & reminders" for Salah, and exclude it from battery optimisation (see `docs/LIMITATIONS.md`).
+
+To update, pull the latest code, run `npm run build:apk` again and install the new `.apk` over the old one. Your data
+stays, because the package name is the same and the build is signed with the same key (EAS keeps it for you).
+Profiles live in `eas.json`: `preview` is the installable APK, `development` is a dev client, `production`
+is a Play Store bundle.
+
 ## More
 
 Start with `AGENTS.md` and `docs/ROADMAP.md`.

@@ -287,3 +287,11 @@ Format: date, title, context, decision, consequence.
 - Context: choosing Prayed or Missed and then tapping Save was an extra step.
 - Decision: tapping an option saves it and closes the sheet. The Save button was removed. Tapping the option that is already true just closes it.
 - Consequence: one tap per change. A mistaken tap is fixed by reopening the sheet. This overrides the Save button in the Figma log sheet.
+
+## 2026-11-03 EAS build profiles
+
+- Context: Expo Go needs a running dev server and cannot play custom alarm sounds, so daily use needs a standalone build.
+- Decision: `eas.json` has `development` (dev client APK), `preview` (internal APK, used by `npm run build:apk`) and `production`
+  (Android App Bundle, auto-incremented). Versions are kept remotely by EAS.
+- Consequence: the first build asks for an Expo login and runs `eas init`, which adds `projectId` to `app.json`. The build was not run from
+  the sandbox. A standalone build includes the ML Kit native module, so the photo check becomes active (it is off in Expo Go).

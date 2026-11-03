@@ -49,7 +49,8 @@
     "ios": "expo start --ios",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "build:apk": "npx eas-cli@latest build --platform android --profile preview"
   },
   "private": true,
   "jest": {

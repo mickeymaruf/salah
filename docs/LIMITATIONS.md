@@ -122,3 +122,11 @@
   read as phone time.
 - Edits are stored only on the device (no backup).
 - Not yet checked on a device: the wheel feel, the sheet over the Adjust times screen, and the Figma match.
+
+## Standalone build
+
+- `eas.json` and the build steps in the README were written without access to Expo's servers. No build was run, so the first
+  build may need adjustments (for example a new `eas-cli` prompt, or a native module that fails to compile).
+- The first standalone build activates the ML Kit photo check, which has not been run on a device. If it wrongly rejects a
+  genuine photo, turn off "Require photo proof" in Settings, or report it so the labels can be loosened.
+- Alarm sounds, the notification color and the notification icon only apply in a standalone or development build.
