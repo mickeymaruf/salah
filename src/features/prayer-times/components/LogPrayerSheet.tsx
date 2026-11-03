@@ -17,15 +17,21 @@ interface LogPrayerSheetProps {
 
 // Mount it to open, unmount it to close. The choice starts from `initial` each time.
 // Tapping an option saves it and closes the sheet, so there is no separate Save button.
+// Tapping Prayed on a prayer that is already prayed undoes it. Missed has no row to remove, so tapping it only closes.
 export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onClose }: LogPrayerSheetProps) {
   const allowed = availableChoices(status);
-  const [choice, setChoice] = useState<LogChoice>(initial);
+  const [choice, setChoice] = useState<LogChoice | null>(initial);
 
   // The screens update at once, so the sheet does not wait for the write. Saving what is already true is skipped.
   const choose = (next: LogChoice, close: () => void) => {
-    setChoice(next);
-    const unchanged = next === 'prayed' ? status === 'prayed' : status !== 'prayed';
-    if (!unchanged) onSave(next);
+    if (next === 'prayed' && status === 'prayed') {
+      // Saving Missed removes the log row, so the prayer returns to unlogged (missed once its time has passed).
+      setChoice(null);
+      onSave('missed');
+    } else {
+      setChoice(next);
+      if (next === 'prayed' || status === 'prayed') onSave(next);
+    }
     close();
   };
 
