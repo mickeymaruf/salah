@@ -9,6 +9,7 @@ import { arcPoint, halfCircleLength, halfCirclePath, type PrayerWindow } from '.
 const RADIUS = 160;
 const STROKE = 3;
 const DOT = 18;
+const TEXT_GAP = 20;
 const DOT_OUTLINE = 3;
 // The svg is wider and taller than the arc so the dot is never cut off at either end or at the top.
 const SVG_WIDTH = 360;
@@ -54,7 +55,7 @@ export function TodayHero({ window, at, sheetTop, width }: TodayHeroProps) {
         pointerEvents="none"
         accessible
         accessibilityLabel={`${PRAYER_LABELS[window.name]}, ${formatTime(window.start)} to ${formatTime(window.end)}. ${PRAYER_LABELS[window.nextName]} ${formatCountdown(window.end.getTime() - at.getTime())}`}
-        style={[styles.text, { top: sheetTop - 114 }]}
+        style={[styles.text, { height: sheetTop }]}
       >
         <Text variant="heroName" color="brand">
           {PRAYER_LABELS[window.name]}
@@ -70,5 +71,6 @@ export function TodayHero({ window, at, sheetTop, width }: TodayHeroProps) {
 
 const styles = StyleSheet.create({
   ring: { position: 'absolute' },
-  text: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: 2 },
+  // The block fills the hero and keeps its text at the bottom, so it rests above the sheet whatever the font's line height.
+  text: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center', justifyContent: 'flex-end', gap: 2, paddingBottom: TEXT_GAP },
 });

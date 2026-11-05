@@ -63,7 +63,9 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start(({ finished }) => {
-      if (finished) setTapped(null);
+      if (!finished) return;
+      progress.setValue(0);
+      setTapped(null);
     });
   };
 
