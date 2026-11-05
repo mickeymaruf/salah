@@ -18,7 +18,7 @@
 
 ## Today
 
-- A prayer whose time has passed without a log row counts as missed immediately. There is no grace window.
+- A prayer whose time has passed without a choice stays unmarked. It is not counted as missed, so the percentage kept only reflects what was marked.
   The user can still mark it prayed through proof, which turns it into prayed.
 
 ## Alarm
@@ -110,8 +110,8 @@
 
 - A prayer logged by hand looks the same as a photo-verified one. Only the stored photo path differs.
 - Logging a prayer on a day before the first use moves the start date back to that day. Every day from there to the
-  first use then counts as missed in the percentage, because nothing was logged on them.
-- Choosing Missed on a photo-verified prayer deletes its log row. The photo file stays in the app storage.
+  first use are unmarked and left out of the percentage.
+- Choosing Missed on a photo-verified prayer replaces its log row, and so does Clear mark. The photo file stays in the app storage.
 - The sheet was built from the Figma frames and type-checked. It was not rendered on a device.
 
 ## Manual prayer times

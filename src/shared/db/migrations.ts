@@ -7,4 +7,6 @@ export const MIGRATIONS: readonly string[] = [
      proof_uri TEXT,
      PRIMARY KEY (date, prayer)
    )`,
+  // Missed is now a choice the user makes, so it needs a stored value. Existing rows are all prayed.
+  `ALTER TABLE prayer_log ADD COLUMN outcome TEXT NOT NULL DEFAULT 'prayed' CHECK (outcome IN ('prayed', 'missed'))`,
 ];

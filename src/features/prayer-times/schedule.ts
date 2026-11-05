@@ -1,6 +1,8 @@
 import { PRAYER_NAMES, type DayTimes, type PrayerName } from './calculate';
+import type { Outcome } from './data/prayerLog';
 
-export type PrayerState = 'prayed' | 'missed' | 'upcoming';
+// Unmarked is a prayer whose time has passed and that the user has not marked. It is never counted as missed.
+export type PrayerState = 'prayed' | 'missed' | 'unmarked' | 'upcoming';
 
 export interface NextPrayer {
   name: PrayerName;
@@ -8,19 +10,19 @@ export interface NextPrayer {
   isTomorrow: boolean;
 }
 
-// Prayed wins over everything. Otherwise a passed time with no log row is missed.
-export function getPrayerState(time: Date, prayed: boolean, at: Date): PrayerState {
-  if (prayed) return 'prayed';
-  return time.getTime() <= at.getTime() ? 'missed' : 'upcoming';
+// What the user chose wins, even before the time. With no choice, a passed time is unmarked and a future one upcoming.
+export function getPrayerState(time: Date, outcome: Outcome | undefined, at: Date): PrayerState {
+  if (outcome) return outcome;
+  return time.getTime() <= at.getTime() ? 'unmarked' : 'upcoming';
 }
 
 export function getDayStates(
   times: DayTimes,
-  prayed: ReadonlySet<PrayerName>,
+  outcomes: ReadonlyMap<PrayerName, Outcome>,
   at: Date,
 ): Record<PrayerName, PrayerState> {
   return Object.fromEntries(
-    PRAYER_NAMES.map((name) => [name, getPrayerState(times[name], prayed.has(name), at)]),
+    PRAYER_NAMES.map((name) => [name, getPrayerState(times[name], outcomes.get(name), at)]),
   ) as Record<PrayerName, PrayerState>;
 }
 

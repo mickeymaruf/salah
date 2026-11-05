@@ -2,30 +2,31 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Check, X } from 'lucide-react-native';
 import { BottomSheet, Text } from '@/shared/ui';
-import { colors, fontFamily, radii } from '@/shared/theme';
+import { colors, fontFamily, radii, sizes } from '@/shared/theme';
 import { PRAYER_LABELS, type PrayerName } from '../calculate';
-import { availableChoices, type LogChoice } from '../logChoice';
+import { availableChoices, canClear, type LogChoice, type LogStatus } from '../logChoice';
 
 interface LogPrayerSheetProps {
   prayer: PrayerName;
   subtitle: string;
-  status: 'prayed' | 'missed' | 'upcoming' | 'untracked';
-  initial: LogChoice;
+  status: LogStatus;
+  initial: LogChoice | null;
   onSave: (choice: LogChoice) => void;
+  // Returns the prayer to unmarked. Offered only when there is a choice to clear.
+  onClear: () => void;
   onClose: () => void;
 }
 
 // Mount it to open, unmount it to close. The choice starts from `initial` each time.
 // Tapping an option saves it and closes the sheet, so there is no separate Save button.
-export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onClose }: LogPrayerSheetProps) {
+export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onClear, onClose }: LogPrayerSheetProps) {
   const allowed = availableChoices(status);
-  const [choice, setChoice] = useState<LogChoice>(initial);
+  const [choice, setChoice] = useState<LogChoice | null>(initial);
 
   // The screens update at once, so the sheet does not wait for the write. Saving what is already true is skipped.
   const choose = (next: LogChoice, close: () => void) => {
     setChoice(next);
-    const unchanged = next === 'prayed' ? status === 'prayed' : status !== 'prayed';
-    if (!unchanged) onSave(next);
+    if (next !== status) onSave(next);
     close();
   };
 
@@ -60,6 +61,20 @@ export function LogPrayerSheet({ prayer, subtitle, status, initial, onSave, onCl
               onPress={() => choose('missed', close)}
             />
           </View>
+          {canClear(status) ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                onClear();
+                close();
+              }}
+              style={styles.clear}
+            >
+              <Text variant="label" color="muted">
+                Clear mark
+              </Text>
+            </Pressable>
+          ) : null}
         </>
       )}
     </BottomSheet>
@@ -115,5 +130,6 @@ const styles = StyleSheet.create({
   option: { flex: 1, padding: 16, gap: 10, borderRadius: radii.cardSmall, backgroundColor: colors.bg.surface },
   disabled: { opacity: 0.45 },
   mark: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  clear: { minHeight: sizes.iconButton, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
   optionTitle: { fontSize: 18 },
 });

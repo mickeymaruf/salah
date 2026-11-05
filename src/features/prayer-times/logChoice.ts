@@ -2,7 +2,8 @@ import { formatDayMonth, formatShortDate, formatTime, parseDateKey } from '@/sha
 
 export type LogChoice = 'prayed' | 'missed';
 
-type Status = 'prayed' | 'missed' | 'upcoming' | 'untracked';
+export type LogStatus = 'prayed' | 'missed' | 'unmarked' | 'upcoming' | 'untracked';
+type Status = LogStatus;
 
 // A prayer whose time has not come cannot be logged at all, neither prayed nor missed.
 export function canLog(status: Status): boolean {
@@ -13,10 +14,15 @@ export function availableChoices(status: Status): LogChoice[] {
   return canLog(status) ? ['prayed', 'missed'] : [];
 }
 
-// The sheet opens on what the prayer currently is, so reopening a missed prayer shows Missed.
-// A prayer that has not started yet can only be Prayed.
-export function initialChoice(status: Status): LogChoice {
-  return status === 'missed' ? 'missed' : 'prayed';
+// The sheet opens on what the user chose before, so reopening a missed prayer shows Missed.
+// A prayer with no choice yet opens with nothing selected.
+export function initialChoice(status: Status): LogChoice | null {
+  return status === 'prayed' || status === 'missed' ? status : null;
+}
+
+// Only a prayer with a choice can be cleared back to unmarked.
+export function canClear(status: Status): boolean {
+  return status === 'prayed' || status === 'missed';
 }
 
 export function sheetSubtitle(time: Date, dateKey: string, todayKey: string): string {

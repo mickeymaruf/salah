@@ -22,7 +22,7 @@ export function PrayerList({ times, states, nextName, onSelect }: PrayerListProp
             time={times[name]}
             state={states[name]}
             isNext={name === nextName}
-            onPress={states[name] === 'missed' ? () => onSelect(name) : undefined}
+            onPress={states[name] === 'unmarked' || states[name] === 'missed' ? () => onSelect(name) : undefined}
           />
         ))}
       </View>

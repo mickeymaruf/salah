@@ -309,3 +309,18 @@ Format: date, title, context, decision, consequence.
 - Decision: upcoming prayers are not tappable anywhere and the log sheet offers no choice for them. This overrides the earlier
   rule that Prayed was allowed before the time.
 - Consequence: marks made earlier on a future prayer stay until changed to Missed in the Progress day card.
+
+## 2026-11-05 Missed is a choice, not a default
+
+- Context: the user did not want a prayer shown as missed just because nothing was logged. Unmarked should stay empty.
+- Decision: `prayer_log` gets an `outcome` column (migration 2, 'prayed' or 'missed', existing rows 'prayed'). A passed prayer with no row is
+  `unmarked` (empty circle). Stats and the percentage count only marked prayers. The log sheet gets "Clear mark" to go back to unmarked.
+  Alarms and follow-ups still stop only for a prayed row. This replaces the rule that past unlogged prayers count as missed.
+- Consequence: history before this change that showed red from nothing now shows empty, and the missed count and percentage change.
+  Rows removed earlier by choosing Missed cannot be recovered as missed.
+
+## 2026-11-05 Next prayer is grey, not green
+
+- Context: a green ring with a dot on the next prayer looked like a completed one.
+- Decision: the next prayer row has the pale grey highlight (`heat[0]`) and an empty ring with a darker outline.
+- Consequence: green now only means prayed.

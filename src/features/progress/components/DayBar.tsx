@@ -14,6 +14,7 @@ const SEGMENT = ROW_HEIGHT / 5;
 const SEGMENT_COLORS: Record<CellState, string> = {
   prayed: colors.brand.green,
   missed: colors.state.missed,
+  unmarked: colors.heat[0],
   upcoming: colors.heat[0],
   untracked: colors.heat[0],
 };

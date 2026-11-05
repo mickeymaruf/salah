@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { now } from '@/shared/lib/date';
 import type { PrayerName } from '../calculate';
 import { overrideKey, type Overrides } from './optimistic';
-import { markPrayed, removePrayed } from './prayerLog';
+import { clearMark, markMissed, markPrayed } from './prayerLog';
 
 interface PrayerLogState {
   // Bumped after every write so screens that read the log know to query again.
@@ -10,6 +10,7 @@ interface PrayerLogState {
   // Changes shown immediately while the database write is still running.
   overrides: Overrides;
   mark: (date: string, prayer: PrayerName, proofUri: string | null) => Promise<void>;
+  markMissed: (date: string, prayer: PrayerName) => Promise<void>;
   unmark: (date: string, prayer: PrayerName) => Promise<void>;
 }
 
@@ -36,9 +37,17 @@ export const usePrayerLogStore = create<PrayerLogState>((set, get) => {
     revision: 0,
     overrides: {},
     mark: (date, prayer, proofUri) =>
-      apply(overrideKey(date, prayer), { date, prayer, completedAt: now().toISOString(), proofUri }, () =>
-        markPrayed(date, prayer, proofUri),
+      apply(
+        overrideKey(date, prayer),
+        { date, prayer, outcome: 'prayed', completedAt: now().toISOString(), proofUri },
+        () => markPrayed(date, prayer, proofUri),
       ),
-    unmark: (date, prayer) => apply(overrideKey(date, prayer), null, () => removePrayed(date, prayer)),
+    markMissed: (date, prayer) =>
+      apply(
+        overrideKey(date, prayer),
+        { date, prayer, outcome: 'missed', completedAt: now().toISOString(), proofUri: null },
+        () => markMissed(date, prayer),
+      ),
+    unmark: (date, prayer) => apply(overrideKey(date, prayer), null, () => clearMark(date, prayer)),
   };
 });

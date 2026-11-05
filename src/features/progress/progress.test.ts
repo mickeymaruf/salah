@@ -6,10 +6,10 @@ import { computeStats, formatStreak } from './stats';
 const todayStates = (state: PrayerState, overrides: Partial<Record<PrayerName, PrayerState>> = {}) =>
   ({ ...Object.fromEntries(PRAYER_NAMES.map((n) => [n, state])), ...overrides }) as Record<PrayerName, PrayerState>;
 
-const all = (date: string) => PRAYER_NAMES.map((prayer) => ({ date, prayer }));
+const all = (date: string) => PRAYER_NAMES.map((prayer) => ({ date, prayer, outcome: 'prayed' as const }));
 
 const build = (
-  entries: { date: string; prayer: PrayerName }[],
+  entries: { date: string; prayer: PrayerName; outcome: 'prayed' | 'missed' }[],
   todayKey = '2026-03-10',
   startKey = '2026-03-01',
   today = todayStates('upcoming'),
@@ -23,10 +23,13 @@ describe('buildYear', () => {
     expect(grid[1][27].date).toBe('2026-02-28');
   });
 
-  it('marks logged prayers prayed and the rest of a past day missed', () => {
-    const cell = build([{ date: '2026-03-05', prayer: 'fajr' }])[2][4];
+  it('shows what was chosen and leaves the rest of a past day unmarked', () => {
+    const cell = build([
+      { date: '2026-03-05', prayer: 'fajr', outcome: 'prayed' },
+      { date: '2026-03-05', prayer: 'dhuhr', outcome: 'missed' },
+    ])[2][4];
     expect(cell.date).toBe('2026-03-05');
-    expect(cell.states).toEqual(['prayed', 'missed', 'missed', 'missed', 'missed']);
+    expect(cell.states).toEqual(['prayed', 'missed', 'unmarked', 'unmarked', 'unmarked']);
   });
 
   it('uses the live states for today and upcoming for later days', () => {
@@ -38,7 +41,7 @@ describe('buildYear', () => {
   it('marks days before the start as untracked', () => {
     const grid = build([]);
     expect(grid[0][0].states.every((s) => s === 'untracked')).toBe(true);
-    expect(grid[2][0].states.every((s) => s === 'missed')).toBe(true);
+    expect(grid[2][0].states.every((s) => s === 'unmarked')).toBe(true);
   });
 
   it('counts prayed prayers in a cell', () => {
@@ -56,14 +59,19 @@ describe('computeStats', () => {
     });
   });
 
-  it('computes prayed, missed and percent from past days and passed prayers today', () => {
-    const entries = [...all('2026-03-01'), ...all('2026-03-02'), { date: '2026-03-03', prayer: 'fajr' as const }];
-    const today = todayStates('upcoming', { fajr: 'prayed', dhuhr: 'missed' });
+  it('counts only what the user chose; unmarked prayers are not missed', () => {
+    const entries = [
+      ...all('2026-03-01'),
+      ...all('2026-03-02'),
+      { date: '2026-03-03', prayer: 'fajr' as const, outcome: 'prayed' as const },
+      { date: '2026-03-03', prayer: 'dhuhr' as const, outcome: 'missed' as const },
+    ];
+    const today = todayStates('upcoming', { fajr: 'prayed', dhuhr: 'missed', asr: 'unmarked' });
     const stats = computeStats(build(entries, '2026-03-10', '2026-03-01', today));
-    // Days Mar 1-9 = 45 prayers, 11 prayed. Today adds 1 prayed and 1 missed.
+    // Mar 1-2 = 10 prayed, Mar 3 adds 1 prayed and 1 missed, today adds 1 prayed and 1 missed.
     expect(stats.prayed).toBe(12);
-    expect(stats.missed).toBe(34 + 1);
-    expect(stats.percentKept).toBe(Math.round((12 / 47) * 100));
+    expect(stats.missed).toBe(2);
+    expect(stats.percentKept).toBe(Math.round((12 / 14) * 100));
   });
 
   it('finds the best streak of fully prayed days', () => {

@@ -86,6 +86,7 @@ function Progress({ profile }: { profile: Profile }) {
           status={selected.states[logging]}
           initial={initialChoice(selected.states[logging])}
           onSave={(choice) => saveChoice(selected.date, PRAYER_NAMES[logging], choice)}
+          onClear={() => saveChoice(selected.date, PRAYER_NAMES[logging], 'clear')}
           onClose={() => setLogging(null)}
         />
       ) : null}

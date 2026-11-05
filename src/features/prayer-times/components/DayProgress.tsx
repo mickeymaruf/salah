@@ -9,10 +9,11 @@ interface DayProgressProps {
   prayedCount: number;
 }
 
-// Prayed is green, missed is red, and anything not due yet stays pale.
+// Prayed is green and missed (chosen by the user) is red. Unmarked and not-yet-due prayers stay pale.
 const BAR_COLORS = {
   prayed: colors.brand.green,
   missed: colors.state.missed,
+  unmarked: colors.heat[0],
   upcoming: colors.heat[0],
 } as const;
 

@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import { Check, ChevronLeft, ChevronRight, X } from 'lucide-react-native';
 import { Card, Text } from '@/shared/ui';
 import { colors, sizes } from '@/shared/theme';
@@ -23,44 +24,69 @@ interface DayDetailProps {
   onNext?: () => void;
 }
 
+const SLIDE_DISTANCE = 56;
+
 export function DayDetail({ cell, onSelectPrayer, onPrevious, onNext }: DayDetailProps) {
   const swipe = useHorizontalSwipe(onPrevious, onNext);
+  // 0 is at rest. A new day starts at 1 (came from the right) or -1 (came from the left) and slides to 0.
+  const [slide] = useState(() => new Animated.Value(0));
+  const shownDate = useRef(cell.date);
+
+  useLayoutEffect(() => {
+    if (shownDate.current === cell.date) return;
+    const direction = cell.date > shownDate.current ? 1 : -1;
+    shownDate.current = cell.date;
+    slide.setValue(direction);
+    Animated.timing(slide, { toValue: 0, duration: 240, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+  }, [cell.date, slide]);
+
+  const translateX = slide.interpolate({ inputRange: [-1, 0, 1], outputRange: [-SLIDE_DISTANCE, 0, SLIDE_DISTANCE] });
+  const opacity = slide.interpolate({ inputRange: [-1, 0, 1], outputRange: [0, 1, 0] });
+  // The arrows stay put; the date, the summary and the five prayers slide in together.
+  const motion = { opacity, transform: [{ translateX }] };
+
   return (
     <View {...swipe.panHandlers}>
       <Card style={styles.card}>
-        <View style={styles.header}>
-          <View style={styles.title}>
-            <ArrowButton direction="previous" onPress={onPrevious} />
-            <Text variant="rowStrong" style={styles.date} accessibilityRole="header">
-              {formatShortDate(parseDateKey(cell.date))}
-            </Text>
-            <ArrowButton direction="next" onPress={onNext} />
-          </View>
-          <Text variant="caption" color="muted">
-            {summary(cell)}
-          </Text>
-        </View>
-        <View style={styles.prayers}>
-          {PRAYER_NAMES.map((name, index) => {
-            // A prayer whose time has not come cannot be marked.
-            const editable = onSelectPrayer !== undefined && canLog(cell.states[index]);
-            return (
-              <Pressable
-                key={name}
-                disabled={!editable}
-                accessibilityRole={editable ? 'button' : undefined}
-                accessibilityLabel={`${PRAYER_LABELS[name]}, ${cell.states[index]}`}
-                accessibilityHint={editable ? 'Opens a sheet to mark it prayed or missed' : undefined}
-                onPress={() => onSelectPrayer?.(index)}
-                style={styles.prayer}
-              >
-                <Mark state={cell.states[index]} />
-                <Text variant="caption" color="muted" style={styles.name}>
-                  {PRAYER_LABELS[name]}
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <View style={styles.title}>
+              <ArrowButton direction="previous" onPress={onPrevious} />
+              <Animated.View style={motion}>
+                <Text variant="rowStrong" style={styles.date} accessibilityRole="header">
+                  {formatShortDate(parseDateKey(cell.date))}
                 </Text>
-              </Pressable>
-            );
-          })}
+              </Animated.View>
+              <ArrowButton direction="next" onPress={onNext} />
+            </View>
+            <Animated.View style={motion}>
+              <Text variant="caption" color="muted">
+                {summary(cell)}
+              </Text>
+            </Animated.View>
+          </View>
+          <Animated.View style={[styles.prayers, motion]}>
+            {PRAYER_NAMES.map((name, index) => {
+              // A prayer whose time has not come cannot be marked.
+              const editable = onSelectPrayer !== undefined && canLog(cell.states[index]);
+              return (
+                <Pressable
+                  key={name}
+                  disabled={!editable}
+                  accessibilityRole={editable ? 'button' : undefined}
+                  accessibilityLabel={`${PRAYER_LABELS[name]}, ${cell.states[index]}`}
+                  accessibilityHint={editable ? 'Opens a sheet to mark it prayed or missed' : undefined}
+                  onPress={() => onSelectPrayer?.(index)}
+                  style={styles.prayer}
+                >
+                  <Mark state={cell.states[index]} />
+                  <Text variant="caption" color="muted" style={styles.name}>
+                    {PRAYER_LABELS[name]}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </Animated.View>
         </View>
       </Card>
     </View>
@@ -102,7 +128,8 @@ function Mark({ state }: { state: CellState }) {
 }
 
 const styles = StyleSheet.create({
-  card: { paddingHorizontal: 17, paddingTop: 7, paddingBottom: 15, gap: 6 },
+  card: { paddingHorizontal: 17, paddingTop: 7, paddingBottom: 15 },
+  content: { gap: 6 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   title: { flexDirection: 'row', alignItems: 'center', marginLeft: -12 },
   date: { minWidth: 96, textAlign: 'center' },

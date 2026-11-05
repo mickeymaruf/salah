@@ -1,6 +1,6 @@
 import type { PrayerLogEntry } from './prayerLog';
 
-// A pending change keyed by "date:prayer". An entry means "logged", null means "removed".
+// A pending change keyed by "date:prayer". An entry means "marked", null means "cleared".
 export type Overrides = Record<string, PrayerLogEntry | null>;
 
 export function overrideKey(date: string, prayer: string): string {

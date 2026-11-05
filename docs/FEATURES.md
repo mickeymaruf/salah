@@ -26,7 +26,8 @@ Shipped features, what they do, who owns the code, how to extend them.
   a 5-segment day bar and the prayer list. The user icon opens Settings.
 - Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `useTodayPrayers.ts`,
   `TodayScreen.tsx`, `components/`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
-- Rules in `schedule.ts`: prayed if logged, missed if the time passed without a log, otherwise upcoming.
+- Rules in `schedule.ts`: the user's choice (prayed or missed) wins. With no choice, a passed time is unmarked (an empty circle, never
+  counted as missed) and a future time is upcoming. The next prayer has a pale grey row and an empty ring, not a green mark.
   The next prayer is the first one strictly in the future, or tomorrow's Fajr after Isha.
 - Extend: a new calculation option goes in `calculate.ts` and `src/shared/state/profile.ts`.
   `useTodayPrayers(profile, prayed)` takes the set of prayed names from the log.
@@ -72,15 +73,15 @@ Shipped features, what they do, who owns the code, how to extend them.
 ## Progress
 
 - What: one screen for the whole year. 12 month rows by up to 31 day columns, each day a bar of 5 segments
-  (Fajr on top): green prayed, terracotta missed, pale upcoming. The grid scrolls horizontally with a thin custom
+  (Fajr on top): green prayed, terracotta missed, pale upcoming. Day numbers 1 to 31 sit above the columns and scroll with them (the selected day's number is dark). The grid scrolls horizontally with a thin custom
   scrollbar and opens with today at the right edge. Month letters stay fixed on the left. Tapping a day shows its
   five prayers in the detail card. Above the grid: percent kept, prayed, missed, best streak.
 - Owns: `src/features/progress/` (`model.ts` builds the grid, `stats.ts`, `useYearProgress.ts`,
   `ProgressScreen.tsx`, `components/`), `app/(tabs)/progress.tsx`.
-- Data: one query for the year (`getYear`). Past days need no prayer times: not logged means missed. Only today
+- Data: one query for the year (`getYear`). Past days need no prayer times: no row means unmarked. Only today
   uses the clock. Days before the start date are "untracked": drawn pale and excluded from every number.
   The start date is `profile.startedOn`, or the first logged day if that is earlier.
-- Stats count prayed and missed prayers whose time passed. Best streak is the longest run of consecutive days with
+- Stats count prayers the user marked prayed or missed. Unmarked ones are left out of the percentage. Best streak is the longest run of consecutive days with
   all five prayed.
 - Extend: a new state needs a color in `DayBar.tsx`, a case in `model.ts`, and a mark in `DayDetail.tsx`.
 
@@ -140,15 +141,16 @@ Shipped features, what they do, who owns the code, how to extend them.
 - What: one bottom sheet (`LogPrayerSheet`) with Prayed or Missed. Tapping one saves it and closes the sheet (no Save button). Two entry points:
   Today (tap a prayer row that is not prayed) and Progress (tap a day in the chart, then a prayer in the day card).
   Past days can be edited with no limit on how far back. Future days cannot.
-- Rules (`logChoice.ts`): Prayed is stored as a log row without a photo. Missed removes the row, because missed is
-  derived. A prayer whose time has not come cannot be marked Missed. Existing photo-verified rows are kept when
+- Rules (`logChoice.ts`): both choices are stored in `prayer_log.outcome` ('prayed' or 'missed'). Prayed has no photo when
+  chosen by hand. A prayer with no row is unmarked and shows an empty circle. "Clear mark" in the sheet returns a marked
+  prayer to unmarked. A prayer whose time has not come cannot be marked at all. Existing photo-verified rows are kept when
   Prayed is saved again.
 - Marks: every prayed prayer shows a filled green check, whether it was logged by hand or verified with a photo.
   Missed shows a filled terracotta cross. The outlined check from the Figma flow was dropped on request, along with
   the explanatory note in the sheet.
-- The sheet opens on the prayer's current state, so a missed prayer opens with Missed selected.
+- The sheet opens on the choice made before (nothing selected for an unmarked prayer).
 - Owns: `src/features/prayer-times/components/LogPrayerSheet.tsx`, `logChoice.ts`, `data/useSaveChoice.ts`,
-  `removePrayed` and `unmark` in the log, `manual` on `DayCell` in `src/features/progress/model.ts`.
+  `markPrayed`, `markMissed` and `clearMark` in the log, `manual` on `DayCell` in `src/features/progress/model.ts`.
 - Hint under the day card: "Tap a prayer to mark it done or missed".
 
 ## Bottom sheets
@@ -168,6 +170,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Owns: `app/(tabs)/_layout.tsx`, `src/shared/ui/TabBar.tsx` (the bar, drawn like the Figma tab bar).
 - Needs both `react-native-tab-view` and `react-native-pager-view`. Expo Router loads the first one inside a try/catch, so a
   missing package builds fine and only fails when the app starts. Check with `npx expo export --no-bytecode` and search the bundle.
+- Changing day slides the date, summary and prayers in from the side they came from (240 ms, native-driven, arrows stay put).
 - On Progress the day card has previous and next arrows, and swiping the card left or right moves to the next or previous day
   of the year (`adjacentDate` in `model.ts`, `useHorizontalSwipe.ts`). The year chart scrolls to keep the selected day in view.
 - Prayers whose time has not come cannot be marked, on Today or on Progress (`canLog` in `logChoice.ts`). A prayer that was

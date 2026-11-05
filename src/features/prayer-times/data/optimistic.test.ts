@@ -4,6 +4,7 @@ import type { PrayerLogEntry } from './prayerLog';
 const entry = (date: string, prayer: PrayerLogEntry['prayer'], proofUri: string | null = null): PrayerLogEntry => ({
   date,
   prayer,
+  outcome: 'prayed',
   completedAt: '2026-10-26T01:00:00.000Z',
   proofUri,
 });

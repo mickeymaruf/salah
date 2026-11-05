@@ -61,13 +61,6 @@ function StatusMark({ state, isNext }: { state: PrayerState; isNext: boolean }) 
       </View>
     );
   }
-  if (isNext) {
-    return (
-      <View style={[styles.mark, styles.ring, { borderColor: colors.brand.green }]}>
-        <View style={styles.dot} />
-      </View>
-    );
-  }
   if (state === 'missed') {
     return (
       <View style={[styles.mark, { backgroundColor: colors.state.missed }]}>
@@ -75,7 +68,8 @@ function StatusMark({ state, isNext }: { state: PrayerState; isNext: boolean }) 
       </View>
     );
   }
-  return <View style={[styles.mark, styles.ring, { borderColor: colors.line.soft }]} />;
+  // Unmarked and upcoming prayers share one empty ring. The next one only gets a darker ring.
+  return <View style={[styles.mark, styles.ring, { borderColor: isNext ? colors.ink.muted : colors.line.soft }]} />;
 }
 
 const styles = StyleSheet.create({
@@ -86,10 +80,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 14,
   },
-  next: { backgroundColor: colors.bg.sage },
+  next: { backgroundColor: colors.heat[0] },
   spacer: { flex: 1 },
   mark: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   filled: { backgroundColor: colors.brand.green },
   ring: { borderWidth: 2 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.brand.green },
 });

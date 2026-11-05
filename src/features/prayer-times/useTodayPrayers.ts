@@ -11,7 +11,7 @@ export function useTodayPrayers(profile: Profile) {
   const at = useNow(10_000);
   const dayKey = toDateKey(at);
   const entries = useDayLog(dayKey);
-  const prayed = useMemo(() => new Set(entries.map((entry) => entry.prayer)), [entries]);
+  const outcomes = useMemo(() => new Map(entries.map((entry) => [entry.prayer, entry.outcome] as const)), [entries]);
   // The revision changes when a downloaded month table arrives, which re-runs this hook with the new times.
   const timesRevision = useTimesStore((state) => state.revision);
   const { times, tomorrowTimes } = useMemo(() => {
@@ -20,7 +20,7 @@ export function useTodayPrayers(profile: Profile) {
   }, [profile, dayKey, timesRevision]);
 
   // The clock ticks every 10 s but the states rarely change, so keep one stable object for consumers.
-  const statesKey = encodeStates(getDayStates(times, prayed, at));
+  const statesKey = encodeStates(getDayStates(times, outcomes, at));
   const states = useMemo(() => decodeStates(statesKey), [statesKey]);
   const next = getNextPrayer(times, tomorrowTimes, at);
 

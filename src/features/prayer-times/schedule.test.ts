@@ -13,30 +13,37 @@ const tomorrow: DayTimes = {
 };
 
 describe('getPrayerState', () => {
-  it('is prayed whenever a log row exists, even before the time', () => {
-    expect(getPrayerState(at(15, 42), true, at(10))).toBe('prayed');
+  it('is whatever the user chose, even before the time', () => {
+    expect(getPrayerState(at(15, 42), 'prayed', at(10))).toBe('prayed');
+    expect(getPrayerState(at(12, 2), 'missed', at(13))).toBe('missed');
   });
 
-  it('is missed once the time has passed without a row', () => {
-    expect(getPrayerState(at(12, 2), false, at(12, 2))).toBe('missed');
-    expect(getPrayerState(at(12, 2), false, at(13))).toBe('missed');
+  it('is unmarked, not missed, once the time has passed with no choice', () => {
+    expect(getPrayerState(at(12, 2), undefined, at(12, 2))).toBe('unmarked');
+    expect(getPrayerState(at(12, 2), undefined, at(13))).toBe('unmarked');
   });
 
   it('is upcoming before the time', () => {
-    expect(getPrayerState(at(15, 42), false, at(15, 41))).toBe('upcoming');
+    expect(getPrayerState(at(15, 42), undefined, at(15, 41))).toBe('upcoming');
   });
 });
 
 describe('getDayStates', () => {
-  it('combines the log and the clock for all five prayers', () => {
-    const states = getDayStates(today, new Set(['fajr']), at(13));
+  it('combines the choices and the clock for all five prayers', () => {
+    const states = getDayStates(today, new Map([['fajr', 'prayed']]), at(13));
     expect(states).toEqual({
       fajr: 'prayed',
-      dhuhr: 'missed',
+      dhuhr: 'unmarked',
       asr: 'upcoming',
       maghrib: 'upcoming',
       isha: 'upcoming',
     });
+  });
+
+  it('shows a chosen Missed as missed', () => {
+    const states = getDayStates(today, new Map([['dhuhr', 'missed']]), at(13));
+    expect(states.dhuhr).toBe('missed');
+    expect(states.fajr).toBe('unmarked');
   });
 });
 
@@ -61,7 +68,7 @@ describe('getNextPrayer', () => {
 
 describe('encodeStates', () => {
   it('round-trips through decodeStates', () => {
-    const states = getDayStates(today, new Set(['fajr']), at(13));
+    const states = getDayStates(today, new Map([['fajr', 'prayed']]), at(13));
     expect(decodeStates(encodeStates(states))).toEqual(states);
   });
 });

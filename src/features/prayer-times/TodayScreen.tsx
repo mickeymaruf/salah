@@ -64,6 +64,7 @@ function Today({ profile }: { profile: Profile }) {
           status={states[logging]}
           initial={initialChoice(states[logging])}
           onSave={(choice) => saveChoice(dayKey, logging, choice)}
+          onClear={() => saveChoice(dayKey, logging, 'clear')}
           onClose={() => setLogging(null)}
         />
       ) : null}

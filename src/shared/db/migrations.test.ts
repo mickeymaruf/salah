@@ -8,6 +8,8 @@ function freshDb(): DatabaseSync {
 }
 
 const insert = 'INSERT OR IGNORE INTO prayer_log (date, prayer, completed_at, proof_uri) VALUES (?, ?, ?, ?)';
+const insertOutcome =
+  'INSERT OR IGNORE INTO prayer_log (date, prayer, outcome, completed_at, proof_uri) VALUES (?, ?, ?, ?, ?)';
 
 describe('prayer_log schema', () => {
   it('keeps the first completion for a day and prayer', () => {
@@ -33,5 +35,20 @@ describe('prayer_log schema', () => {
     db.prepare(insert).run('2027-01-01', 'fajr', 'x', null);
     const rows = db.prepare('SELECT date FROM prayer_log WHERE date BETWEEN ? AND ? ORDER BY date').all('2026-01-01', '2026-12-31');
     expect(rows.map((r) => r.date)).toEqual(['2026-01-01', '2026-12-31']);
+  });
+
+  it('treats rows from before the outcome column as prayed', () => {
+    const db = new DatabaseSync(':memory:');
+    db.exec(MIGRATIONS[0]);
+    db.prepare(insert).run('2026-10-26', 'fajr', 'x', null);
+    db.exec(MIGRATIONS[1]);
+    expect(db.prepare('SELECT outcome FROM prayer_log').all()).toEqual([{ outcome: 'prayed' }]);
+  });
+
+  it('accepts only prayed or missed as an outcome', () => {
+    const db = freshDb();
+    db.prepare(insertOutcome).run('2026-10-26', 'fajr', 'missed', 'x', null);
+    db.prepare(insertOutcome).run('2026-10-26', 'dhuhr', 'skipped', 'x', null);
+    expect(db.prepare('SELECT prayer FROM prayer_log').all()).toEqual([{ prayer: 'fajr' }]);
   });
 });

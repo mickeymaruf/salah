@@ -31,5 +31,8 @@ export function useDayLog(date: string): PrayerLogEntry[] {
 
 export function usePrayedOn(date: string): ReadonlySet<PrayerName> {
   const entries = useDayLog(date);
-  return useMemo(() => new Set(entries.map((entry) => entry.prayer)), [entries]);
+  return useMemo(
+    () => new Set(entries.filter((entry) => entry.outcome === 'prayed').map((entry) => entry.prayer)),
+    [entries],
+  );
 }

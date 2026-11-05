@@ -35,7 +35,10 @@ async function run(profile: Profile, settings: Settings): Promise<void> {
 
   const from = now();
   const logged = await getRange(toDateKey(from), toDateKey(addDays(from, DAYS_AHEAD)));
-  const prayed = new Set(logged.map((entry) => prayedKey(entry.date, entry.prayer)));
+  // Only a prayed row silences a prayer's alarms. Marking it missed does not.
+  const prayed = new Set(
+    logged.filter((entry) => entry.outcome === 'prayed').map((entry) => prayedKey(entry.date, entry.prayer)),
+  );
   const plan = planAlarms({
     profile,
     settings,

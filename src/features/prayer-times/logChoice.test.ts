@@ -1,23 +1,32 @@
-import { availableChoices, canLog, initialChoice, isEditableDay, sheetSubtitle } from './logChoice';
+import { availableChoices, canClear, canLog, initialChoice, isEditableDay, sheetSubtitle } from './logChoice';
 
 describe('availableChoices', () => {
   it('allows nothing before the prayer time', () => {
     expect(availableChoices('upcoming')).toEqual([]);
     expect(canLog('upcoming')).toBe(false);
-    expect(canLog('missed')).toBe(true);
-    expect(canLog('prayed')).toBe(true);
-    expect(availableChoices('missed')).toEqual(['prayed', 'missed']);
-    expect(availableChoices('prayed')).toEqual(['prayed', 'missed']);
-    expect(availableChoices('untracked')).toEqual(['prayed', 'missed']);
+    for (const status of ['unmarked', 'missed', 'prayed', 'untracked'] as const) {
+      expect(canLog(status)).toBe(true);
+      expect(availableChoices(status)).toEqual(['prayed', 'missed']);
+    }
   });
 });
 
 describe('initialChoice', () => {
-  it('opens on the current state', () => {
+  it('opens on the choice made before, and on nothing when there is none', () => {
     expect(initialChoice('missed')).toBe('missed');
     expect(initialChoice('prayed')).toBe('prayed');
-    expect(initialChoice('upcoming')).toBe('prayed');
-    expect(initialChoice('untracked')).toBe('prayed');
+    expect(initialChoice('unmarked')).toBeNull();
+    expect(initialChoice('untracked')).toBeNull();
+    expect(initialChoice('upcoming')).toBeNull();
+  });
+});
+
+describe('canClear', () => {
+  it('is offered only when there is a choice to clear', () => {
+    expect(canClear('prayed')).toBe(true);
+    expect(canClear('missed')).toBe(true);
+    expect(canClear('unmarked')).toBe(false);
+    expect(canClear('upcoming')).toBe(false);
   });
 });
 
