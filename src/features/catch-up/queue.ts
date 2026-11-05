@@ -7,18 +7,8 @@ export interface CatchUpItem {
   time: Date;
 }
 
-// How long the app must have been idle for the prompt to appear.
-export const IDLE_MS = 4 * 60 * 60 * 1000;
-
 // A person who did not open the app for weeks should not face hundreds of cards. Older prayers stay unmarked.
 export const MAX_DAYS_BACK = 7;
-
-// Shown on app open only: after 4 hours idle, or when the calendar day changed since the app was last used.
-// With no earlier use (first launch) there is nothing to catch up on.
-export function isOpenAfterAbsence(lastActive: Date | null, at: Date): boolean {
-  if (!lastActive) return false;
-  return at.getTime() - lastActive.getTime() >= IDLE_MS || toDateKey(lastActive) !== toDateKey(at);
-}
 
 interface QueueInput {
   profile: CalculationInput & { startedOn?: string };

@@ -135,6 +135,7 @@
 
 - Not run on a device. The swipe feel, the colour growing from the ellipse, the fade between prayers and the reduce-motion cross-fade are unverified.
 - Only the last 7 days are asked about. Older unlogged prayers stay unmarked.
-- The prompt can be missed if the app is opened from an alarm notification: it waits for the next open.
+- The prompt appears on every open, including a quick return to the app, and again after the back button closes it. If the app is opened from
+  an alarm notification the prompt skips that open and waits for the next one.
 - A tap in the blank corners outside the two ellipses does nothing, by design. Screen readers activate the buttons directly.
 - The drag on the prayer name is not available to screen readers; Yes and No buttons are.

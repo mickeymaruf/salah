@@ -46,7 +46,7 @@ export default function RootLayout() {
   useTimesSync(profile);
   useAlarmSync(settingsHydrated ? profile : null, settings);
   useNotificationRouting(ready && hasProfile);
-  useCatchUp(profile, ready && hasProfile);
+  useCatchUp(profile, ready);
 
   // The native splash image has no text, so hand over to the in-app splash as soon as fonts exist.
   useEffect(() => {

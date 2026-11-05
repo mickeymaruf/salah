@@ -49,7 +49,7 @@ During onboarding the profile does not exist yet, so `onboarding/draftStore.ts` 
 
 ## Catch-up on open
 
-`useCatchUp` (called in `app/_layout.tsx`) runs at app open. It reads `salah.lastActive`, builds the queue with `buildCatchUpQueue` from the same
+`useCatchUp` (called in `app/_layout.tsx`) runs at every app open. It builds the queue with `buildCatchUpQueue` from the same
 `getDayTimes` and log rows the other screens use, puts it in `catchUpStore` and pushes `/catch-up`. Answers go through `useSaveChoice`, so
 the optimistic log store updates Today and Progress at once.
 

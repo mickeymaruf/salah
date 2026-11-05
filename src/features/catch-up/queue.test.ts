@@ -1,26 +1,7 @@
 import type { CalculationInput } from '@/features/prayer-times/calculate';
-import { buildCatchUpQueue, IDLE_MS, isOpenAfterAbsence, MAX_DAYS_BACK, queueStartKey } from './queue';
+import { buildCatchUpQueue, MAX_DAYS_BACK, queueStartKey } from './queue';
 
 const at = (day: number, h: number, m = 0) => new Date(2026, 10, day, h, m);
-
-describe('isOpenAfterAbsence', () => {
-  it('is false on the first launch', () => {
-    expect(isOpenAfterAbsence(null, at(5, 12))).toBe(false);
-  });
-
-  it('is true after 4 hours idle on the same day', () => {
-    expect(isOpenAfterAbsence(at(5, 8), at(5, 12))).toBe(true);
-    expect(isOpenAfterAbsence(at(5, 8), new Date(at(5, 8).getTime() + IDLE_MS - 1))).toBe(false);
-  });
-
-  it('is true when the calendar day changed, even after a short gap', () => {
-    expect(isOpenAfterAbsence(at(4, 23, 50), at(5, 0, 10))).toBe(true);
-  });
-
-  it('is false for a short gap on the same day', () => {
-    expect(isOpenAfterAbsence(at(5, 10), at(5, 11))).toBe(false);
-  });
-});
 
 describe('queueStartKey', () => {
   it('starts at the start of tracking when that is recent', () => {

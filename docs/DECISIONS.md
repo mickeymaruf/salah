@@ -329,7 +329,7 @@ Format: date, title, context, decision, consequence.
 
 - Context: the user wanted a full-screen "Did you pray?" prompt on opening the app after a gap (Figma "Proposals · D. Catch-up on open").
 - Decision: "unlogged" means no row in `prayer_log`, so a prayer already marked missed is not asked again. "Open" means a cold start or a return
-  to the foreground. The idle time is measured from when the app was last put away (stored as `salah.lastActive`). The queue is limited to the
+  to the foreground. The queue is limited to the
   last 7 days (`MAX_DAYS_BACK`), because a long absence would otherwise produce hundreds of cards. The Log sheet is unchanged.
 - Where the written brief and the Figma frame differ, the brief won: the question reads "Did you pray?" above the prayer name, while Figma P-D1
   puts it below the time. The full-screen result also shows the prayer name under "Prayed" or "Missed", as in Figma P-D3 and P-D5.
@@ -337,3 +337,12 @@ Format: date, title, context, decision, consequence.
   token, and the `giant`, `choice` and `ask` type variants.
 - Consequence: dragging uses `PanResponder` and `Animated` (no gesture-handler or reanimated is installed). The tap target for each answer is its
   ellipse, not the whole half of the screen.
+
+## 2026-11-05 Catch-up asks on every open
+
+- Context: the first version waited for 4+ hours idle or a new day. The user tested it by clearing marks and reopening, saw nothing, and
+  said it should ask immediately and on every reopen while a passed prayer is unmarked.
+- Decision: removed the idle and new-day condition and the stored last-use time. Every open with an unlogged passed prayer shows the prompt.
+  Opening the app because onboarding just finished does not count as an open.
+- Consequence: someone who closes the prompt with the back button is asked again on the next open. Briefly leaving and returning to the app
+  also asks again. A user who onboards in the afternoon is asked about that morning's prayers at the next open.
