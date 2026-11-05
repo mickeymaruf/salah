@@ -59,7 +59,7 @@ export function ChoiceButton({ kind, role, progress, dimmed, disabled, label, on
 }
 
 const styles = StyleSheet.create({
-  slot: { position: 'absolute', top: 8, width: sizes.iconButton, height: sizes.iconButton },
+  slot: { position: 'absolute', top: 11, width: sizes.iconButton, height: sizes.iconButton },
   button: {
     flex: 1,
     borderRadius: 12,

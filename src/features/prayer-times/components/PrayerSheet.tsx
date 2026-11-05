@@ -58,5 +58,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     elevation: 6,
   },
-  content: { paddingHorizontal: 16, paddingTop: 24, paddingBottom: 24, gap: 10 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 30, gap: 10 },
 });

@@ -14,14 +14,14 @@ const ICONS: Record<PrayerName, LucideIcon> = {
 // Four faint copies of the prayer's icon and two dots, scattered in the middle of the pill (Figma "Particles").
 // Positions are fixed so a pill looks the same every time; each prayer shifts them slightly so the five differ.
 const SPOTS = [
-  { x: 158, y: 9, size: 22, tilt: -8 },
-  { x: 204, y: 31, size: 15, tilt: 10 },
-  { x: 246, y: 6, size: 26, tilt: 6 },
-  { x: 294, y: 29, size: 18, tilt: -12 },
+  { x: 158, y: 12, size: 22, tilt: -8 },
+  { x: 204, y: 34, size: 15, tilt: 10 },
+  { x: 246, y: 9, size: 26, tilt: 6 },
+  { x: 294, y: 32, size: 18, tilt: -12 },
 ] as const;
 const DOTS = [
-  { x: 192, y: 9, size: 3 },
-  { x: 274, y: 46, size: 4 },
+  { x: 192, y: 12, size: 3 },
+  { x: 274, y: 49, size: 4 },
 ] as const;
 const OPACITY = 0.16;
 

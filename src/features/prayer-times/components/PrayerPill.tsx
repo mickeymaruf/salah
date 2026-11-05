@@ -11,11 +11,11 @@ import type { PrayerState } from '../schedule';
 import { ChoiceButton, type ButtonRole } from './ChoiceButton';
 import { PrayerParticles } from './PrayerParticles';
 
-const HEIGHT = 60;
+const HEIGHT = 66;
 const BUTTON = 44;
-const BUTTON_INSET = 10;
-const TEXT_LEFT = 64;
-const MARKED_TEXT_LEFT = 20;
+const BUTTON_INSET = 14;
+const TEXT_LEFT = 76;
+const MARKED_TEXT_LEFT = 24;
 // The covering circle is big enough to reach the far corner of the pill from either button.
 const CIRCLE = 700;
 const START_SCALE = 0.2;
@@ -40,7 +40,7 @@ const FILL: Record<LogChoice, string> = { prayed: colors.pill.prayed, missed: co
 // solid, a circle grows from it over the pill, the other button fades, and the pill ends fully coloured with no buttons.
 export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit }: PrayerPillProps) {
   const reduceMotion = useReduceMotion();
-  const [width, setWidth] = useState(358);
+  const [width, setWidth] = useState(350);
   // The choice being animated. While it is set the pill draws the animation even though the log already has the mark.
   const [tapped, setTapped] = useState<LogChoice | null>(null);
   const [progress] = useState(() => new Animated.Value(0));
@@ -148,5 +148,5 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
 const styles = StyleSheet.create({
   pill: { height: HEIGHT, borderRadius: 16, overflow: 'hidden' },
   circle: { position: 'absolute', width: CIRCLE, height: CIRCLE, borderRadius: CIRCLE / 2 },
-  text: { position: 'absolute', top: 12, gap: 2 },
+  text: { position: 'absolute', top: 15, gap: 2 },
 });

@@ -28,7 +28,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   The hero is a thin half circle with the prayer in progress inside it (name, "3:42 PM – 5:21 PM", "Maghrib in 1h 12m"). A green arc and dot
   show how far through that prayer's window it is. The text block sits at the bottom of the hero, so it clears the sheet whatever the
   font's line height. Below it a white sheet, full width, rounded 20 at the top, holds five pills
-  (60 px, 10 px apart). The tab bar is unchanged.
+  (66 px high, 10 px apart, 20 px from the sheet edges and from its top). The buttons sit 14 px in. The tab bar is unchanged.
 - Pill: a missed button (thin terracotta cross) on the left, a prayed button (thin green check) on the right, the name and start time between,
   and faint icons of the prayer behind them (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in
   progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
