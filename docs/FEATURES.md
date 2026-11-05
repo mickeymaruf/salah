@@ -190,3 +190,19 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Changing the location from Settings to a different city asks whether to keep the edits or reset them. Reset is the default.
 - Owns: `src/features/adjust-times/` (screens, wheel, sheet), `src/features/prayer-times/manualTimes.ts` (pure logic),
   `src/features/onboarding/draftStore.ts`.
+
+## Catch-up on open
+
+- What: a full-screen prompt (no tab bar) that asks "Did you pray?" about one unlogged prayer at a time, oldest first. Figma:
+  file OgLgPUUPDO1UindTOIu39O, section "Proposals · D. Catch-up on open", frames P-D1 to P-D6.
+- When: on app open only (cold start, or coming back to the foreground), and only if the app was last used 4 or more hours ago or on
+  a different calendar day, and at least one prayer whose time has passed has no log row (prayed or missed). Never mid-session, never on a
+  first launch, and not over the alarm, proof or verified screens. The queue is a snapshot taken at open and covers up to 7 days back.
+- Answering: tap Yes or No, or drag the prayer name right (Yes) or left (No); it follows the finger and tilts up to 8 degrees. A drag past a
+  quarter of the width or a quick flick answers. The answer is saved at once through `useSaveChoice`, so Today and Progress show it. The chosen
+  colour grows from its half-ellipse to fill the screen (350 ms), shows a check or cross with "Prayed" or "Missed" and the prayer name, holds
+  400 ms, then fades (250 ms) to the next prayer. Light haptic on each answer. No confirmation, sheet or undo.
+- After the last prayer: "All caught up", "N prayed · M missed" and a "Go to Today" button.
+- Accessibility: Yes and No are real buttons ("Yes, I prayed Asr"). With reduce motion on, the colour cross-fades in and out instead of growing.
+- Owns: `src/features/catch-up/` (`queue.ts` and `geometry.ts` are pure and tested; `useCatchUp.ts` decides when to show; `useAnswerFlow.ts` runs an
+  answer; `CatchUpScreen.tsx`), `app/catch-up.tsx`, and `useCatchUp` in `app/_layout.tsx`. The last-use time is stored in AsyncStorage (`salah.lastActive`).

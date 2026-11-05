@@ -11,6 +11,7 @@ import { useSettingsStore } from '@/shared/state/settingsStore';
 import { useTimesSync } from '@/features/prayer-times/data/useTimesSync';
 import { useAlarmSync } from '@/features/alarm/useAlarmSync';
 import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
+import { useCatchUp } from '@/features/catch-up/useCatchUp';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -45,6 +46,7 @@ export default function RootLayout() {
   useTimesSync(profile);
   useAlarmSync(settingsHydrated ? profile : null, settings);
   useNotificationRouting(ready && hasProfile);
+  useCatchUp(profile, ready && hasProfile);
 
   // The native splash image has no text, so hand over to the in-app splash as soon as fonts exist.
   useEffect(() => {
@@ -73,6 +75,7 @@ export default function RootLayout() {
           <Stack.Screen name="alarm" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />
           <Stack.Screen name="proof" options={{ gestureEnabled: false }} />
           <Stack.Screen name="verified" options={{ gestureEnabled: false, animation: 'fade' }} />
+          <Stack.Screen name="catch-up" options={{ animation: 'fade', gestureEnabled: false }} />
           <Stack.Screen name="settings" />
           <Stack.Screen name="edit-times" />
           <Stack.Screen name="privacy" />

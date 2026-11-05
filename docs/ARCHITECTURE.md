@@ -47,6 +47,12 @@ onboarding, prayer-times and settings, so they are shared rather than owned by o
 Every reader goes through it. Settings writes the profile; `useAlarmSync` depends on the profile, so alarms are rebuilt.
 During onboarding the profile does not exist yet, so `onboarding/draftStore.ts` holds the detected place and the edits.
 
+## Catch-up on open
+
+`useCatchUp` (called in `app/_layout.tsx`) runs at app open. It reads `salah.lastActive`, builds the queue with `buildCatchUpQueue` from the same
+`getDayTimes` and log rows the other screens use, puts it in `catchUpStore` and pushes `/catch-up`. Answers go through `useSaveChoice`, so
+the optimistic log store updates Today and Progress at once.
+
 ## Today screen
 
 `useTodayPrayers` combines the profile, the clock (`useNow`, 10 s tick and on foreground) and the set of

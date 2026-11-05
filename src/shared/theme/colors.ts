@@ -19,6 +19,8 @@ export const colors = {
   },
   state: {
     missed: '#CC7361',
+    // Light terracotta for the Catch-up No panel and the full Missed screen (Figma P-D5).
+    missedSoft: '#F2DBD6',
   },
   heat: ['#ECE8E0', '#C7D8CA', '#94B6A0', '#57856E', '#336654', '#1F4D3F'],
   // Concentric rings on the alarm screen, outer to inner.

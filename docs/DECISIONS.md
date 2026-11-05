@@ -324,3 +324,16 @@ Format: date, title, context, decision, consequence.
 - Context: a green ring with a dot on the next prayer looked like a completed one.
 - Decision: the next prayer row has the pale grey highlight (`heat[0]`) and an empty ring with a darker outline.
 - Consequence: green now only means prayed.
+
+## 2026-11-05 Catch-up prompt
+
+- Context: the user wanted a full-screen "Did you pray?" prompt on opening the app after a gap (Figma "Proposals · D. Catch-up on open").
+- Decision: "unlogged" means no row in `prayer_log`, so a prayer already marked missed is not asked again. "Open" means a cold start or a return
+  to the foreground. The idle time is measured from when the app was last put away (stored as `salah.lastActive`). The queue is limited to the
+  last 7 days (`MAX_DAYS_BACK`), because a long absence would otherwise produce hundreds of cards. The Log sheet is unchanged.
+- Where the written brief and the Figma frame differ, the brief won: the question reads "Did you pray?" above the prayer name, while Figma P-D1
+  puts it below the time. The full-screen result also shows the prayer name under "Prayed" or "Missed", as in Figma P-D3 and P-D5.
+- Added `expo-haptics` (version from `bundledNativeModules.json`) for the light tap, `state.missedSoft` (#F2DBD6 from Figma P-D5) as a colour
+  token, and the `giant`, `choice` and `ask` type variants.
+- Consequence: dragging uses `PanResponder` and `Animated` (no gesture-handler or reanimated is installed). The tap target for each answer is its
+  ellipse, not the whole half of the screen.

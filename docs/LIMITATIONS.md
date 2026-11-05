@@ -130,3 +130,11 @@
 - The first standalone build activates the ML Kit photo check, which has not been run on a device. If it wrongly rejects a
   genuine photo, turn off "Require photo proof" in Settings, or report it so the labels can be loosened.
 - Alarm sounds, the notification color and the notification icon only apply in a standalone or development build.
+
+## Catch-up prompt
+
+- Not run on a device. The swipe feel, the colour growing from the ellipse, the fade between prayers and the reduce-motion cross-fade are unverified.
+- Only the last 7 days are asked about. Older unlogged prayers stay unmarked.
+- The prompt can be missed if the app is opened from an alarm notification: it waits for the next open.
+- A tap in the blank corners outside the two ellipses does nothing, by design. Screen readers activate the buttons directly.
+- The drag on the prayer name is not available to screen readers; Yes and No buttons are.

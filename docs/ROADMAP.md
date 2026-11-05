@@ -16,6 +16,7 @@ Status: done, next, todo.
 | 9 | ML Kit verifier (dev build only) | done |
 | 10 | Polish pass | done |
 | 11 | Manual prayer times | done |
+| 12 | Catch-up on open | done |
 
 ## Later
 
