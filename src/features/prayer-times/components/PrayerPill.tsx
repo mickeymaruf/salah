@@ -11,11 +11,12 @@ import type { PrayerState } from '../schedule';
 import { ChoiceButton, type ButtonRole } from './ChoiceButton';
 import { PrayerParticles } from './PrayerParticles';
 
-const HEIGHT = 66;
+const HEIGHT = 76;
 const BUTTON = 44;
-const BUTTON_INSET = 14;
-const TEXT_LEFT = 76;
-const MARKED_TEXT_LEFT = 24;
+const BUTTON_INSET = 16;
+const BUTTON_TOP = (HEIGHT - BUTTON) / 2;
+const TEXT_LEFT = 84;
+const MARKED_TEXT_LEFT = 28;
 // The covering circle is big enough to reach the far corner of the pill from either button.
 const CIRCLE = 700;
 const START_SCALE = 0.2;
@@ -104,7 +105,7 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
             disabled={upcoming || tapped !== null}
             label={`Mark ${label} as missed`}
             onPress={() => mark('missed')}
-            style={{ left: BUTTON_INSET }}
+            style={{ left: BUTTON_INSET, top: BUTTON_TOP }}
           />
           <ChoiceButton
             kind="prayed"
@@ -114,7 +115,7 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
             disabled={upcoming || tapped !== null}
             label={`Mark ${label} as prayed`}
             onPress={() => mark('prayed')}
-            style={{ right: BUTTON_INSET }}
+            style={{ right: BUTTON_INSET, top: BUTTON_TOP }}
           />
         </>
       )}
@@ -122,10 +123,10 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
         pointerEvents="none"
         style={[styles.text, { left: showMarked ? MARKED_TEXT_LEFT : TEXT_LEFT }, !showMarked && { transform: [{ translateX: textShift }] }]}
       >
-        <Text variant="rowStrong" color={upcoming ? 'muted' : 'primary'}>
+        <Text variant="pillName" color={upcoming ? 'muted' : 'primary'} style={styles.noPadding}>
           {label}
         </Text>
-        <Text variant="caption" color="muted">
+        <Text variant="pillTime" color="muted" style={styles.noPadding}>
           {clock}
         </Text>
       </Animated.View>
@@ -148,5 +149,7 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
 const styles = StyleSheet.create({
   pill: { height: HEIGHT, borderRadius: 16, overflow: 'hidden' },
   circle: { position: 'absolute', width: CIRCLE, height: CIRCLE, borderRadius: CIRCLE / 2 },
-  text: { position: 'absolute', top: 15, gap: 2 },
+  // Top and bottom at 0 with centred content keeps the name and time in the middle of the pill whatever the font metrics.
+  text: { position: 'absolute', top: 0, bottom: 0, justifyContent: 'center', gap: 2 },
+  noPadding: { includeFontPadding: false },
 });
