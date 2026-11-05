@@ -6,11 +6,14 @@ import type { LogChoice } from '@/features/prayer-times/logChoice';
 import type { CatchUpItem } from './queue';
 import { useReduceMotion } from './useReduceMotion';
 
-const GROW_MS = 350;
-const CONTENT_MS = 150;
-const HOLD_MS = 400;
-const FADE_MS = 250;
-const REDUCED_MS = 150;
+// Slow and soft: the colour spreads over about half a second, rests, then dissolves into the next prayer.
+const GROW_MS = 600;
+const CONTENT_MS = 300;
+const HOLD_MS = 600;
+const FADE_MS = 450;
+const REDUCED_MS = 200;
+// Starts gently and settles slowly, so the colour seems to flow rather than snap.
+const SOFT = Easing.bezier(0.33, 0, 0.2, 1);
 
 export interface Result {
   choice: LogChoice;
@@ -58,6 +61,7 @@ export function useAnswerFlow(items: CatchUpItem[]) {
     Animated.timing(overlay, {
       toValue: 0,
       duration: reduceMotion ? REDUCED_MS : FADE_MS,
+      easing: Easing.inOut(Easing.quad),
       useNativeDriver: true,
     }).start(() => {
       if (!mounted.current) return;
@@ -87,10 +91,10 @@ export function useAnswerFlow(items: CatchUpItem[]) {
       return;
     }
     overlay.setValue(1);
-    const ease = { duration: GROW_MS, easing: Easing.out(Easing.cubic), useNativeDriver: true };
+    const ease = { duration: GROW_MS, easing: SOFT, useNativeDriver: true };
     Animated.sequence([
       Animated.parallel([Animated.timing(grow, { toValue: 1, ...ease }), Animated.timing(fill, { toValue: 1, ...ease })]),
-      Animated.timing(content, { toValue: 1, duration: CONTENT_MS, useNativeDriver: true }),
+      Animated.timing(content, { toValue: 1, duration: CONTENT_MS, easing: Easing.out(Easing.quad), useNativeDriver: true }),
     ]).start(hold);
   };
 

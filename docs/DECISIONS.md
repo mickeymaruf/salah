@@ -346,3 +346,11 @@ Format: date, title, context, decision, consequence.
   Opening the app because onboarding just finished does not count as an open.
 - Consequence: someone who closes the prompt with the back button is asked again on the next open. Briefly leaving and returning to the app
   also asks again. A user who onboards in the afternoon is asked about that morning's prayers at the next open.
+
+## 2026-11-05 Today rows are editable once marked; calmer Catch-up animation
+
+- Context: prayed rows on Today did nothing when tapped, so a mistaken mark could only be fixed from Progress. The Catch-up colour growth felt abrupt.
+- Decision: every Today row whose time has come opens the log sheet, whatever its state (the sheet offers Prayed, Missed and Clear mark).
+  Catch-up timings were slowed: grow 350 to 600 ms, result fade 150 to 300 ms, hold 400 to 600 ms, dissolve 250 to 450 ms, with a gentler curve
+  (cubic-bezier 0.33, 0, 0.2, 1). This replaces the 350 ms ease-out in the original brief.
+- Consequence: one answer now takes about 2 seconds from tap to the next question.

@@ -11,7 +11,7 @@ interface PrayerRowProps {
   time: Date;
   state: PrayerState;
   isNext: boolean;
-  // Set for rows that can be logged by hand.
+  // Set for rows that can be marked or changed by hand: every prayer whose time has come.
   onPress?: () => void;
 }
 

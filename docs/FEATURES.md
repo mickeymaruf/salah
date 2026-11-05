@@ -139,7 +139,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 ## Manual logging
 
 - What: one bottom sheet (`LogPrayerSheet`) with Prayed or Missed. Tapping one saves it and closes the sheet (no Save button). Two entry points:
-  Today (tap a prayer row that is not prayed) and Progress (tap a day in the chart, then a prayer in the day card).
+  Today (tap any prayer row whose time has come, marked or not) and Progress (tap a day in the chart, then a prayer in the day card).
   Past days can be edited with no limit on how far back. Future days cannot.
 - Rules (`logChoice.ts`): both choices are stored in `prayer_log.outcome` ('prayed' or 'missed'). Prayed has no photo when
   chosen by hand. A prayer with no row is unmarked and shows an empty circle. "Clear mark" in the sheet returns a marked
@@ -201,8 +201,8 @@ Shipped features, what they do, who owns the code, how to extend them.
   snapshot taken at open and covers up to 7 days back.
 - Answering: tap Yes or No, or drag the prayer name right (Yes) or left (No); it follows the finger and tilts up to 8 degrees. A drag past a
   quarter of the width or a quick flick answers. The answer is saved at once through `useSaveChoice`, so Today and Progress show it. The chosen
-  colour grows from its half-ellipse to fill the screen (350 ms), shows a check or cross with "Prayed" or "Missed" and the prayer name, holds
-  400 ms, then fades (250 ms) to the next prayer. Light haptic on each answer. No confirmation, sheet or undo.
+  colour grows from its half-ellipse to fill the screen (600 ms, soft ease), shows a check or cross with "Prayed" or "Missed" and the prayer name
+  (300 ms fade), holds 600 ms, then dissolves (450 ms) into the next prayer. Light haptic on each answer. No confirmation, sheet or undo.
 - After the last prayer: "All caught up", "N prayed · M missed" and a "Go to Today" button.
 - Accessibility: Yes and No are real buttons ("Yes, I prayed Asr"). With reduce motion on, the colour cross-fades in and out instead of growing.
 - Owns: `src/features/catch-up/` (`queue.ts` and `geometry.ts` are pure and tested; `useCatchUp.ts` decides when to show; `useAnswerFlow.ts` runs an

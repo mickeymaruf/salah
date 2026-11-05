@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { Card } from '@/shared/ui';
 import { PRAYER_NAMES, type DayTimes, type PrayerName } from '../calculate';
 import type { PrayerState } from '../schedule';
+import { canLog } from '../logChoice';
 import { PrayerRow } from './PrayerRow';
 
 interface PrayerListProps {
@@ -22,7 +23,7 @@ export function PrayerList({ times, states, nextName, onSelect }: PrayerListProp
             time={times[name]}
             state={states[name]}
             isNext={name === nextName}
-            onPress={states[name] === 'unmarked' || states[name] === 'missed' ? () => onSelect(name) : undefined}
+            onPress={canLog(states[name]) ? () => onSelect(name) : undefined}
           />
         ))}
       </View>
