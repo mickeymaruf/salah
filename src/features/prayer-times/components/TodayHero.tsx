@@ -9,7 +9,11 @@ import { arcPoint, halfCircleLength, halfCirclePath, type PrayerWindow } from '.
 const RADIUS = 160;
 const STROKE = 3;
 const DOT = 18;
-const TEXT_GAP = 20;
+// Figma: the countdown ends 15 px above the sheet. Line heights are Inter's normal height (1.21 x size) so Android lays the block out the same.
+const TEXT_GAP = 15;
+const NAME_LINE = 48;
+const RANGE_LINE = 27;
+const COUNTDOWN_LINE = 19;
 const DOT_OUTLINE = 3;
 // The svg is wider and taller than the arc so the dot is never cut off at either end or at the top.
 const SVG_WIDTH = 360;
@@ -57,11 +61,11 @@ export function TodayHero({ window, at, sheetTop, width }: TodayHeroProps) {
         accessibilityLabel={`${PRAYER_LABELS[window.name]}, ${formatTime(window.start)} to ${formatTime(window.end)}. ${PRAYER_LABELS[window.nextName]} ${formatCountdown(window.end.getTime() - at.getTime())}`}
         style={[styles.text, { height: sheetTop }]}
       >
-        <Text variant="heroName" color="brand">
+        <Text variant="heroName" color="brand" style={styles.name}>
           {PRAYER_LABELS[window.name]}
         </Text>
-        <Text variant="heroRange">{`${formatTime(window.start)} – ${formatTime(window.end)}`}</Text>
-        <Text variant="row" color="muted">
+        <Text variant="heroRange" style={styles.range}>{`${formatTime(window.start)} – ${formatTime(window.end)}`}</Text>
+        <Text variant="row" color="muted" style={styles.countdown}>
           {`${PRAYER_LABELS[window.nextName]} ${formatCountdown(window.end.getTime() - at.getTime())}`}
         </Text>
       </View>
@@ -72,5 +76,8 @@ export function TodayHero({ window, at, sheetTop, width }: TodayHeroProps) {
 const styles = StyleSheet.create({
   ring: { position: 'absolute' },
   // The block fills the hero and keeps its text at the bottom, so it rests above the sheet whatever the font's line height.
-  text: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center', justifyContent: 'flex-end', gap: 2, paddingBottom: TEXT_GAP },
+  text: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: TEXT_GAP },
+  name: { lineHeight: NAME_LINE, includeFontPadding: false },
+  range: { lineHeight: RANGE_LINE, marginTop: 2, includeFontPadding: false },
+  countdown: { lineHeight: COUNTDOWN_LINE, marginTop: 3, includeFontPadding: false },
 });

@@ -365,6 +365,6 @@ Format: date, title, context, decision, consequence.
   The pill fills are the Figma values (#BCCAC5, #EFEEED) and the missed fill is the 40% terracotta calculation (#EBC7C0), since Figma draws it as a circle.
 - Decision: the Today screen no longer shows the day bar or "N of 5 prayed today"; the old list, next-prayer block and day bar components were removed.
   `getNextPrayer` was removed with them. The Verified screen takes its "Next" line from the prayer window.
-- Decision: the hero picture cannot be downloaded from the build environment. `assets/images/today-hero.png` is a generated stand-in until the real one is
-  exported from Figma node 14018:15 and run through `scripts/prepare-hero.js`.
+- Decision: the hero picture cannot be downloaded from the build environment, so the user supplied the Figma image. `assets/images/today-hero.png` is that
+  picture run through `scripts/prepare-hero.js` (saturation x0.45, contrast -5%). The hero text uses Figma's line heights (48, 27, 19) so Android lays it out the same.
 - Consequence: the Catch-up animation timings stay at the slower values the user asked for earlier, not the 350 ms in the brief.

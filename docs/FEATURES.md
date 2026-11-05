@@ -39,7 +39,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   `useTodayPrayers.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`, `HeroBackdrop`, `PrayerSheet`, `PrayerPill`, `ChoiceButton`,
   `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
 - Hero picture: `assets/images/today-hero.png`, made by `node scripts/prepare-hero.js <figma export>` (saturation x0.45, contrast -5%). Without
-  an argument the script draws a plain stand-in. The real picture is Figma node 14018:15.
+  an argument the script draws a plain stand-in. The current file is the real picture for Figma node 14018:15, supplied by the user.
 - Rules in `schedule.ts`: the user's choice (prayed or missed) wins. With no choice, a passed time is unmarked (an empty circle, never
   counted as missed) and a future time is upcoming.
 - Extend: a new calculation option goes in `calculate.ts` and `src/shared/state/profile.ts`.
