@@ -11,6 +11,7 @@ import { initialChoice, isEditableDay, sheetSubtitle } from '@/features/prayer-t
 import { DayDetail } from './components/DayDetail';
 import { StatCard } from './components/StatCard';
 import { YearGrid } from './components/YearGrid';
+import { adjacentDate } from './model';
 import { formatStreak } from './stats';
 import { useYearProgress } from './useYearProgress';
 
@@ -28,6 +29,9 @@ function Progress({ profile }: { profile: Profile }) {
   // Until the user taps a day, the detail card follows today (which changes at midnight).
   const selectedDate = picked ?? dayKey;
   const selected = grid.flat().find((cell) => cell.date === selectedDate) ?? grid.flat()[0];
+
+  const previousDate = adjacentDate(grid, selected.date, -1);
+  const nextDate = adjacentDate(grid, selected.date, 1);
 
   return (
     <Screen scroll bottomInset={false}>
@@ -63,6 +67,8 @@ function Progress({ profile }: { profile: Profile }) {
         <DayDetail
           cell={selected}
           onSelectPrayer={isEditableDay(selected.date, dayKey) ? setLogging : undefined}
+          onPrevious={previousDate ? () => setPicked(previousDate) : undefined}
+          onNext={nextDate ? () => setPicked(nextDate) : undefined}
         />
       </View>
       <Text variant="caption" color="muted" style={styles.hint}>

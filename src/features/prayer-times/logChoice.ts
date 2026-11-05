@@ -4,9 +4,13 @@ export type LogChoice = 'prayed' | 'missed';
 
 type Status = 'prayed' | 'missed' | 'upcoming' | 'untracked';
 
-// A prayer whose time has not come cannot be missed yet. Everything else can be logged either way.
+// A prayer whose time has not come cannot be logged at all, neither prayed nor missed.
+export function canLog(status: Status): boolean {
+  return status !== 'upcoming';
+}
+
 export function availableChoices(status: Status): LogChoice[] {
-  return status === 'upcoming' ? ['prayed'] : ['prayed', 'missed'];
+  return canLog(status) ? ['prayed', 'missed'] : [];
 }
 
 // The sheet opens on what the prayer currently is, so reopening a missed prayer shows Missed.

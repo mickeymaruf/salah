@@ -161,12 +161,17 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Tab swiping
 
-- Today and Progress are pages of one pager (`expo-router/js-top-tabs`, `react-native-pager-view`). Swipe sideways or tap
-  the bottom bar. Taps switch with no animation and the neighbouring page is rendered ahead, so both feel instant.
+- Today and Progress are pages of one pager (`expo-router/js-top-tabs`, `react-native-pager-view`). Swiping between them is
+  off; tap the bottom bar. Taps switch with no animation and the neighbouring page is rendered ahead, so both feel instant.
+- The bar adds the system navigation bar height (the bottom safe-area inset) below itself, so it sits above a three-button or
+  gesture bar and sits at the very bottom on phones without one. Its content area is 62 px, 8 more than Figma, for icon spacing.
 - Owns: `app/(tabs)/_layout.tsx`, `src/shared/ui/TabBar.tsx` (the bar, drawn like the Figma tab bar).
 - Needs both `react-native-tab-view` and `react-native-pager-view`. Expo Router loads the first one inside a try/catch, so a
   missing package builds fine and only fails when the app starts. Check with `npx expo export --no-bytecode` and search the bundle.
-- On Progress, dragging on the year chart scrolls the chart. Drag anywhere else to swipe back to Today.
+- On Progress the day card has previous and next arrows, and swiping the card left or right moves to the next or previous day
+  of the year (`adjacentDate` in `model.ts`, `useHorizontalSwipe.ts`). The year chart scrolls to keep the selected day in view.
+- Prayers whose time has not come cannot be marked, on Today or on Progress (`canLog` in `logChoice.ts`). A prayer that was
+  already marked can still be changed to Missed, which removes the mark.
 
 ## Manual prayer times
 

@@ -1,6 +1,6 @@
 import { PRAYER_NAMES, type PrayerName } from '@/features/prayer-times/calculate';
 import type { PrayerState } from '@/features/prayer-times/schedule';
-import { buildYear, countPrayed, type YearGrid } from './model';
+import { adjacentDate, buildYear, countPrayed, type YearGrid } from './model';
 import { computeStats, formatStreak } from './stats';
 
 const todayStates = (state: PrayerState, overrides: Partial<Record<PrayerName, PrayerState>> = {}) =>
@@ -87,5 +87,25 @@ describe('formatStreak', () => {
   it('pluralizes', () => {
     expect(formatStreak(1)).toBe('1 day');
     expect(formatStreak(7)).toBe('7 days');
+  });
+});
+
+describe('adjacentDate', () => {
+  const grid = build([]);
+
+  it('steps by one day, across month ends', () => {
+    expect(adjacentDate(grid, '2026-03-10', 1)).toBe('2026-03-11');
+    expect(adjacentDate(grid, '2026-03-10', -1)).toBe('2026-03-09');
+    expect(adjacentDate(grid, '2026-02-28', 1)).toBe('2026-03-01');
+    expect(adjacentDate(grid, '2026-03-01', -1)).toBe('2026-02-28');
+  });
+
+  it('stops at the first and last day of the year', () => {
+    expect(adjacentDate(grid, '2026-01-01', -1)).toBeNull();
+    expect(adjacentDate(grid, '2026-12-31', 1)).toBeNull();
+  });
+
+  it('returns null for a date outside the year', () => {
+    expect(adjacentDate(grid, '2025-12-31', 1)).toBeNull();
   });
 });

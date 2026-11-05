@@ -1,8 +1,11 @@
-import { availableChoices, initialChoice, isEditableDay, sheetSubtitle } from './logChoice';
+import { availableChoices, canLog, initialChoice, isEditableDay, sheetSubtitle } from './logChoice';
 
 describe('availableChoices', () => {
-  it('only allows Prayed before the prayer time', () => {
-    expect(availableChoices('upcoming')).toEqual(['prayed']);
+  it('allows nothing before the prayer time', () => {
+    expect(availableChoices('upcoming')).toEqual([]);
+    expect(canLog('upcoming')).toBe(false);
+    expect(canLog('missed')).toBe(true);
+    expect(canLog('prayed')).toBe(true);
     expect(availableChoices('missed')).toEqual(['prayed', 'missed']);
     expect(availableChoices('prayed')).toEqual(['prayed', 'missed']);
     expect(availableChoices('untracked')).toEqual(['prayed', 'missed']);

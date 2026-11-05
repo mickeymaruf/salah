@@ -295,3 +295,17 @@ Format: date, title, context, decision, consequence.
   (Android App Bundle, auto-incremented). Versions are kept remotely by EAS.
 - Consequence: the first build asks for an Expo login and runs `eas init`, which adds `projectId` to `app.json`. The build was not run from
   the sandbox. A standalone build includes the ML Kit native module, so the photo check becomes active (it is off in Expo Go).
+
+## 2026-11-05 Day navigation replaces tab swiping
+
+- Context: the user wanted to move between days on Progress by arrows and swipes, which clashed with swiping between tabs.
+- Decision: tab swiping is off (`swipeEnabled: false`). The day card on Progress has arrows and a horizontal swipe. The tab bar content
+  is 62 px (was 54) and reads the bottom inset itself.
+- Consequence: the pager stays only to keep instant tab switches. Dropping it would mean replacing the navigator.
+
+## 2026-11-05 Future prayers cannot be logged
+
+- Context: an upcoming prayer could be marked prayed from the Progress day card and from the Today list.
+- Decision: upcoming prayers are not tappable anywhere and the log sheet offers no choice for them. This overrides the earlier
+  rule that Prayed was allowed before the time.
+- Consequence: marks made earlier on a future prayer stay until changed to Missed in the Progress day card.

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, View, type ScrollViewInstance } from 'react-native';
 import { Card, Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
@@ -23,6 +23,8 @@ export function YearGrid({ grid, selectedDate, focusDay, onSelect }: YearGridPro
   const [viewport, setViewport] = useState(0);
   const [scrollX] = useState(() => new Animated.Value(0));
   const scroller = useRef<ScrollViewInstance>(null);
+  // Where the user last left the chart, read when a day is picked by the arrows.
+  const settledAt = useRef(0);
   // Placement needs both the viewport width and the content size, which arrive in either order.
   const measured = useRef({ viewport: 0, content: false, placed: false });
 
@@ -44,7 +46,23 @@ export function YearGrid({ grid, selectedDate, focusDay, onSelect }: YearGridPro
     const offset = Math.min(max, Math.max(0, focusDay * DAY_STEP - DAY_GAP - state.viewport));
     scroller.current?.scrollTo({ x: offset, animated: false });
     scrollX.setValue(offset);
+    settledAt.current = offset;
   };
+
+  // Stepping through days with the arrows or a swipe can pick a day that is scrolled out of sight: bring it back in.
+  const selectedDay = Number(selectedDate.slice(-2));
+  useEffect(() => {
+    if (viewport === 0) return;
+    const left = (selectedDay - 1) * DAY_STEP;
+    const right = left + DAY_WIDTH;
+    let target: number | null = null;
+    if (left < settledAt.current) target = left - DAY_STEP;
+    else if (right > settledAt.current + viewport) target = right + DAY_STEP - viewport;
+    if (target === null) return;
+    const clamped = Math.min(Math.max(0, GRID_WIDTH - viewport), Math.max(0, target));
+    settledAt.current = clamped;
+    scroller.current?.scrollTo({ x: clamped, animated: true });
+  }, [selectedDay, viewport]);
 
   return (
     <Card style={styles.card}>
@@ -75,6 +93,12 @@ export function YearGrid({ grid, selectedDate, focusDay, onSelect }: YearGridPro
             placeOnce();
           }}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: true })}
+          onScrollEndDrag={(event) => {
+            settledAt.current = event.nativeEvent.contentOffset.x;
+          }}
+          onMomentumScrollEnd={(event) => {
+            settledAt.current = event.nativeEvent.contentOffset.x;
+          }}
         >
           <View style={styles.grid}>
             {grid.map((month, monthIndex) => (

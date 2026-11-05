@@ -53,3 +53,10 @@ function statesFor(
 export function countPrayed(cell: DayCell): number {
   return cell.states.filter((state) => state === 'prayed').length;
 }
+
+// The day before (-1) or after (+1) `date` within the year, or null at either end of the year.
+export function adjacentDate(grid: YearGrid, date: string, delta: -1 | 1): string | null {
+  const dates = grid.flat().map((cell) => cell.date);
+  const index = dates.indexOf(date);
+  return index < 0 ? null : (dates[index + delta] ?? null);
+}
