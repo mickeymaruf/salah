@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Animated, PanResponder, Pressable, StyleSheet, View, type GestureResponderEvent } from 'react-native';
 import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { formatTime } from '@/shared/lib/date';
@@ -32,7 +33,8 @@ export function CatchUpScreen() {
 }
 
 function Prompt({ items }: { items: CatchUpItem[] }) {
-  const { index, done, item, counts, result, reduceMotion, answer, grow, fill, overlay, content, dragX } = useAnswerFlow(items);
+  const { index, done, item, counts, result, reduceMotion, answer, grow, fill, overlay, content, header, dragX } = useAnswerFlow(items);
+  const insets = useSafeAreaInsets();
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [headerBottom, setHeaderBottom] = useState(0);
 
@@ -57,7 +59,8 @@ function Prompt({ items }: { items: CatchUpItem[] }) {
 
   const { width, height } = size;
   const half = width / 2;
-  const regionTop = headerBottom + 8;
+  // Figma P-D1: the shapes start about 11 px above the bottom of the question, where they are still pinched to a point.
+  const regionTop = headerBottom - 11;
   const regionHeight = Math.max(0, height - regionTop);
   const measured = width > 0 && regionHeight > 0;
   const scaleUp = measured ? coverScale(regionHeight, regionTop + regionHeight / 2, height) : 1;
@@ -121,19 +124,6 @@ function Prompt({ items }: { items: CatchUpItem[] }) {
         <AllCaughtUp prayed={counts.prayed} missed={counts.missed} />
       ) : (
         <View style={StyleSheet.absoluteFill} importantForAccessibility={result ? 'no-hide-descendants' : 'auto'}>
-          <View style={styles.header} onLayout={(event) => setHeaderBottom(event.nativeEvent.layout.y + event.nativeEvent.layout.height)}>
-            <Text variant="ask" color="muted">
-              Did you pray?
-            </Text>
-            <Animated.View {...pan.panHandlers} style={[styles.nameWrap, { transform: [{ translateX: dragX }, { rotate: tilt }] }]}>
-              <Text variant="giant" numberOfLines={1} adjustsFontSizeToFit accessibilityRole="header">
-                {item ? PRAYER_LABELS[item.prayer] : ''}
-              </Text>
-            </Animated.View>
-            <Text variant="row" color="muted">
-              {item ? `${formatTime(item.time)} · ${index + 1} of ${items.length}` : ''}
-            </Text>
-          </View>
           {measured && item ? (
             <>
               {panel('left', 'missed', 'No', `No, I missed ${PRAYER_LABELS[item.prayer]}`, colors.state.missedSoft, colors.state.missed)}
@@ -164,13 +154,33 @@ function Prompt({ items }: { items: CatchUpItem[] }) {
           </Animated.View>
         </Animated.View>
       ) : null}
+      {done ? null : (
+        <Animated.View
+          pointerEvents={result ? 'none' : 'box-none'}
+          style={[styles.header, { paddingTop: insets.top + 30, opacity: header }]}
+          onLayout={(event) => setHeaderBottom(event.nativeEvent.layout.y + event.nativeEvent.layout.height)}
+        >
+          <Animated.View {...pan.panHandlers} style={[styles.nameWrap, { transform: [{ translateX: dragX }, { rotate: tilt }] }]}>
+            <Text variant="giant" numberOfLines={1} adjustsFontSizeToFit accessibilityRole="header">
+              {item ? PRAYER_LABELS[item.prayer] : ''}
+            </Text>
+          </Animated.View>
+          <Text variant="row" color="muted">
+            {item ? `${formatTime(item.time)} · ${index + 1} of ${items.length}` : ''}
+          </Text>
+          <Text variant="ask" color="muted" style={styles.ask}>
+            Did you pray?
+          </Text>
+        </Animated.View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg.base },
-  header: { alignItems: 'center', paddingTop: 72, paddingHorizontal: 24, gap: 4 },
+  header: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center', paddingHorizontal: 24, gap: 3 },
+  ask: { marginTop: 8 },
   nameWrap: { alignSelf: 'stretch', alignItems: 'center' },
   panel: { position: 'absolute' },
   label: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },

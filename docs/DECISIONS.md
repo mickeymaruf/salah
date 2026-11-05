@@ -354,3 +354,17 @@ Format: date, title, context, decision, consequence.
   Catch-up timings were slowed: grow 350 to 600 ms, result fade 150 to 300 ms, hold 400 to 600 ms, dissolve 250 to 450 ms, with a gentler curve
   (cubic-bezier 0.33, 0, 0.2, 1). This replaces the 350 ms ease-out in the original brief.
 - Consequence: one answer now takes about 2 seconds from tap to the next question.
+
+## 2026-11-05 Today redesign and where the brief and the app disagree
+
+- Context: the user asked for a redesigned Today screen and a Catch-up prompt, listing Figma frames and saying Figma wins over the text. Some of the
+  text repeated earlier requirements that the user had since changed, so those were kept as the user last decided them.
+- Decision (kept from the user's later requests, not the text): Catch-up shows on every open while a passed prayer is unmarked, not only after 4 hours
+  or a new day; tapping a marked pill on Today opens the log sheet, which now has no Save button (a choice saves on tap) and has Clear mark.
+- Decision (Figma over text): Catch-up reads name, time, then "Did you pray?" (P-D1); the hero countdown is 16 px, not 15; the ring ends rest on the sheet.
+  The pill fills are the Figma values (#BCCAC5, #EFEEED) and the missed fill is the 40% terracotta calculation (#EBC7C0), since Figma draws it as a circle.
+- Decision: the Today screen no longer shows the day bar or "N of 5 prayed today"; the old list, next-prayer block and day bar components were removed.
+  `getNextPrayer` was removed with them. The Verified screen takes its "Next" line from the prayer window.
+- Decision: the hero picture cannot be downloaded from the build environment. `assets/images/today-hero.png` is a generated stand-in until the real one is
+  exported from Figma node 14018:15 and run through `scripts/prepare-hero.js`.
+- Consequence: the Catch-up animation timings stay at the slower values the user asked for earlier, not the 350 ms in the brief.

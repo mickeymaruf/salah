@@ -55,9 +55,9 @@ the optimistic log store updates Today and Progress at once.
 
 ## Today screen
 
-`useTodayPrayers` combines the profile, the clock (`useNow`, 10 s tick and on foreground) and the set of
-prayed names. It returns times, per-prayer states, the next prayer and the countdown. Components are
-presentational and take those values as props.
+`useTodayPrayers` returns today's times, the five states and the prayer window in progress (`getPrayerWindow`, which also looks at yesterday's Isha and tomorrow's Fajr). `PrayerPill` calls `useSaveChoice`, the same path as the log sheet and Catch-up, so every screen sees the mark at once.
+
+Components are presentational and take those values as props.
 
 ## Prayer log
 

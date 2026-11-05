@@ -4,7 +4,7 @@ import * as Haptics from 'expo-haptics';
 import { useSaveChoice } from '@/features/prayer-times/data/useSaveChoice';
 import type { LogChoice } from '@/features/prayer-times/logChoice';
 import type { CatchUpItem } from './queue';
-import { useReduceMotion } from './useReduceMotion';
+import { useReduceMotion } from '@/shared/lib/useReduceMotion';
 
 // Slow and soft: the colour spreads over about half a second, rests, then dissolves into the next prayer.
 const GROW_MS = 600;
@@ -37,6 +37,8 @@ export function useAnswerFlow(items: CatchUpItem[]) {
   const [content] = useState(() => new Animated.Value(0));
   // How far the prayer name has been dragged sideways.
   const [dragX] = useState(() => new Animated.Value(0));
+  // The name, time and question stay over the growing colour, then fade as the tick or cross arrives.
+  const [header] = useState(() => new Animated.Value(1));
 
   const busy = useRef(false);
   const mounted = useRef(true);
@@ -58,9 +60,12 @@ export function useAnswerFlow(items: CatchUpItem[]) {
     setIndex((value) => value + 1);
     grow.setValue(0);
     dragX.setValue(0);
+    const duration = reduceMotion ? REDUCED_MS : FADE_MS;
+    // The next prayer's question appears as the colour dissolves.
+    Animated.timing(header, { toValue: 1, duration, easing: Easing.inOut(Easing.quad), useNativeDriver: true }).start();
     Animated.timing(overlay, {
       toValue: 0,
-      duration: reduceMotion ? REDUCED_MS : FADE_MS,
+      duration,
       easing: Easing.inOut(Easing.quad),
       useNativeDriver: true,
     }).start(() => {
@@ -87,6 +92,7 @@ export function useAnswerFlow(items: CatchUpItem[]) {
       Animated.parallel([
         Animated.timing(overlay, { toValue: 1, duration: REDUCED_MS, useNativeDriver: true }),
         Animated.timing(content, { toValue: 1, duration: REDUCED_MS, useNativeDriver: true }),
+        Animated.timing(header, { toValue: 0, duration: REDUCED_MS, useNativeDriver: true }),
       ]).start(hold);
       return;
     }
@@ -94,9 +100,12 @@ export function useAnswerFlow(items: CatchUpItem[]) {
     const ease = { duration: GROW_MS, easing: SOFT, useNativeDriver: true };
     Animated.sequence([
       Animated.parallel([Animated.timing(grow, { toValue: 1, ...ease }), Animated.timing(fill, { toValue: 1, ...ease })]),
-      Animated.timing(content, { toValue: 1, duration: CONTENT_MS, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+      Animated.parallel([
+        Animated.timing(content, { toValue: 1, duration: CONTENT_MS, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+        Animated.timing(header, { toValue: 0, duration: CONTENT_MS, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+      ]),
     ]).start(hold);
   };
 
-  return { index, done, item, counts, result, reduceMotion, answer, grow, fill, overlay, content, dragX };
+  return { index, done, item, counts, result, reduceMotion, answer, grow, fill, overlay, content, header, dragX };
 }

@@ -27,7 +27,7 @@ interface VerifiedProps {
 
 function Verified({ profile, prayer, date, label }: VerifiedProps) {
   const entry = useDayLog(date).find((item) => item.prayer === prayer);
-  const { next } = useTodayPrayers(profile);
+  const { window } = useTodayPrayers(profile);
   const name = PRAYER_LABELS[prayer];
 
   return (
@@ -56,7 +56,7 @@ function Verified({ profile, prayer, date, label }: VerifiedProps) {
           </Card>
         ) : null}
         <Text variant="label" color="brand" style={styles.next}>
-          {`Next: ${PRAYER_LABELS[next.name]} at ${formatTime(next.time)}`}
+          {`Next: ${PRAYER_LABELS[window.nextName]} at ${formatTime(window.end)}`}
         </Text>
         <View style={styles.fill} />
         <Button label="Done" onPress={() => router.dismissTo('/today')} style={styles.done} />

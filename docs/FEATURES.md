@@ -22,15 +22,26 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Prayer times and Today
 
-- What: computes today's five times offline and shows the next prayer, a live countdown,
-  a 5-segment day bar and the prayer list. The user icon opens Settings.
-- Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `useTodayPrayers.ts`,
-  `TodayScreen.tsx`, `components/`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
+- What: computes today's five times offline (or from the Aladhan table) and shows them on the redesigned Today screen. Figma: file
+  OgLgPUUPDO1UindTOIu39O, frame "3 · Today" (14017:14) and "Storyboard · marking a prayer" (14018:20).
+- Layout: a misty mosque picture behind the top, the date and greeting at the left, the user button and two faint sparkles at the right.
+  The hero is a thin half circle with the prayer in progress inside it (name, "3:42 PM – 5:21 PM", "Maghrib in 1h 12m"). A green arc and dot
+  show how far through that prayer's window it is. Below it a white sheet, full width, rounded 20 at the top, holds five pills
+  (60 px, 10 px apart). The tab bar is unchanged.
+- Pill: a missed button (thin terracotta cross) on the left, a prayed button (thin green check) on the right, the name and start time between,
+  and faint icons of the prayer behind them (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in
+  progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
+- Marking: one tap on the check or cross. The button turns solid, a circle grows from it over the pill (350 ms, ease-out), the other button fades,
+  and the pill ends filled (green 30% for prayed, terracotta 40% for missed) with no buttons and the text at the left edge. Light haptic, saved at
+  once. With reduce motion on, the fill cross-fades. Tapping a marked pill opens the log sheet to change or clear the mark.
+- Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `window.ts` for the prayer in progress and the ring maths,
+  `useTodayPrayers.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`, `HeroBackdrop`, `PrayerSheet`, `PrayerPill`, `ChoiceButton`,
+  `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
+- Hero picture: `assets/images/today-hero.png`, made by `node scripts/prepare-hero.js <figma export>` (saturation x0.45, contrast -5%). Without
+  an argument the script draws a plain stand-in. The real picture is Figma node 14018:15.
 - Rules in `schedule.ts`: the user's choice (prayed or missed) wins. With no choice, a passed time is unmarked (an empty circle, never
-  counted as missed) and a future time is upcoming. The next prayer has a pale grey row and an empty ring, not a green mark.
-  The next prayer is the first one strictly in the future, or tomorrow's Fajr after Isha.
+  counted as missed) and a future time is upcoming.
 - Extend: a new calculation option goes in `calculate.ts` and `src/shared/state/profile.ts`.
-  `useTodayPrayers(profile, prayed)` takes the set of prayed names from the log.
 
 ## Prayer log (SQLite)
 
@@ -139,7 +150,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 ## Manual logging
 
 - What: one bottom sheet (`LogPrayerSheet`) with Prayed or Missed. Tapping one saves it and closes the sheet (no Save button). Two entry points:
-  Today (tap any prayer row whose time has come, marked or not) and Progress (tap a day in the chart, then a prayer in the day card).
+  Today (tap a marked pill; unmarked pills use their own check and cross buttons) and Progress (tap a day in the chart, then a prayer in the day card).
   Past days can be edited with no limit on how far back. Future days cannot.
 - Rules (`logChoice.ts`): both choices are stored in `prayer_log.outcome` ('prayed' or 'missed'). Prayed has no photo when
   chosen by hand. A prayer with no row is unmarked and shows an empty circle. "Clear mark" in the sheet returns a marked
@@ -195,6 +206,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 - What: a full-screen prompt (no tab bar) that asks "Did you pray?" about one unlogged prayer at a time, oldest first. Figma:
   file OgLgPUUPDO1UindTOIu39O, section "Proposals · D. Catch-up on open", frames P-D1 to P-D6.
+- Question order follows Figma P-D1: the prayer name, the time with "1 of 3", then "Did you pray?". The three stay over the growing colour and fade out as the tick or cross fades in.
 - When: on every app open (a cold start, and each time the app comes back to the foreground) if at least one prayer whose time has passed has
   no log row (prayed or missed). There is no idle-time or new-day condition: it asks again on each open until everything is answered. Never
   while the app is in use on its own, not right after onboarding, and not over the alarm, proof or verified screens. The queue is a

@@ -1,19 +1,25 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Screen, Text, UserButton } from '@/shared/ui';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, UserButton } from '@/shared/ui';
+import { colors } from '@/shared/theme';
 import { formatLongDate } from '@/shared/lib/date';
 import { useProfileStore } from '@/shared/state/profileStore';
 import type { Profile } from '@/shared/state/profile';
 import { AlarmsOffNotice } from '@/features/alarm/components/AlarmsOffNotice';
 import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
-import { DayProgress } from './components/DayProgress';
+import { HeroBackdrop } from './components/HeroBackdrop';
 import { LogPrayerSheet } from './components/LogPrayerSheet';
-import { NextPrayerBlock } from './components/NextPrayerBlock';
-import { PrayerList } from './components/PrayerList';
+import { PrayerSheet } from './components/PrayerSheet';
+import { TodayHero } from './components/TodayHero';
 import type { PrayerName } from './calculate';
 import { useSaveChoice } from './data/useSaveChoice';
 import { initialChoice, sheetSubtitle } from './logChoice';
 import { useTodayPrayers } from './useTodayPrayers';
+
+// Figma "3 · Today": the prayer sheet starts 336 px down a frame whose status bar is 54 px, so 282 px below the status bar.
+const HERO_HEIGHT = 282;
 
 export function TodayScreen() {
   const profile = useProfileStore((state) => state.profile);
@@ -21,62 +27,60 @@ export function TodayScreen() {
 }
 
 function Today({ profile }: { profile: Profile }) {
-  const { at, dayKey, times, states, next, countdownMs, prayedCount } = useTodayPrayers(profile);
-  const [logging, setLogging] = useState<PrayerName | null>(null);
+  const { at, dayKey, times, states, window } = useTodayPrayers(profile);
+  const [editing, setEditing] = useState<PrayerName | null>(null);
   const saveChoice = useSaveChoice();
   const notifications = useNotificationStatus();
+  const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const sheetTop = insets.top + HERO_HEIGHT;
 
   return (
-    <Screen scroll bottomInset={false}>
-      <View style={styles.top}>
-        <View style={styles.greeting}>
-          <Text variant="label" color="muted">
-            {formatLongDate(at)}
-          </Text>
-          <Text variant="heading">{`Assalamu alaikum, ${profile.name}`}</Text>
-        </View>
+    <View style={styles.root}>
+      <StatusBar style="dark" />
+      <HeroBackdrop sheetTop={sheetTop} safeTop={insets.top} />
+      <View style={[styles.header, { top: insets.top + 12 }]}>
+        <Text variant="dateLine">{formatLongDate(at)}</Text>
+        <Text variant="greeting" color="muted">{`Assalamu alaikum, ${profile.name}`}</Text>
+      </View>
+      <View style={[styles.user, { top: insets.top + 4 }]}>
         <UserButton />
       </View>
-      {notifications.status === 'denied' ? (
-        <View style={styles.notice}>
-          <AlarmsOffNotice onFix={notifications.fix} />
-        </View>
-      ) : null}
-      <View style={styles.next}>
-        <NextPrayerBlock next={next} countdownMs={countdownMs} />
-      </View>
-      <View style={styles.progress}>
-        <DayProgress states={states} prayedCount={prayedCount} />
-      </View>
-      <View style={styles.list}>
-        <PrayerList
-          times={times}
-          states={states}
-          nextName={next.isTomorrow ? null : next.name}
-          onSelect={setLogging}
-        />
-      </View>
-      {logging ? (
+      <TodayHero window={window} at={at} sheetTop={sheetTop} width={width} />
+      <PrayerSheet
+        top={sheetTop}
+        times={times}
+        states={states}
+        currentName={window.name}
+        onMark={(name, choice) => saveChoice(dayKey, name, choice)}
+        onEdit={setEditing}
+        notice={
+          notifications.status === 'denied' ? (
+            <View style={styles.notice}>
+              <AlarmsOffNotice onFix={notifications.fix} />
+            </View>
+          ) : null
+        }
+      />
+      {editing ? (
         <LogPrayerSheet
-          key={logging}
-          prayer={logging}
-          subtitle={sheetSubtitle(times[logging], dayKey, dayKey)}
-          status={states[logging]}
-          initial={initialChoice(states[logging])}
-          onSave={(choice) => saveChoice(dayKey, logging, choice)}
-          onClear={() => saveChoice(dayKey, logging, 'clear')}
-          onClose={() => setLogging(null)}
+          key={editing}
+          prayer={editing}
+          subtitle={sheetSubtitle(times[editing], dayKey, dayKey)}
+          status={states[editing]}
+          initial={initialChoice(states[editing])}
+          onSave={(choice) => saveChoice(dayKey, editing, choice)}
+          onClear={() => saveChoice(dayKey, editing, 'clear')}
+          onClose={() => setEditing(null)}
         />
       ) : null}
-    </Screen>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  greeting: { flex: 1, gap: 4, paddingVertical: 8 },
-  notice: { marginTop: 16 },
-  next: { marginTop: 32 },
-  progress: { marginTop: 24 },
-  list: { marginTop: 28, marginBottom: 24 },
+  root: { flex: 1, backgroundColor: colors.bg.base },
+  header: { position: 'absolute', left: 24, gap: 4 },
+  user: { position: 'absolute', right: 24 },
+  notice: { marginBottom: 4 },
 });

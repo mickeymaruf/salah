@@ -1,16 +1,9 @@
 import type { DayTimes } from './calculate';
-import { decodeStates, encodeStates, getDayStates, getNextPrayer, getPrayerState } from './schedule';
+import { decodeStates, encodeStates, getDayStates, getPrayerState } from './schedule';
 
 const at = (h: number, m = 0, day = 26) => new Date(2026, 9, day, h, m);
 
 const today: DayTimes = { fajr: at(4, 48), dhuhr: at(12, 2), asr: at(15, 42), maghrib: at(17, 21), isha: at(18, 40) };
-const tomorrow: DayTimes = {
-  fajr: at(4, 49, 27),
-  dhuhr: at(12, 2, 27),
-  asr: at(15, 41, 27),
-  maghrib: at(17, 20, 27),
-  isha: at(18, 39, 27),
-};
 
 describe('getPrayerState', () => {
   it('is whatever the user chose, even before the time', () => {
@@ -44,25 +37,6 @@ describe('getDayStates', () => {
     const states = getDayStates(today, new Map([['dhuhr', 'missed']]), at(13));
     expect(states.dhuhr).toBe('missed');
     expect(states.fajr).toBe('unmarked');
-  });
-});
-
-describe('getNextPrayer', () => {
-  it('is Fajr before dawn', () => {
-    expect(getNextPrayer(today, tomorrow, at(3))).toEqual({ name: 'fajr', time: today.fajr, isTomorrow: false });
-  });
-
-  it('skips prayers that already started', () => {
-    expect(getNextPrayer(today, tomorrow, at(12, 2)).name).toBe('asr');
-    expect(getNextPrayer(today, tomorrow, at(14)).name).toBe('asr');
-  });
-
-  it('rolls over to tomorrow after Isha', () => {
-    expect(getNextPrayer(today, tomorrow, at(21))).toEqual({
-      name: 'fajr',
-      time: tomorrow.fajr,
-      isTomorrow: true,
-    });
   });
 });
 

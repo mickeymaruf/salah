@@ -14,6 +14,11 @@ export const typography = {
   giant: { fontFamily: fontFamily.semiBold, fontSize: 80 },
   choice: { fontFamily: fontFamily.medium, fontSize: 56 },
   ask: { fontFamily: fontFamily.regular, fontSize: 22 },
+  // Today hero and header.
+  heroName: { fontFamily: fontFamily.semiBold, fontSize: 40 },
+  heroRange: { fontFamily: fontFamily.semiBold, fontSize: 22 },
+  dateLine: { fontFamily: fontFamily.medium, fontSize: 16 },
+  greeting: { fontFamily: fontFamily.regular, fontSize: 15 },
   clock: { fontFamily: fontFamily.semiBold, fontSize: 88, letterSpacing: -3.52 },
   display: { fontFamily: fontFamily.semiBold, fontSize: 56, letterSpacing: -1.68 },
   splash: { fontFamily: fontFamily.semiBold, fontSize: 40, letterSpacing: -1.2 },

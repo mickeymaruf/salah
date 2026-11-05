@@ -18,6 +18,10 @@
 
 ## Today
 
+- The hero picture is a generated stand-in until the real Figma image is run through `scripts/prepare-hero.js`. Nothing on Today has been checked on a device.
+- The pill's missed fill (#EBC7C0) is calculated from the brief (terracotta 40% over white); Figma draws it only as a circle.
+- The prayer sheet scrolls on small screens. The sparkles are positioned for a 390 px wide screen.
+
 - A prayer whose time has passed without a choice stays unmarked. It is not counted as missed, so the percentage kept only reflects what was marked.
   The user can still mark it prayed through proof, which turns it into prayed.
 

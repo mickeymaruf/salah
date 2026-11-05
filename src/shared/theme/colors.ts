@@ -22,6 +22,12 @@ export const colors = {
     // Light terracotta for the Catch-up No panel and the full Missed screen (Figma P-D5).
     missedSoft: '#F2DBD6',
   },
+  // Prayer pill fills on Today (Figma 3 · Today): brand/green 30% and state/missed 40% over white, and ink/muted 14% over white.
+  pill: {
+    prayed: '#BCCAC5',
+    missed: '#EBC7C0',
+    current: '#EFEEED',
+  },
   heat: ['#ECE8E0', '#C7D8CA', '#94B6A0', '#57856E', '#336654', '#1F4D3F'],
   // Concentric rings on the alarm screen, outer to inner.
   ring: ['rgba(243,241,234,0.14)', 'rgba(243,241,234,0.3)', 'rgba(243,241,234,0.5)'],
