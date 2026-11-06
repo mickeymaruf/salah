@@ -39,7 +39,7 @@ function Today({ profile }: { profile: Profile }) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const sheetTop = insets.top + HERO_HEIGHT;
-  const range = dayRange(profile.startedOn, todayKey);
+  const range = dayRange(todayKey);
   const kinds = timelineKinds(times, at, currentName);
 
   const go = (days: number) => {

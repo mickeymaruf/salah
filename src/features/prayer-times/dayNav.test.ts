@@ -1,4 +1,4 @@
-import { dayRange, relativeDayLabel, shiftDayKey, MAX_DAYS_AHEAD } from './dayNav';
+import { dayRange, relativeDayLabel, shiftDayKey, MAX_DAYS_AHEAD, MAX_DAYS_BACK } from './dayNav';
 
 describe('dayNav', () => {
   it('shifts across month ends', () => {
@@ -14,13 +14,9 @@ describe('dayNav', () => {
     expect(relativeDayLabel('2026-10-30', '2026-10-26')).toBe('In 4 days');
   });
 
-  it('starts at the day tracking began and ends two weeks ahead', () => {
-    const range = dayRange('2026-10-01', '2026-10-26');
-    expect(range.first).toBe('2026-10-01');
+  it('goes back a year and ahead two weeks, whenever tracking began', () => {
+    const range = dayRange('2026-10-26');
+    expect(range.first).toBe(shiftDayKey('2026-10-26', -MAX_DAYS_BACK));
     expect(range.last).toBe(shiftDayKey('2026-10-26', MAX_DAYS_AHEAD));
-  });
-
-  it('falls back to 30 days back without a start date', () => {
-    expect(dayRange(undefined, '2026-10-26').first).toBe('2026-09-26');
   });
 });

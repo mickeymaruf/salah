@@ -31,7 +31,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   the next prayer (32 px, "1h 12m 06s", "42m 06s", "06s", seconds in muted grey, updated every second) and "until Maghrib". At 0 the name and
   countdown move to the next prayer. The text block sits at the bottom of the hero, so it clears the sheet whatever the font's line height.
 - Sheet: white, full width, top corners 20 px. The top row is the date navigator: a 40 px arrow on each side and the long date with "Today",
-  "Yesterday", "Tomorrow", "3 days ago" or "In 3 days" under it. The arrows stop at the day tracking began and 14 days ahead. A past day is edited
+  "Yesterday", "Tomorrow", "3 days ago" or "In 3 days" under it. The arrows go back a year and ahead 14 days, whenever tracking began. A past day is edited
   like today. A future day shows its prayers dimmed and cannot be marked. The hero always shows the real current prayer, whatever day the list shows.
   Left of the pills (x = 24) a timeline runs: green dots and green line for prayers whose time has passed, a larger haloed dot for the one in progress
   (only when the list shows today and that prayer started today), hollow dots on the grey line for those to come (`timeline.ts`).

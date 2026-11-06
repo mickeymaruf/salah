@@ -2,8 +2,8 @@ import { addDays, parseDateKey, toDateKey } from '@/shared/lib/date';
 
 // Future days are view-only, so the arrows stop a couple of weeks ahead.
 export const MAX_DAYS_AHEAD = 14;
-// With no start date on the profile, the arrows go back this far.
-export const DEFAULT_DAYS_BACK = 30;
+// Past days can be opened and edited, so the arrows go back a year. Days before tracking began are not counted as missed.
+export const MAX_DAYS_BACK = 365;
 
 export function shiftDayKey(key: string, days: number): string {
   return toDateKey(addDays(parseDateKey(key), days));
@@ -14,11 +14,8 @@ export interface DayRange {
   last: string;
 }
 
-// The first day is where tracking started: earlier days were never part of the log.
-export function dayRange(startedOn: string | undefined, today: string): DayRange {
-  const fallback = shiftDayKey(today, -DEFAULT_DAYS_BACK);
-  const first = startedOn && startedOn <= today ? startedOn : fallback;
-  return { first, last: shiftDayKey(today, MAX_DAYS_AHEAD) };
+export function dayRange(today: string): DayRange {
+  return { first: shiftDayKey(today, -MAX_DAYS_BACK), last: shiftDayKey(today, MAX_DAYS_AHEAD) };
 }
 
 function daysBetween(from: string, to: string): number {
