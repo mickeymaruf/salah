@@ -47,15 +47,9 @@ onboarding, prayer-times and settings, so they are shared rather than owned by o
 Every reader goes through it. Settings writes the profile; `useAlarmSync` depends on the profile, so alarms are rebuilt.
 During onboarding the profile does not exist yet, so `onboarding/draftStore.ts` holds the detected place and the edits.
 
-## Catch-up on open
-
-`useCatchUp` (called in `app/_layout.tsx`) runs at every app open. It builds the queue with `buildCatchUpQueue` from the same
-`getDayTimes` and log rows the other screens use, puts it in `catchUpStore` and pushes `/catch-up`. Answers go through `useSaveChoice`, so
-the optimistic log store updates Today and Progress at once.
-
 ## Today screen
 
-`useTodayView(profile, picked)` ticks every second and returns the times and states of the day picked with the date arrows (today when none) and, always, the prayer window in progress (`getPrayerWindow`, which also looks at yesterday's Isha and tomorrow's Fajr). `states` stays one object until a state changes, so the memoised `PrayerPill` rows do not redraw each tick. `useTodayPrayers` (10 s tick, today only) still serves Progress and Verified. `PrayerPill` calls `useSaveChoice`, the same path as the log sheet and Catch-up, so every screen sees the mark at once.
+`useTodayView(profile, picked)` ticks every second and returns the times and states of the day picked with the date arrows (today when none) and, always, the prayer window in progress (`getPrayerWindow`, which also looks at yesterday's Isha and tomorrow's Fajr). `states` stays one object until a state changes, so the memoised `PrayerPill` rows do not redraw each tick. `useTodayPrayers` (10 s tick, today only) still serves Progress and Verified. `PrayerPill` calls `useSaveChoice`, the same path as the log sheet, so every screen sees the mark at once.
 
 Components are presentational and take those values as props.
 

@@ -232,25 +232,3 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Owns: `src/features/adjust-times/` (screens, wheel, sheet), `src/features/prayer-times/manualTimes.ts` (pure logic),
   `src/features/onboarding/draftStore.ts`.
 
-## Catch-up on open
-
-- Status: switched off. `CATCH_UP_ENABLED` is `false` in `src/features/catch-up/useCatchUp.ts`, so the prompt never opens. Everything below describes how it works when
-  the flag is turned back on; the code can also be removed later.
-- What: a full-screen prompt (no tab bar) that asks "Did you pray?" about one unlogged prayer at a time, oldest first. Figma:
-  file OgLgPUUPDO1UindTOIu39O, section "Proposals · D. Catch-up on open", frames P-D1 to P-D6.
-- Question order follows Figma P-D1: the prayer name, the time with "1 of 3", then "Did you pray?". The three stay over the growing colour and fade out as the tick or cross fades in.
-- When: on every app open (a cold start, and each time the app comes back to the foreground) if at least one prayer whose time has passed has
-  no log row (prayed or missed). There is no idle-time or new-day condition: it asks again on each open until everything is answered. Never
-  while the app is in use on its own, not right after onboarding, and not over the alarm, proof or verified screens. The queue is a
-  snapshot taken at open and covers up to 7 days back.
-- Answering: tap Yes or No, or drag the prayer name right (Yes) or left (No); it follows the finger and tilts up to 8 degrees. A drag past a
-  quarter of the width or a quick flick answers. The answer is saved at once through `useSaveChoice`, so Today and Progress show it. The chosen
-  colour grows from its half-ellipse to fill the screen (600 ms, soft ease), shows a check or cross with "Prayed" or "Missed" and the prayer name
-  (300 ms fade), holds 600 ms, then dissolves (450 ms) into the next prayer. Light haptic on each answer. A Yes also bursts confetti from the middle
-  of the Yes half and plays the pop (same as Today's check, same Settings switch); a No has neither. No confirmation, sheet or undo. The timings stay
-  slower than the 350 ms in the newest Figma flow note because the user asked for that earlier; the "first open after 4+ hours idle or a new day" note in
-  Figma is also not followed, because the user chose to be asked on every open.
-- After the last prayer: "All caught up", "N prayed · M missed" and a "Go to Today" button.
-- Accessibility: Yes and No are real buttons ("Yes, I prayed Asr"). With reduce motion on, the colour cross-fades in and out instead of growing.
-- Owns: `src/features/catch-up/` (`queue.ts` and `geometry.ts` are pure and tested; `useCatchUp.ts` decides when to show; `useAnswerFlow.ts` runs an
-  answer; `CatchUpScreen.tsx`), `app/catch-up.tsx`, and `useCatchUp` in `app/_layout.tsx`.

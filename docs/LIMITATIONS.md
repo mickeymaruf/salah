@@ -135,11 +135,3 @@
   genuine photo, turn off "Require photo proof" in Settings, or report it so the labels can be loosened.
 - Alarm sounds, the notification color and the notification icon only apply in a standalone or development build.
 
-## Catch-up prompt
-
-- Not run on a device. The swipe feel, the colour growing from the ellipse, the fade between prayers and the reduce-motion cross-fade are unverified.
-- Only the last 7 days are asked about. Older unlogged prayers stay unmarked.
-- The prompt appears on every open, including a quick return to the app, and again after the back button closes it. If the app is opened from
-  an alarm notification the prompt skips that open and waits for the next one.
-- A tap in the blank corners outside the two ellipses does nothing, by design. Screen readers activate the buttons directly.
-- The drag on the prayer name is not available to screen readers; Yes and No buttons are.

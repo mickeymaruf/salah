@@ -381,3 +381,5 @@ Format: date, title, context, decision, consequence.
 - Decision: the app font is Plus Jakarta Sans (Regular, Medium, Semi Bold from `@expo-google-fonts/plus-jakarta-sans`), replacing DM Sans, everywhere, on the user's
   latest request. Every text style takes its family from the `fontFamily` tokens in `src/shared/theme/typography.ts`. Its letters are a little wider than DM Sans, so
   check long names and the fixed-height hero lines on a device.
+- Decision: Catch-up on open is deleted (`src/features/catch-up/`, `app/catch-up.tsx`, its hook in `app/_layout.tsx`, and the text styles and colour only it used), at the
+  user's request, because it is no longer needed. The earlier Catch-up entries above stay as history. Today's one-tap buttons and date picker are how past prayers get logged.

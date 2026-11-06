@@ -10,10 +10,6 @@ type Style = Pick<TextStyle, 'fontFamily' | 'fontSize' | 'lineHeight' | 'letterS
 
 // Sizes, line heights and tracking are taken from the Figma frames.
 export const typography = {
-  // Catch-up prompt: the prayer name, the question and the two answers.
-  giant: { fontFamily: fontFamily.semiBold, fontSize: 80 },
-  choice: { fontFamily: fontFamily.medium, fontSize: 56 },
-  ask: { fontFamily: fontFamily.regular, fontSize: 22 },
   // Today hero and header.
   heroName: { fontFamily: fontFamily.semiBold, fontSize: 40, lineHeight: 48 },
   heroCountdown: { fontFamily: fontFamily.semiBold, fontSize: 32, lineHeight: 39 },

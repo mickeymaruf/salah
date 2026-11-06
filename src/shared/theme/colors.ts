@@ -19,8 +19,6 @@ export const colors = {
   },
   state: {
     missed: '#CC7361',
-    // Light terracotta for the Catch-up No panel and the full Missed screen (Figma P-D5).
-    missedSoft: '#F2DBD6',
   },
   // Prayer pill fills on Today (Figma 3 · Today): brand/green 30% and state/missed 40% over white, and ink/muted 14% over white.
   pill: {
