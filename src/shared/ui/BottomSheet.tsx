@@ -7,6 +7,8 @@ interface BottomSheetProps {
   // A function receives `close`, which plays the exit animation and then calls `onClose`.
   children: ReactNode | ((close: () => void) => ReactNode);
   onClose: () => void;
+  // Space below the last element on top of the bottom safe area. Without it the sheet keeps its roomier default.
+  bottomGap?: number;
 }
 
 const OPEN_MS = 280;
@@ -17,7 +19,7 @@ const CLOSE_MS = 200;
 // One native-driven value moves the sheet by its own height and fades the scrim, so nothing runs on the JS thread.
 // The scrim fills the whole window behind the sheet, which keeps the rounded corners visible, and the
 // modal is translucent under the status and navigation bars so the dimming reaches every edge.
-export function BottomSheet({ children, onClose }: BottomSheetProps) {
+export function BottomSheet({ children, onClose, bottomGap }: BottomSheetProps) {
   const insets = useSafeAreaInsets();
   const [progress] = useState(() => new Animated.Value(0));
   const [height, setHeight] = useState(0);
@@ -64,7 +66,7 @@ export function BottomSheet({ children, onClose }: BottomSheetProps) {
         </Animated.View>
         <Animated.View
           onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
-          style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 16) + 18, transform: [{ translateY }] }]}
+          style={[styles.sheet, { paddingBottom: bottomGap === undefined ? Math.max(insets.bottom, 16) + 18 : insets.bottom + bottomGap, transform: [{ translateY }] }]}
         >
           <View style={styles.grabber} />
           {typeof children === 'function' ? children(close) : children}

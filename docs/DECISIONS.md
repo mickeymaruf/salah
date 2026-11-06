@@ -403,3 +403,6 @@ Format: date, title, context, decision, consequence.
   because it ships with the SDK. Its limits (no shadows, no custom font, no animation, no write without the app) are listed in `docs/LIMITATIONS.md`. The widget layout cannot import app code, so colours are
   passed as props (`palette.ts`). `package.json` scripts were left as they were (`expo prebuild` rewrites `android` and `ios`).
 
+- Decision: the Log a prayer sheet follows Figma "F. Log a prayer, kawaii" (18083:18, 18083:123, 18083:219). The choice is written 600 ms after the tap, when the sheet closes (or at once if the sheet is dismissed), not at the
+  tap, so that tapping the chosen card again can cancel it. The Save button was already gone (see above). "Clear mark" stays for marked prayers, although the Figma frames do not show it. The sheet keeps the 32 px top corners
+  of the shared `BottomSheet`, which is what Figma draws (the brief said 20). The bottom gap is 6 px plus the safe area, as the brief says; Figma has 28 px.

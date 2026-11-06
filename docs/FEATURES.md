@@ -185,7 +185,12 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Manual logging
 
-- What: one bottom sheet (`LogPrayerSheet`) with Prayed or Missed. Tapping one saves it and closes the sheet (no Save button). Two entry points:
+- What: one bottom sheet (`LogPrayerSheet`, Figma "F. Log a prayer, kawaii": 18083:18, 18083:123, 18083:219). A 56 px round 3D icon of the prayer, its name (28 px) with "4:48 AM · Today, 26 Oct" under it,
+  "Did you pray?", and two 150 px cards (32 px corners): the 76 px 3D tick and "Prayed", the 76 px 3D cross and "Missed". The chosen card gets its fill (sage, or the coral `choiceMissed`), a 2 px ring in
+  brand/green or state/missed and a soft shadow, and the other card drops to 55%. There are no captions and no Save button. A press scales the card to 0.97 for 80 ms with a light haptic. A choice springs
+  its icon (0.9, 1.15, 1), fades the tint in over 150 ms and, 600 ms later, writes to the log and closes the sheet. Tapping the chosen card again within those 600 ms deselects it and cancels both. Dismissing the
+  sheet while a choice waits writes it. With reduce motion on there is no spring and no press scale, only the fades. Pictures: `assets/images/sheet-tick.png`, `sheet-cross.png` and `sheet-<prayer>.png`
+  (`node scripts/prepare-sheet-icons.js tick=Prayed_button.svg cross=Missed_button.svg fajr=Fajr.png ...`). The bottom gap under the cards is 6 px plus the safe area (`BottomSheet` `bottomGap`). Two entry points:
   Today (tap a marked pill; unmarked pills use their own check and cross buttons) and Progress (tap a day in the chart, then a prayer in the day card).
   Past days can be edited with no limit on how far back. Future days cannot.
 - Rules (`logChoice.ts`): both choices are stored in `prayer_log.outcome` ('prayed' or 'missed'). Prayed has no photo when

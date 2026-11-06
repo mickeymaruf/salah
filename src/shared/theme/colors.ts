@@ -26,6 +26,8 @@ export const colors = {
     missed: '#EBC7C0',
     current: '#EFEEED',
   },
+  // The Missed card of the Log a prayer sheet once chosen (Figma 18083:219): a soft coral, the tint of state/missed. There is no token for it.
+  choiceMissed: '#FAE6E0',
   // The timeline halo around the current prayer (brand/green at 20%).
   halo: 'rgba(31,77,63,0.2)',
   // Confetti pieces when a prayer is marked as prayed (Figma 18007:14).
