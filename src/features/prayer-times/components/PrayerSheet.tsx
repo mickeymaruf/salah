@@ -10,7 +10,8 @@ import { DateNavigator } from './DateNavigator';
 import { PrayerPill, PILL_HEIGHT } from './PrayerPill';
 import { Timeline } from './Timeline';
 
-const PADDING_TOP = 10;
+// Figma 14030:14: the date row is 12 px from the top of the sheet and the first pill starts 26 px below it.
+const PADDING_TOP = 26;
 const GAP = 12;
 // Figma: the pills start 48 px from the left to leave room for the timeline, and sit 20 px from the right edge.
 const PADDING_LEFT = 48;
@@ -111,6 +112,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   // The row is 48 px high, with the 40 px arrows centred in it, 20 px from each side.
-  navigator: { marginTop: 14, height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 },
+  navigator: { marginTop: 12, height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 },
   content: { paddingLeft: PADDING_LEFT, paddingRight: PADDING_RIGHT, paddingTop: PADDING_TOP, paddingBottom: 34, gap: GAP },
 });

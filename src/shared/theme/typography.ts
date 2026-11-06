@@ -46,6 +46,8 @@ export const typography = {
   small: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21 },
   caption: { fontFamily: fontFamily.regular, fontSize: 13 },
   tiny: { fontFamily: fontFamily.regular, fontSize: 12 },
+  tinyMedium: { fontFamily: fontFamily.medium, fontSize: 12, lineHeight: 15 },
+  labelSmall: { fontFamily: fontFamily.medium, fontSize: 14 },
   tab: { fontFamily: fontFamily.semiBold, fontSize: 12 },
   overline: { fontFamily: fontFamily.semiBold, fontSize: 12, letterSpacing: 1.2 },
 } satisfies Record<string, Style>;

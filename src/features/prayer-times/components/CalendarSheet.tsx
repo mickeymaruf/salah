@@ -16,7 +16,10 @@ const CLOSE_MS = 240;
 // After a day is tapped the sheet waits a moment, so the selection is seen before it closes.
 const PICK_DELAY_MS = 150;
 const CELL = 40;
-const SHEET_HEIGHT = 470;
+const ROW_GAP = 18;
+// Figma 18011:272: a 420 px sheet, the day grid 58 px from row to row.
+const SHEET_HEIGHT = 420;
+const BOTTOM_SPACE = 36;
 
 interface CalendarSheetProps {
   // The day Today is showing: the sheet opens on its month with it selected.
@@ -94,13 +97,24 @@ export function CalendarSheet({ shownKey, todayKey, firstKey, onSelect, onClose 
           onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
           style={{ transform: [{ translateY: slide }], opacity: reduceMotion ? progress : 1 }}
         >
-          <Animated.View {...pan.panHandlers} style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 16) + 8, transform: [{ translateY: pull }] }]}>
+          <Animated.View {...pan.panHandlers} style={[styles.sheet, { paddingBottom: insets.bottom + BOTTOM_SPACE, transform: [{ translateY: pull }] }]}>
             <View style={styles.grabber} />
             <View style={styles.header}>
-              <Text variant="title" accessibilityRole="header">
+              <Text variant="title" accessibilityRole="header" style={styles.title}>
                 {formatMonthYear(month.year, month.monthIndex)}
               </Text>
               <View style={styles.arrows}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Go to today"
+                  onPress={() => pick(todayKey)}
+                  hitSlop={4}
+                  style={styles.today}
+                >
+                  <Text variant="labelSmall" color="brand">
+                    Today
+                  </Text>
+                </Pressable>
                 <ArrowButton
                   label="Previous month"
                   enabled={compareMonths(month, earliest) > 0}
@@ -115,10 +129,10 @@ export function CalendarSheet({ shownKey, todayKey, firstKey, onSelect, onClose 
                 />
               </View>
             </View>
-            <View style={styles.week} importantForAccessibility="no-hide-descendants">
+            <View style={styles.letters} importantForAccessibility="no-hide-descendants">
               {letters.map((letter, i) => (
-                <View key={i} style={styles.column}>
-                  <Text variant="label" color="muted" style={styles.letter}>
+                <View key={i} style={styles.letterColumn}>
+                  <Text variant="tinyMedium" color="muted">
                     {letter}
                   </Text>
                 </View>
@@ -141,11 +155,6 @@ export function CalendarSheet({ shownKey, todayKey, firstKey, onSelect, onClose 
                 ))}
               </View>
             ))}
-            <Pressable accessibilityRole="button" onPress={() => pick(todayKey)} style={styles.today}>
-              <Text variant="label" color="brand">
-                Go to today
-              </Text>
-            </Pressable>
           </Animated.View>
         </Animated.View>
       </View>
@@ -173,7 +182,7 @@ function DayCell({ dayKey, selected, isToday, enabled, onPick }: DayCellProps) {
       onPress={() => onPick(dayKey)}
       style={[styles.cell, selected && styles.cellSelected, isToday && !selected && styles.cellToday, !enabled && styles.cellFaded]}
     >
-      <Text variant={selected ? 'rowStrong' : 'row'} style={selected ? styles.selectedNumber : undefined}>
+      <Text variant={selected ? 'rowStrong' : 'row'} color={enabled ? 'primary' : 'muted'} style={selected ? styles.selectedNumber : undefined}>
         {date.getDate()}
       </Text>
     </Pressable>
@@ -188,24 +197,36 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg.surface,
     borderTopLeftRadius: radii.card,
     borderTopRightRadius: radii.card,
-    paddingTop: 12,
+    paddingTop: 10,
     paddingHorizontal: 24,
+    shadowColor: colors.ink.primary,
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: -6 },
+    elevation: 8,
   },
-  grabber: { alignSelf: 'center', width: 40, height: 4, borderRadius: 2, backgroundColor: colors.line.soft, marginBottom: 16 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
-  arrows: { flexDirection: 'row', gap: 8 },
-  week: { flexDirection: 'row', marginBottom: 4 },
+  // The grabber is 4 px high at y 10, and the title and buttons row (40 px) starts at y 24.
+  grabber: { alignSelf: 'center', width: 40, height: 4, borderRadius: 2, backgroundColor: colors.line.soft, marginBottom: 10 },
+  header: { height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  // The title sits 2 px above the row's middle in Figma.
+  title: { marginBottom: 4 },
+  arrows: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  // The weekday letters are at y 86, 22 px under the row, and the first week of days at y 112.
+  letters: { flexDirection: 'row', marginTop: 22, marginBottom: 11 },
+  week: { flexDirection: 'row', marginBottom: ROW_GAP },
   column: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: CELL },
-  letter: { fontSize: 12 },
+  letterColumn: { flex: 1, alignItems: 'center' },
   cell: { width: CELL, height: CELL, borderRadius: CELL / 2, alignItems: 'center', justifyContent: 'center' },
   cellSelected: { backgroundColor: colors.brand.green },
   cellToday: { borderWidth: 1.5, borderColor: colors.brand.green },
   cellFaded: { opacity: 0.55 },
-  selectedNumber: { color: colors.bg.surface },
+  selectedNumber: { color: colors.brand.onDark },
+  // The Today button: 76 x 40, filled with bg/base, 16 px before the month arrows.
   today: {
-    minHeight: 52,
-    marginTop: 12,
-    borderRadius: radii.pill,
+    width: 76,
+    height: 40,
+    marginRight: 8,
+    borderRadius: 12,
     backgroundColor: colors.bg.base,
     alignItems: 'center',
     justifyContent: 'center',

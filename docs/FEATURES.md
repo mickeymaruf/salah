@@ -30,16 +30,18 @@ Shipped features, what they do, who owns the code, how to extend them.
   window that has passed, pale grey for the rest, a green end dot with a 3 px white border. Inside: the prayer name (40 px), a live countdown to
   the next prayer (32 px, "1h 12m 06s", "42m 06s", "06s", seconds in muted grey, updated every second) and "until Maghrib". At 0 the name and
   countdown move to the next prayer. The text block sits at the bottom of the hero, so it clears the sheet whatever the font's line height.
-- Sheet: white, full width, top corners 20 px. The top row is the date navigator: a 40 px arrow on each side and the long date with "Today",
+- Sheet: white, full width, top corners 20 px. The top row is the date navigator (12 px from the top of the sheet; the first pill starts 26 px below it,
+  Figma 14030:14): a 40 px arrow on each side and the long date with "Today",
   "Yesterday" or "3 days ago" under it. The arrows go back a year and stop at today: a future day cannot be reached, because a prayer that has not
   come cannot be logged. A past day is edited like today (✓ / ✕ / marked fill, and the log sheet on a marked pill). The hero always shows the real
   current prayer, whatever day the list shows.
 - Date picker: tapping the date opens a calendar bottom sheet (`CalendarSheet.tsx`, pure grid maths in `calendar.ts`). It is a plain month grid,
-  because the native Android picker is a dialog that cannot be styled this way. Scrim 42%, white sheet with 24 px top corners, a 40 x 4 grabber,
-  about 470 px high. Header: month and year (20 px Semi Bold) with 40 px previous and next month buttons (next stops at the current month, previous
-  at a year back). Weekday letters start on the device's first weekday (`expo-localization`, Sunday when unknown). 40 px round day cells: the
+  because the native Android picker is a dialog that cannot be styled this way. Figma 18011:272: scrim 42%, white sheet with 24 px top corners and
+  a soft shadow, a 40 x 4 grabber, about 420 px high. Header: month and year (20 px Semi Bold), then a 76 x 40 "Today" button (bg/base fill, 12 px
+  radius, 14 px Medium green label) and the 40 px previous and next month buttons 8 px apart (next stops at the current month, previous at a year
+  back). Weekday letters (12 px Medium) sit at y 86 and the day rows are 58 px apart. Weekday letters start on the device's first weekday (`expo-localization`, Sunday when unknown). 40 px round day cells: the
   selected day is a green circle with a white number, today a thin green ring, days after today at 55% and not selectable, no dots or marks.
-  "Go to today" selects today. It opens on the shown date's month with that day selected; tapping a day selects it, then after 150 ms shows that
+  The Today button selects today. It opens on the shown date's month with that day selected; tapping a day selects it, then after 150 ms shows that
   day on Today and closes. Swiping down, the scrim and the back button close it without changing the date. Slides up in 320 ms (ease-out) and back
   in 240 ms; with reduce motion it fades. Each day is a button labelled like "Monday 26 October", with its selected state announced. The arrows
   beside the date and the calendar share one picked day, so they stay in sync.
