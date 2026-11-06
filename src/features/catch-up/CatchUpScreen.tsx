@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, PanResponder, Pressable, StyleSheet, View, type GestureResponderEvent } from 'react-native';
 import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { formatTime } from '@/shared/lib/date';
+import { playPop, preloadPop, useConfetti, type ViewHandle } from '@/shared/feedback';
 import { PRAYER_LABELS } from '@/features/prayer-times/calculate';
 import type { LogChoice } from '@/features/prayer-times/logChoice';
 import { AllCaughtUp } from './components/AllCaughtUp';
@@ -33,7 +34,14 @@ export function CatchUpScreen() {
 }
 
 function Prompt({ items }: { items: CatchUpItem[] }) {
-  const { index, done, item, counts, result, reduceMotion, answer, grow, fill, overlay, content, header, dragX } = useAnswerFlow(items);
+  const { layer: confetti, burst } = useConfetti();
+  // The Yes half, so the confetti starts from the middle of it whether the answer was a tap or a swipe.
+  const yesPanel = useRef<ViewHandle>(null);
+  useEffect(preloadPop, []);
+  const { index, done, item, counts, result, reduceMotion, answer, grow, fill, overlay, content, header, dragX } = useAnswerFlow(items, () => {
+    burst(yesPanel.current);
+    playPop();
+  });
   const insets = useSafeAreaInsets();
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [headerBottom, setHeaderBottom] = useState(0);
@@ -106,6 +114,8 @@ function Prompt({ items }: { items: CatchUpItem[] }) {
           style={StyleSheet.absoluteFill}
         />
         <Animated.View
+          ref={choice === 'prayed' ? yesPanel : undefined}
+          collapsable={false}
           pointerEvents="none"
           style={[styles.label, { opacity: grow.interpolate({ inputRange: [0, 0.5], outputRange: [1, 0], extrapolate: 'clamp' }) }]}
         >
@@ -173,6 +183,7 @@ function Prompt({ items }: { items: CatchUpItem[] }) {
           </Text>
         </Animated.View>
       )}
+      {confetti}
     </View>
   );
 }

@@ -22,7 +22,8 @@ export interface Result {
 
 // One answer at a time: save it, grow its colour over the screen, hold, then move on to the next prayer.
 // With reduce motion on, the colour fades in and out instead of growing.
-export function useAnswerFlow(items: CatchUpItem[]) {
+// `onPrayed` runs when an answer is Yes, for the confetti and the pop.
+export function useAnswerFlow(items: CatchUpItem[], onPrayed: () => void) {
   const saveChoice = useSaveChoice();
   const reduceMotion = useReduceMotion();
   const [index, setIndex] = useState(0);
@@ -82,6 +83,7 @@ export function useAnswerFlow(items: CatchUpItem[]) {
     busy.current = true;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
     saveChoice(item.date, item.prayer, choice);
+    if (choice === 'prayed') onPrayed();
     setResult({ choice, item });
     setCounts((value) => ({ ...value, [choice]: value[choice] + 1 }));
 
