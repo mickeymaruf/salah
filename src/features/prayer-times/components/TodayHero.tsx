@@ -1,12 +1,14 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { formatCountdown, formatCountdownClock } from '@/shared/lib/date';
 import { PRAYER_LABELS } from '../calculate';
+import { heroScale } from '../heroScale';
 import { arcPoint, ringDotCount, ringDots, type PrayerWindow } from '../window';
 
+// Figma's half circle: 160 px radius in a 390 px wide frame. It scales with the screen width (`heroScale`).
 const RADIUS = 160;
 const DOT_SPACING = 9;
 const RING_DOT = 3.5;
@@ -14,14 +16,11 @@ const RING_DOT = 3.5;
 const END_DOT = 12;
 const END_OUTLINE = 3;
 // The svg is wider and taller than the arc so the end dot is never cut off at either end or at the top.
-const SVG_WIDTH = 360;
-const ARC_BASE = 190;
-const SVG_HEIGHT = ARC_BASE + 10;
-const CX = SVG_WIDTH / 2;
+const SIDE_ROOM = 20;
+const TOP_ROOM = 10;
+const BOTTOM_ROOM = 30;
 // Figma: the last line ends 16 px above the sheet. The lines have fixed heights (50, 40, 20), so Android lays the block out the same.
 const TEXT_GAP = 16;
-
-const DOTS = ringDots(ringDotCount(RADIUS, DOT_SPACING), CX, ARC_BASE, RADIUS);
 
 interface TodayHeroProps {
   window: PrayerWindow;
@@ -34,7 +33,13 @@ interface TodayHeroProps {
 // The prayer in progress inside a half circle of dots. Green dots show how far through the window it is, and the end
 // dot marks the moment. Under the name a live countdown runs to the next prayer.
 function TodayHeroView({ window, at, sheetTop, width }: TodayHeroProps) {
-  const end = arcPoint(window.progress, CX, ARC_BASE, RADIUS);
+  const radius = RADIUS * heroScale(width);
+  const svgWidth = radius * 2 + SIDE_ROOM * 2;
+  const arcBase = radius + BOTTOM_ROOM;
+  const svgHeight = arcBase + TOP_ROOM;
+  const cx = svgWidth / 2;
+  const dots = useMemo(() => ringDots(ringDotCount(radius, DOT_SPACING), cx, arcBase, radius), [radius, cx, arcBase]);
+  const end = arcPoint(window.progress, cx, arcBase, radius);
   const remaining = window.end.getTime() - at.getTime();
   const { lead, seconds } = formatCountdownClock(remaining);
   const nextLabel = PRAYER_LABELS[window.nextName];
@@ -42,12 +47,12 @@ function TodayHeroView({ window, at, sheetTop, width }: TodayHeroProps) {
   return (
     <>
       <Svg
-        width={SVG_WIDTH}
-        height={SVG_HEIGHT}
+        width={svgWidth}
+        height={svgHeight}
         pointerEvents="none"
-        style={[styles.ring, { left: (width - SVG_WIDTH) / 2, top: sheetTop - ARC_BASE }]}
+        style={[styles.ring, { left: (width - svgWidth) / 2, top: sheetTop - arcBase }]}
       >
-        {DOTS.map((dot) => (
+        {dots.map((dot) => (
           <Circle
             key={dot.at}
             cx={dot.x}

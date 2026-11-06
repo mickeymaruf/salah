@@ -18,11 +18,12 @@ import { TodayHero } from './components/TodayHero';
 import { PRAYER_NAMES, type PrayerName } from './calculate';
 import { useSaveChoice } from './data/useSaveChoice';
 import { clampDay, dayRange, relativeDayLabel, shiftDayKey } from './dayNav';
+import { heroScale } from './heroScale';
 import { initialChoice, sheetSubtitle, type LogChoice } from './logChoice';
 import { timelineKinds } from './timeline';
 import { useTodayView } from './useTodayView';
 
-// Figma "3 · Today": the prayer sheet starts 300 px down a frame whose status bar is 54 px, so 246 px below the status bar.
+// Figma "3 · Today": the prayer sheet starts 300 px down a frame whose status bar is 54 px, so 246 px below the status bar. It scales with the screen width.
 const HERO_HEIGHT = 246;
 
 export function TodayScreen() {
@@ -40,7 +41,7 @@ function Today({ profile }: { profile: Profile }) {
   const notifications = useNotificationStatus();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const sheetTop = insets.top + HERO_HEIGHT;
+  const sheetTop = insets.top + HERO_HEIGHT * heroScale(width);
   const range = dayRange(todayKey);
   const kinds = timelineKinds(times, at, currentName);
 
@@ -71,7 +72,7 @@ function Today({ profile }: { profile: Profile }) {
   return (
     <View style={styles.root}>
       <StatusBar style="dark" />
-      <HeroBackdrop sheetTop={sheetTop} safeTop={insets.top} />
+      <HeroBackdrop sheetTop={sheetTop} safeTop={insets.top} width={width} />
       <View style={[styles.header, { top: insets.top + 13 }]}>
         <Text variant="greeting" numberOfLines={1}>{`Assalamu alaikum, ${profile.name}`}</Text>
       </View>

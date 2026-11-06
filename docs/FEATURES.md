@@ -68,6 +68,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `window.ts` for the prayer in progress and the ring maths,
   `dayNav.ts`, `calendar.ts`, `firstWeekday.ts` and `timeline.ts` for the date arrows, the calendar and the timeline, `useTodayView.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`,
   `HeroBackdrop`, `PrayerSheet`, `DateNavigator`, `ArrowButton`, `CalendarSheet`, `Timeline`, `PrayerPill`, `ChoiceButton`, `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
+- Hero scaling: Figma's Today frame is 390 px wide. `heroScale.ts` (width / 390, limited to 0.85 to 1.4) scales the ring radius, the hero height, the picture and the sparkles, so a wider phone keeps the ring's share of the screen and its distance from the edges. Text sizes and the 24 px side insets do not scale.
 - Hero picture: `assets/images/today-hero.png`, made by `node scripts/prepare-hero.js <figma export>` (saturation x0.45, contrast -5%). Without
   an argument the script draws a plain stand-in. The current file is the real picture for Figma node 14018:15, supplied by the user.
 - Rules in `schedule.ts`: the user's choice (prayed or missed) wins. With no choice, a passed time is unmarked (an empty circle, never
