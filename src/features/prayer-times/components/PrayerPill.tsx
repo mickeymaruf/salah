@@ -1,5 +1,5 @@
 import { memo, useLayoutEffect, useRef, useState } from 'react';
-import { Animated, Easing, Image, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Text } from '@/shared/ui';
 import type { ViewHandle } from '@/shared/feedback';
@@ -15,14 +15,6 @@ import { PrayerParticles } from './PrayerParticles';
 
 export const PILL_HEIGHT = 76;
 const HEIGHT = PILL_HEIGHT;
-// The 3D picture shown on a marked pill, where the check button was (Figma 18066:13).
-const RESULTS = {
-  prayed: require('../../../../assets/images/button-prayed.png'),
-  missed: require('../../../../assets/images/button-missed.png'),
-} as const;
-const RESULT = 38;
-const RESULT_RIGHT = 16;
-const RESULT_TOP = (PILL_HEIGHT - RESULT) / 2;
 const BUTTON = 44;
 // The 44 px touch area is centred on a 38 px circle that sits 16 px from the pill's edge.
 const BUTTON_LEFT = 13;
@@ -175,11 +167,6 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onPrayed,
           />
         </>
       )}
-      {marked ? (
-        <Animated.View pointerEvents="none" style={[styles.result, { opacity: tapped ? slide : 1 }]}>
-          <Image source={RESULTS[tapped ?? (state as LogChoice)]} style={styles.resultPicture} accessibilityIgnoresInvertColors />
-        </Animated.View>
-      ) : null}
       <Animated.View
         pointerEvents="none"
         style={[styles.text, { left: showMarked ? MARKED_TEXT_LEFT : TEXT_LEFT }, !showMarked && { transform: [{ translateX: textShift }] }]}
@@ -212,8 +199,6 @@ export const PrayerPill = memo(PrayerPillView);
 const styles = StyleSheet.create({
   pill: { height: HEIGHT, borderRadius: 16, overflow: 'hidden' },
   circle: { position: 'absolute' },
-  result: { position: 'absolute', right: RESULT_RIGHT, top: RESULT_TOP, width: RESULT, height: RESULT },
-  resultPicture: { width: RESULT, height: RESULT, borderRadius: RESULT / 2 },
   // Top and bottom at 0 with centred content keeps the name and time in the middle of the pill whatever the font metrics.
   text: { position: 'absolute', top: 0, bottom: 0, justifyContent: 'center', gap: 2 },
   noPadding: { includeFontPadding: false },
