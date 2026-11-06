@@ -52,10 +52,10 @@ Shipped features, what they do, who owns the code, how to extend them.
   and time (13 px, line 16) start at 76 px, 24 px once marked, and are centred vertically. The cross is 17 px from the left edge, the check 11 px from the
   right edge, both vertically centred. The tab bar's inactive label is Medium weight; the active one is Semi Bold. The sizes have gone back and forth between 66, 76 and 64 px
   as the user and the Figma file changed: Figma is the reference now.
-- Pill: each button is a 44 px tile with 14 px corners in a soft tint (red or green) holding a 30 px round badge: terracotta with a thick white cross, or
-  brand green with a thick white check, with a light ring. Figma draws these as image fills with a gradient; the app draws them in code with the same colours as the
-  tokens, so the badge colours are close but not identical. Faint icons of the prayer sit behind (sunrise, sun, cloud-sun, sunset, moon; green once
-  the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
+- Pill: each button is a 44 px picture with 14 px corners: the 3D cross (orange-red) or check (dark green) from Figma (14034:15 and 14034:31). Figma and the
+  Illustrator export hold them as one 1024 px PNG inside an SVG wrapper, not as vectors, so the app uses that PNG, cropped as the SVG shows it and shipped at 1x, 2x and
+  3x (`assets/images/button-missed.png` and `button-prayed.png`, made by `node scripts/prepare-buttons.js Missed_button.svg Prayed_button.svg`). Faint icons of the prayer
+  sit behind (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
 - Marking: one tap on the check or cross, saved at once, with a light haptic. A circle in the final fill colour starts at the middle of the tapped
   button, reaches just past the far corner (`markGeometry.ts`) and grows in scale only, 0 to 1 in 520 ms (cubic-bezier 0.45, 0, 0.2, 1). Over the
   same time the buttons fade and shrink (180 ms from 0 ms) and the name and time slide to 24 px from the left (320 ms from 120 ms, ease-out).

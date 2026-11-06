@@ -383,3 +383,5 @@ Format: date, title, context, decision, consequence.
   check long names and the fixed-height hero lines on a device.
 - Decision: Catch-up on open is deleted (`src/features/catch-up/`, `app/catch-up.tsx`, its hook in `app/_layout.tsx`, and the text styles and colour only it used), at the
   user's request, because it is no longer needed. The earlier Catch-up entries above stay as history. Today's one-tap buttons and date picker are how past prayers get logged.
+- Decision: the Today ✕ and ✓ buttons use the original 3D pictures from Figma, not a redraw. The user supplied the Illustrator SVGs, which only wrap one 1024 px PNG each, so
+  `scripts/prepare-buttons.js` extracts and crops that PNG into 1x, 2x and 3x files instead of embedding 1 MB SVGs in the app.

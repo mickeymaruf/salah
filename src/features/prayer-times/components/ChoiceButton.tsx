@@ -1,8 +1,7 @@
 import type { Ref } from 'react';
-import { Animated, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Image, Pressable, StyleSheet } from 'react-native';
+import { sizes } from '@/shared/theme';
 import type { ViewHandle } from '@/shared/feedback';
-import { Check, X } from 'lucide-react-native';
-import { colors, sizes } from '@/shared/theme';
 import type { LogChoice } from '../logChoice';
 
 interface ChoiceButtonProps {
@@ -18,17 +17,17 @@ interface ChoiceButtonProps {
   slotRef?: Ref<ViewHandle>;
 }
 
-const ICON_SIZE = 16;
-const STROKE = 3.25;
-const BADGE = 30;
 const LEAVE_SCALE = 0.6;
 
-// A 44 px tile with 14 px corners, tinted red or green, holding a round badge with a thick white cross or check (Figma 14034:15). When its pill is marked the button fades
-// away and shrinks while the colour grows over the pill.
-export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, style, slotRef }: ChoiceButtonProps) {
-  const accent = kind === 'prayed' ? colors.brand.green : colors.state.missed;
-  const Icon = kind === 'prayed' ? Check : X;
+// The 3D pictures from Figma (nodes 14034:15 and 14034:31), made by `scripts/prepare-buttons.js`.
+const PICTURES = {
+  missed: require('../../../../assets/images/button-missed.png'),
+  prayed: require('../../../../assets/images/button-prayed.png'),
+} as const;
 
+// A 44 px button with 14 px corners showing the 3D cross or check. When its pill is marked the button fades away and
+// shrinks while the colour grows over the pill.
+export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, style, slotRef }: ChoiceButtonProps) {
   const opacity = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) : dimmed ? 0.45 : 1;
   const scale = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, LEAVE_SCALE] }) : 1;
 
@@ -40,11 +39,9 @@ export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, st
         accessibilityState={{ disabled }}
         disabled={disabled}
         onPress={onPress}
-        style={[styles.button, { backgroundColor: kind === 'prayed' ? colors.pill.prayedButton : colors.pill.missedButton }]}
+        style={styles.button}
       >
-        <View style={[styles.badge, { backgroundColor: accent }]}>
-          <Icon size={ICON_SIZE} color={colors.bg.surface} strokeWidth={STROKE} />
-        </View>
+        <Image source={PICTURES[kind]} style={styles.picture} accessibilityIgnoresInvertColors />
       </Pressable>
     </Animated.View>
   );
@@ -52,19 +49,6 @@ export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, st
 
 const styles = StyleSheet.create({
   slot: { position: 'absolute', width: sizes.iconButton, height: sizes.iconButton },
-  badge: {
-    width: BADGE,
-    height: BADGE,
-    borderRadius: BADGE / 2,
-    borderWidth: 2,
-    borderColor: colors.badgeRing,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    flex: 1,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  button: { flex: 1, borderRadius: 14, overflow: 'hidden' },
+  picture: { width: '100%', height: '100%' },
 });
