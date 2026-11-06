@@ -7,7 +7,7 @@ import { countPrayed, type CellState, type DayCell } from '../model';
 export const DAY_WIDTH = 14;
 export const DAY_GAP = 3;
 export const DAY_STEP = DAY_WIDTH + DAY_GAP;
-export const ROW_HEIGHT = 19;
+export const ROW_HEIGHT = 27;
 export const ROW_GAP = 3;
 const SEGMENT = ROW_HEIGHT / 5;
 

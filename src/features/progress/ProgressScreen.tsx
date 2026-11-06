@@ -9,7 +9,7 @@ import { PRAYER_NAMES, getDayTimes } from '@/features/prayer-times/calculate';
 import { useSaveChoice } from '@/features/prayer-times/data/useSaveChoice';
 import { initialChoice, isEditableDay, sheetSubtitle } from '@/features/prayer-times/logChoice';
 import { DayDetail } from './components/DayDetail';
-import { SummaryCard } from './components/SummaryCard';
+import { StatPills } from './components/StatPills';
 import { YearGrid } from './components/YearGrid';
 import { adjacentDate } from './model';
 import { useYearProgress } from './useYearProgress';
@@ -44,7 +44,7 @@ function Progress({ profile }: { profile: Profile }) {
         <UserButton />
       </View>
       <View style={styles.summary}>
-        <SummaryCard stats={stats} />
+        <StatPills stats={stats} />
       </View>
       <View style={styles.chart}>
         <YearGrid
@@ -62,9 +62,6 @@ function Progress({ profile }: { profile: Profile }) {
           onNext={nextDate ? () => setPicked(nextDate) : undefined}
         />
       </View>
-      <Text variant="tiny" color="muted" style={styles.hint}>
-        Tap a prayer to mark it done or missed
-      </Text>
       {logging !== null ? (
         <LogPrayerSheet
           key={`${selected.date}-${logging}`}
@@ -88,8 +85,7 @@ function Progress({ profile }: { profile: Profile }) {
 const styles = StyleSheet.create({
   top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   heading: { flex: 1, gap: 2, paddingVertical: 8 },
-  summary: { marginTop: 2 },
-  chart: { marginTop: 9 },
-  detail: { marginTop: 8 },
-  hint: { marginTop: 8, paddingHorizontal: 14 },
+  summary: { marginTop: 14 },
+  chart: { marginTop: 12 },
+  detail: { marginTop: 12 },
 });
