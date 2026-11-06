@@ -119,7 +119,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 - What: one screen for the whole year (Figma 18035:16, "P-D3 · Year · 3D icons", second version). A "Your year / 2026" header with the user button. Three round white pills
   (32 px corners) with 40 px 3D icons: Prayed (3D check), Missed (3D cross, red number) and Streak (3D flame, best streak in days). Pictures: `assets/images/stat-prayed.png`, `stat-missed.png` and `stat-streak.png`, the whole 3D picture with its shadow (made by
   `node scripts/prepare-stat-icons.js prayed=Prayed_button.svg missed=Missed_button.svg streak=Icon.svg`). Today's round buttons use a tighter crop of the same art.
-  Below, the year chart in a card: 12 month rows by up to 31 day columns, each day a bar of 5 segments of 5.4 px (27 px high, Fajr on top): green prayed, terracotta missed, pale upcoming. The grid
+  Below, the year chart in a card: 12 month rows by up to 31 day columns, each day a bar of 5 segments of 5.4 px (27 px high, Fajr on top): green prayed (`chart.prayed` #1B6B33), red-orange missed (`chart.missed` #E4583C), pale upcoming (`chart.upcoming`). The scrollbar track is `line.soft`. The grid
   scrolls horizontally with a thin custom scrollbar and opens with today at the right edge. Month letters stay fixed on the left. Tapping a day shows its five prayers in the day card
   (20 px corners): the date, "4 of 5 prayed", and five 24 px marks with the prayer names (a missed prayer's name is red). Swiping the card moves to the next or previous day.
   There is no percent card, legend, day-number row, hint line or day arrows: the second Figma version dropped them.

@@ -129,6 +129,6 @@ const styles = StyleSheet.create({
   grid: { gap: ROW_GAP },
   monthRow: { flexDirection: 'row', gap: DAY_STEP - DAY_WIDTH },
   scrollbar: { marginTop: 10, paddingLeft: LABEL_WIDTH + LABEL_GAP },
-  track: { height: TRACK_HEIGHT, borderRadius: 2, backgroundColor: colors.heat[0], overflow: 'hidden' },
+  track: { height: TRACK_HEIGHT, borderRadius: 2, backgroundColor: colors.line.soft, overflow: 'hidden' },
   thumb: { height: TRACK_HEIGHT, borderRadius: 2, backgroundColor: colors.ink.muted },
 });

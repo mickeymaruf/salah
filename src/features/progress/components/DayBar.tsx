@@ -12,11 +12,11 @@ export const ROW_GAP = 3;
 const SEGMENT = ROW_HEIGHT / 5;
 
 const SEGMENT_COLORS: Record<CellState, string> = {
-  prayed: colors.brand.green,
-  missed: colors.state.missed,
-  unmarked: colors.heat[0],
-  upcoming: colors.heat[0],
-  untracked: colors.heat[0],
+  prayed: colors.chart.prayed,
+  missed: colors.chart.missed,
+  unmarked: colors.chart.upcoming,
+  upcoming: colors.chart.upcoming,
+  untracked: colors.chart.upcoming,
 };
 
 interface DayBarProps {
