@@ -51,7 +51,9 @@ Shipped features, what they do, who owns the code, how to extend them.
   row (as in Figma), 34 px of space under the last. The name (18 px Semi Bold) and time (15 px) start at 84 px, 24 px once marked, and are centred vertically. The buttons
   are 16 px from each edge. This is the roomier size the user calls "our padding"; Figma 14017:14 has 64 px pills with 8 px gaps, and the app deliberately differs. The
   tab bar's inactive label is Medium weight; the active one is Semi Bold. The pill size has been 66, 76 and 64 px as the user and Figma changed: 76 px is current.
-- Pill: each button is a 44 px tile with 14 px corners, tinted red or green (`pill.missedButton`, `pill.prayedButton`), with a plain 22 px cross or check (Figma 18047:13). The 3D pictures were tried and dropped; `scripts/prepare-buttons.js` and `assets/images/button-*.png` stay unused. Faint icons of the prayer
+- Pill: each button is a 44 px picture with 14 px corners: the 3D cross (orange-red) or check (dark green) from Figma (14034:15 and 14034:31). Figma and the
+  Illustrator export hold them as one 1024 px PNG inside an SVG wrapper, not as vectors, so the app uses that PNG, cropped as the SVG shows it and shipped at 1x, 2x and
+  3x (`assets/images/button-missed.png` and `button-prayed.png`, made by `node scripts/prepare-buttons.js Missed_button.svg Prayed_button.svg`). Faint icons of the prayer
   sit behind (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
 - Marking: one tap on the check or cross, saved at once, with a light haptic. A circle in the final fill colour starts at the middle of the tapped
   button, reaches just past the far corner (`markGeometry.ts`) and grows in scale only, 0 to 1 in 520 ms (cubic-bezier 0.45, 0, 0.2, 1). Over the

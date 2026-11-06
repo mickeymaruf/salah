@@ -25,9 +25,6 @@ export const colors = {
     prayed: '#BCCAC5',
     missed: '#EBC7C0',
     current: '#EFEEED',
-    // The unmarked buttons: brand/green and state/missed at 18% over white (Figma 18047:13).
-    prayedButton: '#D7DFDC',
-    missedButton: '#F6E6E3',
   },
   // The timeline halo around the current prayer (brand/green at 20%).
   halo: 'rgba(31,77,63,0.2)',
