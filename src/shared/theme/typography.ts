@@ -1,9 +1,9 @@
 import type { TextStyle } from 'react-native';
 
 export const fontFamily = {
-  regular: 'PlusJakartaSans_400Regular',
-  medium: 'PlusJakartaSans_500Medium',
-  semiBold: 'PlusJakartaSans_600SemiBold',
+  regular: 'DMSans_400Regular',
+  medium: 'DMSans_500Medium',
+  semiBold: 'DMSans_600SemiBold',
 } as const;
 
 type Style = Pick<TextStyle, 'fontFamily' | 'fontSize' | 'lineHeight' | 'letterSpacing'>;

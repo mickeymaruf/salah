@@ -374,6 +374,7 @@ Format: date, title, context, decision, consequence.
   The code stays so it can be turned back on or removed later.
 - Decision: the date picker is a custom month grid in its own bottom sheet, not the native picker, to match the Figma look. The device's first weekday comes
   from `expo-localization` (added at the version in `bundledNativeModules.json`). Future days are unreachable by the picker and by the next arrow.
-- Decision: the app font is Plus Jakarta Sans (Regular, Medium, Semi Bold from `@expo-google-fonts/plus-jakarta-sans`), replacing Inter everywhere. All text takes its
-  family from the `fontFamily` tokens in `src/shared/theme/typography.ts`, so there is one place to change it. The Figma file still shows Inter. The fixed line
-  heights set for Inter in the hero were left as they are.
+- Decision: the app font is DM Sans (Regular, Medium, Semi Bold from `@expo-google-fonts/dm-sans`), replacing Inter and then Plus Jakarta Sans, everywhere. The user chose
+  it from the Figma variants "3 · Today · Plus Jakarta Sans / DM Sans / Manrope / Outfit" (the DM Sans one is 18019:271, same layout, only the font differs). All text
+  takes its family from the `fontFamily` tokens in `src/shared/theme/typography.ts`, so there is one place to change it. The fixed line heights set in the hero were left
+  as they are.
