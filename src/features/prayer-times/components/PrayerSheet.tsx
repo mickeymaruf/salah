@@ -11,7 +11,7 @@ import { PrayerPill, PILL_HEIGHT } from './PrayerPill';
 import { Timeline } from './Timeline';
 
 const PADDING_TOP = 10;
-const GAP = 12;
+const GAP = 10;
 // Figma: the pills start 48 px from the left to leave room for the timeline, and sit 20 px from the right edge.
 const PADDING_LEFT = 48;
 const PADDING_RIGHT = 20;
@@ -101,5 +101,5 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   navigator: { paddingTop: 14 },
-  content: { paddingLeft: PADDING_LEFT, paddingRight: PADDING_RIGHT, paddingTop: PADDING_TOP, paddingBottom: 34, gap: GAP },
+  content: { paddingLeft: PADDING_LEFT, paddingRight: PADDING_RIGHT, paddingTop: PADDING_TOP, paddingBottom: 30, gap: GAP },
 });
