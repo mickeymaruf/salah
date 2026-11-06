@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { colors } from '@/shared/theme';
+import { colors, radii } from '@/shared/theme';
 import type { ViewHandle } from '@/shared/feedback';
 import { PRAYER_NAMES, type DayTimes, type PrayerName } from '../calculate';
 import type { LogChoice } from '../logChoice';
@@ -102,8 +102,8 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: colors.bg.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: radii.sheet,
+    borderTopRightRadius: radii.sheet,
     shadowColor: colors.ink.primary,
     shadowOpacity: 0.06,
     shadowRadius: 12,

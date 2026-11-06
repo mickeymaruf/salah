@@ -13,6 +13,7 @@ export const radii = {
   cardSmall: 20,
   pill: 28,
   viewfinder: 32,
+  sheet: 32,
   bar: 3,
 } as const;
 

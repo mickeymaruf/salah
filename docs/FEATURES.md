@@ -51,6 +51,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   row (as in Figma), 34 px of space under the last. The name (18 px Semi Bold) and time (15 px) start at 84 px, 24 px once marked, and are centred vertically. The buttons
   are 16 px from each edge. This is the roomier size the user calls "our padding"; Figma 14017:14 has 64 px pills with 8 px gaps, and the app deliberately differs. The
   tab bar's inactive label is Medium weight; the active one is Semi Bold. The pill size has been 66, 76 and 64 px as the user and Figma changed: 76 px is current.
+- Sheet: the prayer sheet has 32 px top corners (`radii.sheet`; Figma has 20, the user asked for rounder).
 - Pill: each button is a 44 px picture with 14 px corners: the 3D cross (orange-red) or check (dark green) from Figma (14034:15 and 14034:31). Figma and the
   Illustrator export hold them as one 1024 px PNG inside an SVG wrapper, not as vectors, so the app uses that PNG, cropped as the SVG shows it and shipped at 1x, 2x and
   3x (`assets/images/button-missed.png` and `button-prayed.png`, made by `node scripts/prepare-buttons.js Missed_button.svg Prayed_button.svg`). Faint icons of the prayer
