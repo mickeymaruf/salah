@@ -31,8 +31,18 @@ Shipped features, what they do, who owns the code, how to extend them.
   the next prayer (32 px, "1h 12m 06s", "42m 06s", "06s", seconds in muted grey, updated every second) and "until Maghrib". At 0 the name and
   countdown move to the next prayer. The text block sits at the bottom of the hero, so it clears the sheet whatever the font's line height.
 - Sheet: white, full width, top corners 20 px. The top row is the date navigator: a 40 px arrow on each side and the long date with "Today",
-  "Yesterday", "Tomorrow", "3 days ago" or "In 3 days" under it. The arrows go back a year and ahead 14 days, whenever tracking began. A past day is edited
-  like today. A future day shows its prayers dimmed and cannot be marked. The hero always shows the real current prayer, whatever day the list shows.
+  "Yesterday" or "3 days ago" under it. The arrows go back a year and stop at today: a future day cannot be reached, because a prayer that has not
+  come cannot be logged. A past day is edited like today (✓ / ✕ / marked fill, and the log sheet on a marked pill). The hero always shows the real
+  current prayer, whatever day the list shows.
+- Date picker: tapping the date opens a calendar bottom sheet (`CalendarSheet.tsx`, pure grid maths in `calendar.ts`). It is a plain month grid,
+  because the native Android picker is a dialog that cannot be styled this way. Scrim 42%, white sheet with 24 px top corners, a 40 x 4 grabber,
+  about 470 px high. Header: month and year (20 px Semi Bold) with 40 px previous and next month buttons (next stops at the current month, previous
+  at a year back). Weekday letters start on the device's first weekday (`expo-localization`, Sunday when unknown). 40 px round day cells: the
+  selected day is a green circle with a white number, today a thin green ring, days after today at 55% and not selectable, no dots or marks.
+  "Go to today" selects today. It opens on the shown date's month with that day selected; tapping a day selects it, then after 150 ms shows that
+  day on Today and closes. Swiping down, the scrim and the back button close it without changing the date. Slides up in 320 ms (ease-out) and back
+  in 240 ms; with reduce motion it fades. Each day is a button labelled like "Monday 26 October", with its selected state announced. The arrows
+  beside the date and the calendar share one picked day, so they stay in sync.
   Left of the pills (x = 24) a timeline runs: green dots and green line for prayers whose time has passed, a larger haloed dot for the one in progress
   (only when the list shows today and that prayer started today), hollow dots on the grey line for those to come (`timeline.ts`).
 - Pills (Figma 14030:14): 322 px wide (48 px from the left to leave room for the timeline, 20 from the right), 66 px high, 10 px apart, 16 radius, the first
@@ -54,8 +64,8 @@ Shipped features, what they do, who owns the code, how to extend them.
   `node scripts/make-pop.js`, preloaded) plays with every check, follows the silent switch and the Settings switch "Sound when marking a prayer";
   confetti and the light haptic play whether sound is on or off. A cross has no confetti and no sound.
 - Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `window.ts` for the prayer in progress and the ring maths,
-  `dayNav.ts` and `timeline.ts` for the date arrows and the timeline, `useTodayView.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`,
-  `HeroBackdrop`, `PrayerSheet`, `DateNavigator`, `Timeline`, `PrayerPill`, `ChoiceButton`, `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
+  `dayNav.ts`, `calendar.ts`, `firstWeekday.ts` and `timeline.ts` for the date arrows, the calendar and the timeline, `useTodayView.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`,
+  `HeroBackdrop`, `PrayerSheet`, `DateNavigator`, `ArrowButton`, `CalendarSheet`, `Timeline`, `PrayerPill`, `ChoiceButton`, `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
 - Hero picture: `assets/images/today-hero.png`, made by `node scripts/prepare-hero.js <figma export>` (saturation x0.45, contrast -5%). Without
   an argument the script draws a plain stand-in. The current file is the real picture for Figma node 14018:15, supplied by the user.
 - Rules in `schedule.ts`: the user's choice (prayed or missed) wins. With no choice, a passed time is unmarked (an empty circle, never

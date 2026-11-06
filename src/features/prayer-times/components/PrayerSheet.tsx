@@ -27,6 +27,7 @@ interface PrayerSheetProps {
   canGoForward: boolean;
   onBack: () => void;
   onForward: () => void;
+  onPickDate: () => void;
   times: DayTimes;
   states: Record<PrayerName, PrayerState>;
   kinds: Record<PrayerName, TimelineKind>;
@@ -49,6 +50,7 @@ export function PrayerSheet({
   canGoForward,
   onBack,
   onForward,
+  onPickDate,
   times,
   states,
   kinds,
@@ -61,7 +63,15 @@ export function PrayerSheet({
   return (
     <View style={[styles.sheet, { top }]}>
       <View style={styles.navigator}>
-        <DateNavigator date={dateLabel} sub={dateSub} canGoBack={canGoBack} canGoForward={canGoForward} onBack={onBack} onForward={onForward} />
+        <DateNavigator
+          date={dateLabel}
+          sub={dateSub}
+          canGoBack={canGoBack}
+          canGoForward={canGoForward}
+          onBack={onBack}
+          onForward={onForward}
+          onPickDate={onPickDate}
+        />
       </View>
       {notice}
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} overScrollMode="never">
@@ -100,6 +110,7 @@ const styles = StyleSheet.create({
     elevation: 6,
     overflow: 'hidden',
   },
-  navigator: { paddingTop: 14 },
+  // The row is 48 px high, with the 40 px arrows centred in it, 20 px from each side.
+  navigator: { marginTop: 14, height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 },
   content: { paddingLeft: PADDING_LEFT, paddingRight: PADDING_RIGHT, paddingTop: PADDING_TOP, paddingBottom: 30, gap: GAP },
 });

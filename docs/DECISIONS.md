@@ -372,3 +372,5 @@ Format: date, title, context, decision, consequence.
   respect. It only controls the pop; confetti and haptics always play. The pop is a synthesised tone (`scripts/make-pop.js`), like the alarm tones.
 - Decision: Catch-up on open is switched off (`CATCH_UP_ENABLED = false`) because Today's one-tap buttons and date arrows now cover logging past prayers.
   The code stays so it can be turned back on or removed later.
+- Decision: the date picker is a custom month grid in its own bottom sheet, not the native picker, to match the Figma look. The device's first weekday comes
+  from `expo-localization` (added at the version in `bundledNativeModules.json`). Future days are unreachable by the picker and by the next arrow.

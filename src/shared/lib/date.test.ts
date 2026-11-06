@@ -5,6 +5,8 @@ import {
   formatCountdownClock,
   formatDayMonth,
   formatLongDate,
+  formatMonthYear,
+  formatWeekdayDate,
   formatShortDate,
   formatTime,
   now,
@@ -66,6 +68,11 @@ describe('formatting', () => {
     expect(formatCountdown(59 * 1000)).toBe('in 1m');
     expect(formatCountdown(5 * 60000)).toBe('in 5m');
     expect(formatCountdown(-1000)).toBe('in 0m');
+  });
+
+  it('formats a spoken date and a month heading', () => {
+    expect(formatWeekdayDate(new Date(2026, 9, 26))).toBe('Monday 26 October');
+    expect(formatMonthYear(2026, 9)).toBe('October 2026');
   });
 
   it('formats the live countdown by size', () => {

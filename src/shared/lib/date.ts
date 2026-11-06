@@ -53,6 +53,15 @@ export function formatLongDate(date: Date): string {
   return `${WEEKDAYS[date.getDay()]}, ${date.getDate()} ${MONTHS[date.getMonth()]}`;
 }
 
+// "Monday 26 October", for screen readers.
+export function formatWeekdayDate(date: Date): string {
+  return `${WEEKDAYS[date.getDay()]} ${date.getDate()} ${MONTHS[date.getMonth()]}`;
+}
+
+export function formatMonthYear(year: number, monthIndex: number): string {
+  return `${MONTHS[monthIndex]} ${year}`;
+}
+
 export function formatShortDate(date: Date): string {
   return `${WEEKDAYS[date.getDay()].slice(0, 3)}, ${date.getDate()} ${MONTHS[date.getMonth()].slice(0, 3)}`;
 }

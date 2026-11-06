@@ -11,6 +11,7 @@ import type { Profile } from '@/shared/state/profile';
 import { AlarmsOffNotice } from '@/features/alarm/components/AlarmsOffNotice';
 import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
 import { HeroBackdrop } from './components/HeroBackdrop';
+import { CalendarSheet } from './components/CalendarSheet';
 import { LogPrayerSheet } from './components/LogPrayerSheet';
 import { PrayerSheet } from './components/PrayerSheet';
 import { TodayHero } from './components/TodayHero';
@@ -34,6 +35,7 @@ function Today({ profile }: { profile: Profile }) {
   const [picked, setPicked] = useState<string | null>(null);
   const { at, todayKey, dayKey, times, states, window, currentName } = useTodayView(profile, picked);
   const [editing, setEditing] = useState<PrayerName | null>(null);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const saveChoice = useSaveChoice();
   const notifications = useNotificationStatus();
   const insets = useSafeAreaInsets();
@@ -57,6 +59,7 @@ function Today({ profile }: { profile: Profile }) {
     },
     [burst, states],
   );
+  const pickDay = (key: string) => setPicked(key === todayKey ? null : key);
   const onMark = useCallback((name: PrayerName, choice: LogChoice) => saveChoice(dayKey, name, choice), [saveChoice, dayKey]);
   const notice =
     notifications.status === 'denied' ? (
@@ -85,6 +88,7 @@ function Today({ profile }: { profile: Profile }) {
         canGoForward={dayKey < range.last}
         onBack={() => go(-1)}
         onForward={() => go(1)}
+        onPickDate={() => setCalendarOpen(true)}
         times={times}
         states={states}
         kinds={kinds}
@@ -95,6 +99,9 @@ function Today({ profile }: { profile: Profile }) {
         notice={notice}
       />
       {confetti}
+      {calendarOpen ? (
+        <CalendarSheet shownKey={dayKey} todayKey={todayKey} firstKey={range.first} onSelect={pickDay} onClose={() => setCalendarOpen(false)} />
+      ) : null}
       {editing ? (
         <LogPrayerSheet
           key={editing}

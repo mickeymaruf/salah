@@ -1,9 +1,7 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { Text } from '@/shared/ui';
-import { colors } from '@/shared/theme';
-
-const ARROW = 40;
+import { ArrowButton } from './ArrowButton';
 
 interface DateNavigatorProps {
   date: string;
@@ -12,61 +10,35 @@ interface DateNavigatorProps {
   canGoForward: boolean;
   onBack: () => void;
   onForward: () => void;
+  // Tapping the date itself opens the calendar.
+  onPickDate: () => void;
 }
 
 // The top row of the prayer sheet: a square arrow on each side and the date with "Today" (or "Yesterday", ...) under it.
-export function DateNavigator({ date, sub, canGoBack, canGoForward, onBack, onForward }: DateNavigatorProps) {
+// The date is a button that opens the calendar.
+export function DateNavigator({ date, sub, canGoBack, canGoForward, onBack, onForward, onPickDate }: DateNavigatorProps) {
   return (
-    <View style={styles.row}>
-      <Arrow label="Previous day" enabled={canGoBack} onPress={onBack} Icon={ChevronLeft} />
-      <View style={styles.centre} accessible accessibilityRole="header" accessibilityLabel={`${date}, ${sub}`}>
+    <>
+      <ArrowButton label="Previous day" enabled={canGoBack} onPress={onBack} Icon={ChevronLeft} />
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${date}, ${sub}`}
+        accessibilityHint="Opens a calendar to pick a day"
+        onPress={onPickDate}
+        style={styles.centre}
+      >
         <Text variant="bodyStrong" numberOfLines={1}>
           {date}
         </Text>
         <Text variant="tiny" color="muted">
           {sub}
         </Text>
-      </View>
-      <Arrow label="Next day" enabled={canGoForward} onPress={onForward} Icon={ChevronRight} />
-    </View>
-  );
-}
-
-interface ArrowProps {
-  label: string;
-  enabled: boolean;
-  onPress: () => void;
-  Icon: typeof ChevronLeft;
-}
-
-function Arrow({ label, enabled, onPress, Icon }: ArrowProps) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityState={{ disabled: !enabled }}
-      disabled={!enabled}
-      onPress={onPress}
-      // The square is 40 px in Figma; the extra hit area brings the touch target to 48.
-      hitSlop={4}
-      style={[styles.arrow, !enabled && styles.arrowOff]}
-    >
-      <Icon size={20} color={colors.ink.primary} strokeWidth={1.5} />
-    </Pressable>
+      </Pressable>
+      <ArrowButton label="Next day" enabled={canGoForward} onPress={onForward} Icon={ChevronRight} />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  row: { height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 },
-  centre: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  arrow: {
-    width: ARROW,
-    height: ARROW,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: colors.line.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  arrowOff: { opacity: 0.35 },
+  centre: { flex: 1, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center' },
 });
