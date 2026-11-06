@@ -47,11 +47,10 @@ Shipped features, what they do, who owns the code, how to extend them.
   beside the date and the calendar share one picked day, so they stay in sync.
   Left of the pills (x = 24) a timeline runs: green dots and green line for prayers whose time has passed, a larger haloed dot for the one in progress
   (only when the list shows today and that prayer started today), hollow dots on the grey line for those to come (`timeline.ts`).
-- Pills (Figma 3 · Today, 14017:14, read again on the user's request to match it): 322 px wide (48 px from the left to leave room for the timeline, 20 from
-  the right), 64 px high, 8 px apart, 16 radius, the first one 26 px below the date row, 18 px of space under the last. The name (16 px Semi Bold, line 20)
-  and time (13 px, line 16) start at 76 px, 24 px once marked, and are centred vertically. The cross is 17 px from the left edge, the check 11 px from the
-  right edge, both vertically centred. The tab bar's inactive label is Medium weight; the active one is Semi Bold. The sizes have gone back and forth between 66, 76 and 64 px
-  as the user and the Figma file changed: Figma is the reference now.
+- Pills: 322 px wide (48 px from the left to leave room for the timeline, 20 from the right), 76 px high, 12 px apart, 16 radius, the first one 26 px below the date
+  row (as in Figma), 34 px of space under the last. The name (18 px Semi Bold) and time (15 px) start at 84 px, 24 px once marked, and are centred vertically. The buttons
+  are 16 px from each edge. This is the roomier size the user calls "our padding"; Figma 14017:14 has 64 px pills with 8 px gaps, and the app deliberately differs. The
+  tab bar's inactive label is Medium weight; the active one is Semi Bold. The pill size has been 66, 76 and 64 px as the user and Figma changed: 76 px is current.
 - Pill: each button is a 44 px picture with 14 px corners: the 3D cross (orange-red) or check (dark green) from Figma (14034:15 and 14034:31). Figma and the
   Illustrator export hold them as one 1024 px PNG inside an SVG wrapper, not as vectors, so the app uses that PNG, cropped as the SVG shows it and shipped at 1x, 2x and
   3x (`assets/images/button-missed.png` and `button-prayed.png`, made by `node scripts/prepare-buttons.js Missed_button.svg Prayed_button.svg`). Faint icons of the prayer

@@ -13,14 +13,13 @@ import type { PrayerState } from '../schedule';
 import { ChoiceButton } from './ChoiceButton';
 import { PrayerParticles } from './PrayerParticles';
 
-export const PILL_HEIGHT = 64;
+export const PILL_HEIGHT = 76;
 const HEIGHT = PILL_HEIGHT;
 const BUTTON = 44;
-// Figma: the cross is 17 px from the left edge and the check 11 px from the right edge.
-const BUTTON_LEFT = 17;
-const BUTTON_RIGHT = 11;
+const BUTTON_LEFT = 16;
+const BUTTON_RIGHT = 16;
 const BUTTON_TOP = (HEIGHT - BUTTON) / 2;
-const TEXT_LEFT = 76;
+const TEXT_LEFT = 84;
 const MARKED_TEXT_LEFT = 24;
 
 // The marking animation. The circle grows 0 to 1 in scale only, never in width, height or radius. The buttons leave
@@ -200,6 +199,6 @@ const styles = StyleSheet.create({
   pill: { height: HEIGHT, borderRadius: 16, overflow: 'hidden' },
   circle: { position: 'absolute' },
   // Top and bottom at 0 with centred content keeps the name and time in the middle of the pill whatever the font metrics.
-  text: { position: 'absolute', top: 0, bottom: 0, justifyContent: 'center' },
+  text: { position: 'absolute', top: 0, bottom: 0, justifyContent: 'center', gap: 2 },
   noPadding: { includeFontPadding: false },
 });
