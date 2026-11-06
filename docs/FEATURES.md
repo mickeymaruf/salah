@@ -116,10 +116,15 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Progress
 
-- What: one screen for the whole year. 12 month rows by up to 31 day columns, each day a bar of 5 segments
+- What: one screen for the whole year (Figma 18035:16, "P-D3 · Year · 3D icons"). A "Your year / 2026" header with the user button. A sage card (28 px corners): "Your progress / Prayers kept"
+  with the percent kept at 52 px, and three white pills with 38 px 3D icons: Prayed (3D check), Missed (3D cross, red number) and Streak (3D flame, best streak in days).
+  Pictures: `assets/images/button-prayed.png` and `button-missed.png` (shared with Today) and `stat-streak.png` (made by `node scripts/prepare-streak.js Icon.svg`).
+  Below, the year chart: 12 month rows by up to 31 day columns, each day a bar of 5 segments
   (Fajr on top): green prayed, terracotta missed, pale upcoming. Day numbers 1 to 31 sit above the columns and scroll with them (the selected day's number is dark). The grid scrolls horizontally with a thin custom
   scrollbar and opens with today at the right edge. Month letters stay fixed on the left. Tapping a day shows its
-  five prayers in the detail card. Above the grid: percent kept, prayed, missed, best streak.
+  five prayers in the day card (20 px corners): date with arrows, "4 of 5 prayed" (red if any missed, green if all five, grey otherwise), and five 24 px marks with the prayer names (a missed prayer's name is red).
+  The hint "Tap a prayer to mark it done or missed" sits under it. Before anything is tracked the percent is a dash and the small title reads "Pray today to start your year".
+  Figma's frame has no day numbers and no arrows on the day card; the app keeps both because the user asked for them earlier.
 - Owns: `src/features/progress/` (`model.ts` builds the grid, `stats.ts`, `useYearProgress.ts`,
   `ProgressScreen.tsx`, `components/`), `app/(tabs)/progress.tsx`.
 - Data: one query for the year (`getYear`). Past days need no prayer times: no row means unmarked. Only today
@@ -127,7 +132,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   The start date is `profile.startedOn`, or the first logged day if that is earlier.
 - Stats count prayers the user marked prayed or missed. Unmarked ones are left out of the percentage. Best streak is the longest run of consecutive days with
   all five prayed.
-- Extend: a new state needs a color in `DayBar.tsx`, a case in `model.ts`, and a mark in `DayDetail.tsx`.
+- Extend: a new state needs a color in `DayBar.tsx`, a case in `model.ts`, and a mark in `DayDetail.tsx`. The summary card is `components/SummaryCard.tsx`.
 
 ## Settings
 

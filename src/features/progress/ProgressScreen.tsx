@@ -9,10 +9,9 @@ import { PRAYER_NAMES, getDayTimes } from '@/features/prayer-times/calculate';
 import { useSaveChoice } from '@/features/prayer-times/data/useSaveChoice';
 import { initialChoice, isEditableDay, sheetSubtitle } from '@/features/prayer-times/logChoice';
 import { DayDetail } from './components/DayDetail';
-import { StatCard } from './components/StatCard';
+import { SummaryCard } from './components/SummaryCard';
 import { YearGrid } from './components/YearGrid';
 import { adjacentDate } from './model';
-import { formatStreak } from './stats';
 import { useYearProgress } from './useYearProgress';
 
 export function ProgressScreen() {
@@ -45,15 +44,7 @@ function Progress({ profile }: { profile: Profile }) {
         <UserButton />
       </View>
       <View style={styles.summary}>
-        <Text variant="stat">{stats.percentKept === null ? '—' : `${stats.percentKept}%`}</Text>
-        <Text variant="label" color="muted" style={styles.summaryLabel}>
-          {stats.percentKept === null ? 'Pray today to start your year' : 'of prayers kept'}
-        </Text>
-      </View>
-      <View style={styles.stats}>
-        <StatCard label="Prayed" value={String(stats.prayed)} />
-        <StatCard label="Missed" value={String(stats.missed)} />
-        <StatCard label="Best streak" value={formatStreak(stats.bestStreak)} />
+        <SummaryCard stats={stats} />
       </View>
       <View style={styles.chart}>
         <YearGrid
@@ -71,7 +62,7 @@ function Progress({ profile }: { profile: Profile }) {
           onNext={nextDate ? () => setPicked(nextDate) : undefined}
         />
       </View>
-      <Text variant="caption" color="muted" style={styles.hint}>
+      <Text variant="tiny" color="muted" style={styles.hint}>
         Tap a prayer to mark it done or missed
       </Text>
       {logging !== null ? (
@@ -96,11 +87,9 @@ function Progress({ profile }: { profile: Profile }) {
 
 const styles = StyleSheet.create({
   top: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  heading: { flex: 1, gap: 4, paddingVertical: 8 },
-  summary: { marginTop: 10, flexDirection: 'row', alignItems: 'flex-end', gap: 10 },
-  summaryLabel: { paddingBottom: 8 },
-  stats: { marginTop: 16, flexDirection: 'row', gap: 10 },
-  chart: { marginTop: 14 },
-  detail: { marginTop: 12 },
+  heading: { flex: 1, gap: 2, paddingVertical: 8 },
+  summary: { marginTop: 2 },
+  chart: { marginTop: 9 },
+  detail: { marginTop: 8 },
   hint: { marginTop: 8, paddingHorizontal: 14 },
 });

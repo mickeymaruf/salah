@@ -21,6 +21,13 @@ export const typography = {
   confirm: { fontFamily: fontFamily.semiBold, fontSize: 32, lineHeight: 38, letterSpacing: -0.64 },
   input: { fontFamily: fontFamily.medium, fontSize: 32 },
   stat: { fontFamily: fontFamily.semiBold, fontSize: 44, letterSpacing: -1.32 },
+  // Progress (Figma 18035:16).
+  percent: { fontFamily: fontFamily.semiBold, fontSize: 52 },
+  cardTitle: { fontFamily: fontFamily.semiBold, fontSize: 18 },
+  statValue: { fontFamily: fontFamily.semiBold, fontSize: 15 },
+  statLabel: { fontFamily: fontFamily.medium, fontSize: 11 },
+  dayTitle: { fontFamily: fontFamily.semiBold, fontSize: 15 },
+  daySummary: { fontFamily: fontFamily.medium, fontSize: 13 },
   heading: { fontFamily: fontFamily.semiBold, fontSize: 26, letterSpacing: -0.39 },
   alarmName: { fontFamily: fontFamily.medium, fontSize: 28, letterSpacing: -0.28 },
   sheetTitle: { fontFamily: fontFamily.semiBold, fontSize: 28, letterSpacing: -0.42 },

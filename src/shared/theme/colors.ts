@@ -52,11 +52,13 @@ export type TextColor =
   | 'primary'
   | 'muted'
   | 'brand'
-  | 'onDark';
+  | 'onDark'
+  | 'missed';
 
 export const textColors: Record<TextColor, string> = {
   primary: colors.ink.primary,
   muted: colors.ink.muted,
   brand: colors.brand.green,
   onDark: colors.brand.onDark,
+  missed: colors.state.missed,
 };

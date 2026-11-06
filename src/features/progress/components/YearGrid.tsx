@@ -153,7 +153,7 @@ function LegendItem({ color, label }: { color: string; label: string }) {
 }
 
 const styles = StyleSheet.create({
-  card: { paddingHorizontal: 13, paddingTop: 15, paddingBottom: 15 },
+  card: { paddingHorizontal: 13, paddingTop: 15, paddingBottom: 13 },
   chart: { flexDirection: 'row', gap: LABEL_GAP },
   labels: { width: LABEL_WIDTH, gap: ROW_GAP },
   label: { height: ROW_HEIGHT, justifyContent: 'center' },
@@ -164,10 +164,10 @@ const styles = StyleSheet.create({
   number: { width: DAY_WIDTH, fontSize: 9, lineHeight: NUMBER_HEIGHT, textAlign: 'center' },
   numberSpacer: { height: NUMBER_HEIGHT },
   monthRow: { flexDirection: 'row', gap: DAY_STEP - DAY_WIDTH },
-  scrollbar: { marginTop: 25, paddingLeft: LABEL_WIDTH + LABEL_GAP },
+  scrollbar: { marginTop: 10, paddingLeft: LABEL_WIDTH + LABEL_GAP },
   track: { height: TRACK_HEIGHT, borderRadius: 2, backgroundColor: colors.heat[0], overflow: 'hidden' },
   thumb: { height: TRACK_HEIGHT, borderRadius: 2, backgroundColor: colors.ink.muted },
-  legend: { marginTop: 14, flexDirection: 'row', justifyContent: 'center', gap: 12 },
+  legend: { marginTop: 10, flexDirection: 'row', justifyContent: 'center', gap: 12 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   swatch: { width: 8, height: 8, borderRadius: 2 },
   legendText: { fontSize: 11 },

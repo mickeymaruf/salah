@@ -2,12 +2,18 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import { Check, ChevronLeft, ChevronRight, X } from 'lucide-react-native';
 import { Card, Text } from '@/shared/ui';
-import { colors, sizes } from '@/shared/theme';
+import { colors, type TextColor } from '@/shared/theme';
 import { formatShortDate, parseDateKey } from '@/shared/lib/date';
 import { PRAYER_LABELS, PRAYER_NAMES } from '@/features/prayer-times/calculate';
 import { canLog } from '@/features/prayer-times/logChoice';
 import { countPrayed, type CellState, type DayCell } from '../model';
 import { useHorizontalSwipe } from '../useHorizontalSwipe';
+
+function summaryColor(cell: DayCell): TextColor {
+  if (cell.states.includes('missed')) return 'missed';
+  if (cell.states.every((state) => state === 'prayed')) return 'brand';
+  return 'muted';
+}
 
 function summary(cell: DayCell): string {
   if (cell.states.every((state) => state === 'untracked')) return 'Not tracked';
@@ -47,20 +53,20 @@ export function DayDetail({ cell, onSelectPrayer, onPrevious, onNext }: DayDetai
 
   return (
     <View {...swipe.panHandlers}>
-      <Card style={styles.card}>
+      <Card radius={20} style={styles.card}>
         <View style={styles.content}>
           <View style={styles.header}>
             <View style={styles.title}>
               <ArrowButton direction="previous" onPress={onPrevious} />
               <Animated.View style={motion}>
-                <Text variant="rowStrong" style={styles.date} accessibilityRole="header">
+                <Text variant="dayTitle" style={styles.date} accessibilityRole="header">
                   {formatShortDate(parseDateKey(cell.date))}
                 </Text>
               </Animated.View>
               <ArrowButton direction="next" onPress={onNext} />
             </View>
             <Animated.View style={motion}>
-              <Text variant="caption" color="muted">
+              <Text variant="daySummary" color={summaryColor(cell)}>
                 {summary(cell)}
               </Text>
             </Animated.View>
@@ -80,7 +86,7 @@ export function DayDetail({ cell, onSelectPrayer, onPrevious, onNext }: DayDetai
                   style={styles.prayer}
                 >
                   <Mark state={cell.states[index]} />
-                  <Text variant="caption" color="muted" style={styles.name}>
+                  <Text variant="statLabel" color={cell.states[index] === 'missed' ? 'missed' : 'muted'}>
                     {PRAYER_LABELS[name]}
                   </Text>
                 </Pressable>
@@ -102,9 +108,10 @@ function ArrowButton({ direction, onPress }: { direction: 'previous' | 'next'; o
       accessibilityState={{ disabled: !onPress }}
       disabled={!onPress}
       onPress={onPress}
+      hitSlop={{ top: 12, bottom: 12, left: 8, right: 8 }}
       style={[styles.arrow, !onPress && styles.arrowOff]}
     >
-      <Icon size={20} color={colors.ink.primary} strokeWidth={2} />
+      <Icon size={18} color={colors.ink.primary} strokeWidth={2} />
     </Pressable>
   );
 }
@@ -120,7 +127,7 @@ function Mark({ state }: { state: CellState }) {
   if (state === 'missed') {
     return (
       <View style={[styles.mark, { backgroundColor: colors.state.missed }]}>
-        <X size={14} color={colors.brand.onDark} strokeWidth={3} />
+        <X size={12} color={colors.brand.onDark} strokeWidth={3} />
       </View>
     );
   }
@@ -128,16 +135,15 @@ function Mark({ state }: { state: CellState }) {
 }
 
 const styles = StyleSheet.create({
-  card: { paddingHorizontal: 17, paddingTop: 7, paddingBottom: 15 },
-  content: { gap: 6 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  title: { flexDirection: 'row', alignItems: 'center', marginLeft: -12 },
-  date: { minWidth: 96, textAlign: 'center' },
-  arrow: { width: sizes.iconButton, height: sizes.iconButton, alignItems: 'center', justifyContent: 'center' },
+  card: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 13 },
+  content: { gap: 10 },
+  header: { height: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  title: { flexDirection: 'row', alignItems: 'center', marginLeft: -6 },
+  date: { minWidth: 84, textAlign: 'center' },
+  arrow: { width: 28, height: 20, alignItems: 'center', justifyContent: 'center' },
   arrowOff: { opacity: 0.25 },
   prayers: { flexDirection: 'row' },
-  prayer: { flex: 1, alignItems: 'center', gap: 6 },
+  prayer: { flex: 1, minHeight: 44, alignItems: 'center', gap: 6 },
   mark: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   ring: { borderWidth: 2, borderColor: colors.line.soft },
-  name: { fontSize: 12 },
 });

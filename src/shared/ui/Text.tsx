@@ -7,7 +7,7 @@ interface TextProps extends RNTextProps {
 }
 
 // Display sizes are already large, so they scale less than body text before the layout breaks.
-const DISPLAY_VARIANTS: readonly TypeVariant[] = ['clock', 'display', 'splash', 'hero', 'confirm', 'stat', 'input', 'wheel', 'wheelDim', 'heroName', 'heroCountdown', 'greeting'];
+const DISPLAY_VARIANTS: readonly TypeVariant[] = ['clock', 'display', 'splash', 'hero', 'confirm', 'stat', 'percent', 'input', 'wheel', 'wheelDim', 'heroName', 'heroCountdown', 'greeting'];
 
 export function Text({ variant = 'body', color = 'primary', style, ...rest }: TextProps) {
   return (
