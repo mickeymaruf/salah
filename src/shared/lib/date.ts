@@ -79,20 +79,17 @@ export function formatCountdown(ms: number): string {
 }
 
 export interface CountdownParts {
-  // Hours and minutes, for example "1h 12m". Empty in the last minute.
+  // Hours, minutes and the colon after them, for example "01:12:".
   lead: string;
-  // Always two digits and an "s", for example "06s".
+  // Always two digits, for example "06".
   seconds: string;
 }
 
-// A live countdown: "1h 12m" + "06s" above an hour, "42m" + "06s" under it, just "06s" in the last minute.
-// Rounds up to the next second so it reads 01s just before it ends and never 00s.
+// A live countdown as a clock: "01:12:" + "06" for 1 h 12 min 6 s, "00:42:" + "06" under an hour. Always hours, minutes and seconds, so the width never jumps.
+// Rounds up to the next second so it reads 00:00:01 just before it ends and never 00:00:00.
 export function formatCountdownClock(ms: number): CountdownParts {
   const total = Math.max(0, Math.ceil(ms / 1000));
   const hours = Math.floor(total / 3600);
   const minutes = Math.floor((total % 3600) / 60);
-  const seconds = `${pad(total % 60)}s`;
-  if (hours > 0) return { lead: `${hours}h ${minutes}m`, seconds };
-  if (minutes > 0) return { lead: `${minutes}m`, seconds };
-  return { lead: '', seconds };
+  return { lead: `${pad(hours)}:${pad(minutes)}:`, seconds: pad(total % 60) };
 }

@@ -1,17 +1,17 @@
-// Makes the two Today button pictures: assets/images/button-missed.png and button-prayed.png, each at 1x, 2x and 3x (44, 88, 132 px).
+// Makes the two Today button pictures: assets/images/button-missed.png and button-prayed.png, each at 1x, 2x and 3x (38, 76, 114 px).
 //
 //   node scripts/prepare-buttons.js path/to/Missed_button.svg path/to/Prayed_button.svg
 //
-// The Figma exports (nodes 14034:15 and 14034:31) are an SVG that only wraps one 1024 px PNG, placed at 130% of the button and shifted
-// 15% up and left, then clipped to the 44 px rounded square. This pulls the PNG out and crops the part the SVG shows. The 14 px
-// corners are cut by the button's own border radius in the app.
+// The Figma exports (nodes 14034:15 and 14034:31) are a 38 px SVG that only wraps one 1024 px PNG, placed at 150% of the button and shifted
+// 25% up and left, then clipped to a circle. This pulls the PNG out and crops the part the SVG shows. The circle is cut by the button's
+// own border radius in the app.
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 
-const SIZE = 44;
-const SCALE = 1.3;
-const OFFSET = -0.15;
+const SIZE = 38;
+const SCALE = 1.5;
+const OFFSET = -0.25;
 const outDir = path.join(__dirname, '..', 'assets', 'images');
 
 async function prepare(svgPath, name) {

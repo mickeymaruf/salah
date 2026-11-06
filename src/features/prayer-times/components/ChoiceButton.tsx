@@ -18,14 +18,15 @@ interface ChoiceButtonProps {
 }
 
 const LEAVE_SCALE = 0.6;
+const PICTURE = 38;
 
-// The 3D pictures from Figma (nodes 14034:15 and 14034:31), made by `scripts/prepare-buttons.js`.
+// The round 3D pictures from Figma (nodes 14034:15 and 14034:31), made by `scripts/prepare-buttons.js`.
 const PICTURES = {
   missed: require('../../../../assets/images/button-missed.png'),
   prayed: require('../../../../assets/images/button-prayed.png'),
 } as const;
 
-// A 44 px button with 14 px corners showing the 3D cross or check. When its pill is marked the button fades away and
+// A 44 px touch area holding a round 38 px 3D cross or check. When its pill is marked the button fades away and
 // shrinks while the colour grows over the pill.
 export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, style, slotRef }: ChoiceButtonProps) {
   const opacity = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) : dimmed ? 0.45 : 1;
@@ -49,6 +50,6 @@ export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, st
 
 const styles = StyleSheet.create({
   slot: { position: 'absolute', width: sizes.iconButton, height: sizes.iconButton },
-  button: { flex: 1, borderRadius: 14, overflow: 'hidden' },
-  picture: { width: '100%', height: '100%' },
+  button: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  picture: { width: PICTURE, height: PICTURE, borderRadius: PICTURE / 2 },
 });

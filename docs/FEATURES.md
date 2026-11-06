@@ -28,7 +28,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Hero: a misty mosque picture behind the top, "Assalamu alaikum, <name>" (22 px Semi Bold, one line, no date) at the left and the user button
   at the right, two faint sparkles (the top one is 32 px, Figma has 38). The prayer in progress sits inside a half circle of 3.5 px dots about 9 px apart: green for the part of the
   window that has passed, pale grey for the rest, a green end dot with a 3 px white border. Inside: the prayer name (40 px), a live countdown to
-  the next prayer (32 px, "1h 12m 06s", "42m 06s", "06s", seconds in muted grey, updated every second) and "until Maghrib". At 0 the name and
+  the next prayer (32 px, as a clock, "01:12:06", "00:42:06", "00:00:06", seconds in muted grey, updated every second) and "until Maghrib". At 0 the name and
   countdown move to the next prayer. The text block sits at the bottom of the hero, so it clears the sheet whatever the font's line height.
 - Sheet: white, full width, top corners 20 px. The top row is the date navigator (12 px from the top of the sheet; the first pill starts 26 px below it,
   Figma 14030:14): a 40 px arrow on each side and the long date with "Today",
@@ -52,9 +52,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   are 16 px from each edge. This is the roomier size the user calls "our padding"; Figma 14017:14 has 64 px pills with 8 px gaps, and the app deliberately differs. The
   tab bar's inactive label is Medium weight; the active one is Semi Bold. The pill size has been 66, 76 and 64 px as the user and Figma changed: 76 px is current.
 - Sheet: the prayer sheet has 20 px top corners (`radii.sheet`, as in Figma).
-- Pill: each button is a 44 px picture with 14 px corners: the 3D cross (orange-red) or check (dark green) from Figma (14034:15 and 14034:31). Figma and the
-  Illustrator export hold them as one 1024 px PNG inside an SVG wrapper, not as vectors, so the app uses that PNG, cropped as the SVG shows it and shipped at 1x, 2x and
-  3x (`assets/images/button-missed.png` and `button-prayed.png`, made by `node scripts/prepare-buttons.js Missed_button.svg Prayed_button.svg`). Faint icons of the prayer
+- Pill: each button is a round 38 px picture, the 3D cross (orange-red) or check (dark green) from Figma (14034:15 and 14034:31), inside a 44 px touch area, 16 px from the pill's edge. The Illustrator export is a 38 px SVG that only wraps one 1024 px PNG (150% of the button, shifted 25%), so the app uses that PNG cropped as the SVG shows it and shipped at 1x, 2x and 3x (`assets/images/button-missed.png` and `button-prayed.png`, made by `node scripts/prepare-buttons.js Missed_button.svg Prayed_button.svg`). Faint icons of the prayer
   sit behind (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
 - Marking: one tap on the check or cross, saved at once, with a light haptic. A circle in the final fill colour starts at the middle of the tapped
   button, reaches just past the far corner (`markGeometry.ts`) and grows in scale only, 0 to 1 in 520 ms (cubic-bezier 0.45, 0, 0.2, 1). Over the

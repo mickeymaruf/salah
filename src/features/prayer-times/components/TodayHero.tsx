@@ -72,16 +72,10 @@ function TodayHeroView({ window, at, sheetTop, width }: TodayHeroProps) {
           {PRAYER_LABELS[window.name]}
         </Text>
         <Text variant="heroCountdown" style={styles.countdown}>
-          {lead ? (
-            <>
-              {`${lead} `}
-              <Text variant="heroCountdown" color="muted">
-                {seconds}
-              </Text>
-            </>
-          ) : (
-            seconds
-          )}
+          {lead}
+          <Text variant="heroCountdown" color="muted">
+            {seconds}
+          </Text>
         </Text>
         <Text variant="row" color="muted" style={styles.until}>
           {`until ${nextLabel}`}

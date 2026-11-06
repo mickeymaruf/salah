@@ -16,8 +16,9 @@ import { PrayerParticles } from './PrayerParticles';
 export const PILL_HEIGHT = 76;
 const HEIGHT = PILL_HEIGHT;
 const BUTTON = 44;
-const BUTTON_LEFT = 16;
-const BUTTON_RIGHT = 16;
+// The 44 px touch area is centred on a 38 px circle that sits 16 px from the pill's edge.
+const BUTTON_LEFT = 13;
+const BUTTON_RIGHT = 13;
 const BUTTON_TOP = (HEIGHT - BUTTON) / 2;
 const TEXT_LEFT = 84;
 const MARKED_TEXT_LEFT = 24;

@@ -76,14 +76,14 @@ describe('formatting', () => {
   });
 
   it('formats the live countdown by size', () => {
-    expect(formatCountdownClock((3600 + 12 * 60 + 6) * 1000)).toEqual({ lead: '1h 12m', seconds: '06s' });
-    expect(formatCountdownClock((42 * 60 + 6) * 1000)).toEqual({ lead: '42m', seconds: '06s' });
-    expect(formatCountdownClock(6000)).toEqual({ lead: '', seconds: '06s' });
+    expect(formatCountdownClock((3600 + 12 * 60 + 6) * 1000)).toEqual({ lead: '01:12:', seconds: '06' });
+    expect(formatCountdownClock((42 * 60 + 6) * 1000)).toEqual({ lead: '00:42:', seconds: '06' });
+    expect(formatCountdownClock(6000)).toEqual({ lead: '00:00:', seconds: '06' });
   });
 
   it('rounds the live countdown up and never goes below zero', () => {
-    expect(formatCountdownClock(59_001)).toEqual({ lead: '1m', seconds: '00s' });
-    expect(formatCountdownClock(400)).toEqual({ lead: '', seconds: '01s' });
-    expect(formatCountdownClock(-5000)).toEqual({ lead: '', seconds: '00s' });
+    expect(formatCountdownClock(59_001)).toEqual({ lead: '00:01:', seconds: '00' });
+    expect(formatCountdownClock(400)).toEqual({ lead: '00:00:', seconds: '01' });
+    expect(formatCountdownClock(-5000)).toEqual({ lead: '00:00:', seconds: '00' });
   });
 });
