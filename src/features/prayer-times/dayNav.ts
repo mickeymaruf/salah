@@ -17,6 +17,13 @@ export function dayRange(today: string): DayRange {
   return { first: shiftDayKey(today, -MAX_DAYS_BACK), last: today };
 }
 
+// The day itself, or the nearest day inside the range. Keeps every way of changing the day away from the future.
+export function clampDay(key: string, range: DayRange): string {
+  if (key > range.last) return range.last;
+  if (key < range.first) return range.first;
+  return key;
+}
+
 function daysBetween(from: string, to: string): number {
   const ms = parseDateKey(to).getTime() - parseDateKey(from).getTime();
   return Math.round(ms / 86_400_000);

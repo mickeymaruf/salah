@@ -17,7 +17,7 @@ import { PrayerSheet } from './components/PrayerSheet';
 import { TodayHero } from './components/TodayHero';
 import { PRAYER_NAMES, type PrayerName } from './calculate';
 import { useSaveChoice } from './data/useSaveChoice';
-import { dayRange, relativeDayLabel, shiftDayKey } from './dayNav';
+import { clampDay, dayRange, relativeDayLabel, shiftDayKey } from './dayNav';
 import { initialChoice, sheetSubtitle, type LogChoice } from './logChoice';
 import { timelineKinds } from './timeline';
 import { useTodayView } from './useTodayView';
@@ -44,10 +44,11 @@ function Today({ profile }: { profile: Profile }) {
   const range = dayRange(todayKey);
   const kinds = timelineKinds(times, at, currentName);
 
-  const go = (days: number) => {
-    const next = shiftDayKey(dayKey, days);
-    setPicked(next === todayKey ? null : next);
+  const pickDay = (key: string) => {
+    const day = clampDay(key, range);
+    setPicked(day === todayKey ? null : day);
   };
+  const go = (days: number) => pickDay(shiftDayKey(dayKey, days));
   const { layer: confetti, burst } = useConfetti();
   useEffect(preloadPop, []);
   // The fifth prayer of the day: this check completes a day on which the other four were already prayed.
@@ -59,7 +60,6 @@ function Today({ profile }: { profile: Profile }) {
     },
     [burst, states],
   );
-  const pickDay = (key: string) => setPicked(key === todayKey ? null : key);
   const onMark = useCallback((name: PrayerName, choice: LogChoice) => saveChoice(dayKey, name, choice), [saveChoice, dayKey]);
   const notice =
     notifications.status === 'denied' ? (

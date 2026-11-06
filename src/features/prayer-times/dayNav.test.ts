@@ -1,4 +1,4 @@
-import { dayRange, relativeDayLabel, shiftDayKey, MAX_DAYS_BACK } from './dayNav';
+import { clampDay, dayRange, relativeDayLabel, shiftDayKey, MAX_DAYS_BACK } from './dayNav';
 
 describe('dayNav', () => {
   it('shifts across month ends', () => {
@@ -10,6 +10,14 @@ describe('dayNav', () => {
     expect(relativeDayLabel('2026-10-26', '2026-10-26')).toBe('Today');
     expect(relativeDayLabel('2026-10-25', '2026-10-26')).toBe('Yesterday');
     expect(relativeDayLabel('2026-10-20', '2026-10-26')).toBe('6 days ago');
+  });
+
+  it('never lets a day past today through', () => {
+    const range = dayRange('2026-10-26');
+    expect(clampDay('2026-10-27', range)).toBe('2026-10-26');
+    expect(clampDay('2027-01-01', range)).toBe('2026-10-26');
+    expect(clampDay('2026-10-20', range)).toBe('2026-10-20');
+    expect(clampDay('2020-01-01', range)).toBe(range.first);
   });
 
   it('goes back a year and stops at today, whenever tracking began', () => {
