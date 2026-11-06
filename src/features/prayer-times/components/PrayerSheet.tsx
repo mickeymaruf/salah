@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { colors } from '@/shared/theme';
+import type { ViewHandle } from '@/shared/feedback';
 import { PRAYER_NAMES, type DayTimes, type PrayerName } from '../calculate';
 import type { LogChoice } from '../logChoice';
 import type { PrayerState } from '../schedule';
@@ -31,6 +32,7 @@ interface PrayerSheetProps {
   kinds: Record<PrayerName, TimelineKind>;
   currentName: PrayerName | null;
   onMark: (name: PrayerName, choice: LogChoice) => void;
+  onPrayed: (name: PrayerName, from: ViewHandle | null) => void;
   onEdit: (name: PrayerName) => void;
   // Shown above the list, for example the notice that alarms are off.
   notice?: ReactNode;
@@ -52,6 +54,7 @@ export function PrayerSheet({
   kinds,
   currentName,
   onMark,
+  onPrayed,
   onEdit,
   notice,
 }: PrayerSheetProps) {
@@ -72,6 +75,7 @@ export function PrayerSheet({
             state={states[name]}
             isCurrent={name === currentName}
             onMark={onMark}
+            onPrayed={onPrayed}
             onEdit={onEdit}
           />
         ))}

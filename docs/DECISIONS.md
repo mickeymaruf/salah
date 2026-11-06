@@ -368,3 +368,5 @@ Format: date, title, context, decision, consequence.
 - Decision: the hero picture cannot be downloaded from the build environment, so the user supplied the Figma image. `assets/images/today-hero.png` is that
   picture run through `scripts/prepare-hero.js` (saturation x0.45, contrast -5%). The hero text uses Figma's line heights (48, 27, 19) so Android lays it out the same.
 - Consequence: the Catch-up animation timings stay at the slower values the user asked for earlier, not the 350 ms in the brief.
+- Decision: the pop sound has its own setting, `markSound` ("Sound when marking a prayer", default on), because the app had no general sound switch to
+  respect. It only controls the pop; confetti and haptics always play. The pop is a synthesised tone (`scripts/make-pop.js`), like the alarm tones.

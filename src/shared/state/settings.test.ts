@@ -8,7 +8,7 @@ describe('parseSettings', () => {
   });
 
   it('keeps valid stored values', () => {
-    const stored = { requireProof: false, alarmSound: 'bell', reminderMinutesBefore: 0 };
+    const stored = { requireProof: false, markSound: false, alarmSound: 'bell', reminderMinutesBefore: 0 };
     expect(parseSettings(JSON.stringify(stored))).toEqual(stored);
   });
 

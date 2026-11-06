@@ -1,7 +1,8 @@
-import { memo, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Text } from '@/shared/ui';
+import type { ViewHandle } from '@/shared/feedback';
 import { colors } from '@/shared/theme';
 import { formatTime } from '@/shared/lib/date';
 import { useReduceMotion } from '@/shared/lib/useReduceMotion';
@@ -37,6 +38,8 @@ interface PrayerPillProps {
   // The prayer in progress gets a warm grey fill.
   isCurrent: boolean;
   onMark: (name: PrayerName, choice: LogChoice) => void;
+  // Called as well when it was marked as prayed, with the check button so the celebration can start from it.
+  onPrayed: (name: PrayerName, from: ViewHandle | null) => void;
   // Opens the log sheet, for changing or clearing a mark that is already there.
   onEdit: (name: PrayerName) => void;
 }
@@ -47,7 +50,7 @@ const FILL: Record<LogChoice, string> = { prayed: colors.pill.prayed, missed: co
 // once. A circle in the final colour grows from the tapped button over the pill, the buttons shrink away and the text
 // slides left. When the circle has covered the pill the pill takes that colour as its own background and the circle goes,
 // in the same frame, so the swap cannot be seen. Other pills stay tappable while this one plays.
-function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }: PrayerPillProps) {
+function PrayerPillView({ name, time, index, state, isCurrent, onMark, onPrayed, onEdit }: PrayerPillProps) {
   const reduceMotion = useReduceMotion();
   const [width, setWidth] = useState(322);
   // The choice being animated. While it is set the pill draws the animation even though the log already has the mark.
@@ -55,6 +58,7 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }:
   const [grow] = useState(() => new Animated.Value(0));
   const [leave] = useState(() => new Animated.Value(0));
   const [slide] = useState(() => new Animated.Value(0));
+  const prayedButton = useRef<ViewHandle>(null);
 
   const upcoming = state === 'upcoming';
   const marked = state === 'prayed' || state === 'missed';
@@ -70,6 +74,7 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }:
     leave.setValue(0);
     slide.setValue(0);
     onMark(name, choice);
+    if (choice === 'prayed') onPrayed(name, prayedButton.current);
     Animated.parallel([
       Animated.timing(grow, {
         toValue: 1,
@@ -150,6 +155,7 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }:
             label={`Mark ${label} as prayed`}
             onPress={() => mark('prayed')}
             style={{ right: BUTTON_INSET, top: BUTTON_TOP }}
+            slotRef={prayedButton}
           />
         </>
       )}

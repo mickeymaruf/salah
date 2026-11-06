@@ -33,6 +33,8 @@ export const colors = {
   },
   // The timeline halo around the current prayer (brand/green at 20%).
   halo: 'rgba(31,77,63,0.2)',
+  // Confetti pieces when a prayer is marked as prayed (Figma 18007:14).
+  confetti: ['#1F4D3F', '#6FA58B', '#C9A54A', '#D9826B', '#A9CDB8'],
   heat: ['#ECE8E0', '#C7D8CA', '#94B6A0', '#57856E', '#336654', '#1F4D3F'],
   // Concentric rings on the alarm screen, outer to inner.
   ring: ['rgba(243,241,234,0.14)', 'rgba(243,241,234,0.3)', 'rgba(243,241,234,0.5)'],

@@ -46,6 +46,12 @@ Shipped features, what they do, who owns the code, how to extend them.
   When the circle has covered the pill, the pill takes that colour as its real background and the circle is removed in the same frame, so the swap
   is invisible. Prayed is brand/green 30% over white, missed is terracotta 40%. Other pills stay tappable while one plays. With reduce motion on, a
   150 ms cross-fade to the final colour. Tapping a marked pill opens the log sheet to change or clear the mark (the user chose to keep it).
+- Confetti and sound (only for a check): a burst from the middle of the check button, 30 to 36 pieces (6 px dots, 6x11 px blocks, 3x13 px strips in the
+  five Figma colours) fanning up over 150 degrees, flying 35 to 130 px with spin and gravity and fading in about 1 s, drawn in a touch-transparent
+  layer above the list with transform and opacity only (`src/shared/feedback/`). When the check completes a day (the other four already prayed) there
+  are twice the pieces and it lasts 1.4 s. With reduce motion on, one soft green pulse replaces the confetti. A soft pop (`assets/sounds/pop.wav`, made by
+  `node scripts/make-pop.js`, preloaded) plays with every check, follows the silent switch and the Settings switch "Sound when marking a prayer";
+  confetti and the light haptic play whether sound is on or off. A cross has no confetti and no sound.
 - Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `window.ts` for the prayer in progress and the ring maths,
   `dayNav.ts` and `timeline.ts` for the date arrows and the timeline, `useTodayView.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`,
   `HeroBackdrop`, `PrayerSheet`, `DateNavigator`, `Timeline`, `PrayerPill`, `ChoiceButton`, `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
@@ -111,7 +117,7 @@ Shipped features, what they do, who owns the code, how to extend them.
 ## Settings
 
 - What: reached from the user icon on Today and Progress. Profile card with name edit. Prayer times: refresh
-  location, calculation method, Asr method. Alarm: sound (plays a 2.5 s preview), require photo proof,
+  location, calculation method, Asr method. Alarm: sound (plays a 2.5 s preview), require photo proof, a switch for the soft pop when a prayer is marked as prayed,
   reminder before. About: Privacy and Help pages (static text).
 - Owns: `src/features/settings/` (`SettingsScreen.tsx`, `options.ts` labels, `useRefreshLocation.ts`,
   `components/`, `PrivacyScreen.tsx`, `HelpScreen.tsx`), `src/shared/ui/ScreenHeader.tsx`,

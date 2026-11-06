@@ -84,6 +84,16 @@ function Settings({ profile }: { profile: Profile }) {
             }
           />
           <SettingsRow
+            label="Sound when marking a prayer"
+            right={
+              <Toggle
+                accessibilityLabel="Sound when marking a prayer"
+                value={settings.markSound}
+                onValueChange={(markSound) => updateSettings({ markSound })}
+              />
+            }
+          />
+          <SettingsRow
             label="Remind me before"
             value={formatReminder(settings.reminderMinutesBefore)}
             onPress={() => setSheet('reminder')}

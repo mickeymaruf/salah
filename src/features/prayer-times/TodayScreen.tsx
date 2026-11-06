@@ -1,10 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, UserButton } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { formatLongDate, parseDateKey } from '@/shared/lib/date';
+import { playPop, preloadPop, useConfetti, type ViewHandle } from '@/shared/feedback';
 import { useProfileStore } from '@/shared/state/profileStore';
 import type { Profile } from '@/shared/state/profile';
 import { AlarmsOffNotice } from '@/features/alarm/components/AlarmsOffNotice';
@@ -13,7 +14,7 @@ import { HeroBackdrop } from './components/HeroBackdrop';
 import { LogPrayerSheet } from './components/LogPrayerSheet';
 import { PrayerSheet } from './components/PrayerSheet';
 import { TodayHero } from './components/TodayHero';
-import type { PrayerName } from './calculate';
+import { PRAYER_NAMES, type PrayerName } from './calculate';
 import { useSaveChoice } from './data/useSaveChoice';
 import { dayRange, relativeDayLabel, shiftDayKey } from './dayNav';
 import { initialChoice, sheetSubtitle, type LogChoice } from './logChoice';
@@ -45,6 +46,17 @@ function Today({ profile }: { profile: Profile }) {
     const next = shiftDayKey(dayKey, days);
     setPicked(next === todayKey ? null : next);
   };
+  const { layer: confetti, burst } = useConfetti();
+  useEffect(preloadPop, []);
+  // The fifth prayer of the day: this check completes a day on which the other four were already prayed.
+  const onPrayed = useCallback(
+    (name: PrayerName, from: ViewHandle | null) => {
+      const others = PRAYER_NAMES.filter((other) => other !== name);
+      burst(from, { big: others.every((other) => states[other] === 'prayed') });
+      playPop();
+    },
+    [burst, states],
+  );
   const onMark = useCallback((name: PrayerName, choice: LogChoice) => saveChoice(dayKey, name, choice), [saveChoice, dayKey]);
   const notice =
     notifications.status === 'denied' ? (
@@ -78,9 +90,11 @@ function Today({ profile }: { profile: Profile }) {
         kinds={kinds}
         currentName={currentName}
         onMark={onMark}
+        onPrayed={onPrayed}
         onEdit={setEditing}
         notice={notice}
       />
+      {confetti}
       {editing ? (
         <LogPrayerSheet
           key={editing}

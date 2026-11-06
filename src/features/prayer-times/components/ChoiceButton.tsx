@@ -1,4 +1,6 @@
+import type { Ref } from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
+import type { ViewHandle } from '@/shared/feedback';
 import { Check, X } from 'lucide-react-native';
 import { colors, sizes } from '@/shared/theme';
 import type { LogChoice } from '../logChoice';
@@ -12,6 +14,8 @@ interface ChoiceButtonProps {
   label: string;
   onPress: () => void;
   style: object;
+  // The outer view, so the confetti can start from the middle of the button.
+  slotRef?: Ref<ViewHandle>;
 }
 
 const ICON_SIZE = 22;
@@ -20,7 +24,7 @@ const LEAVE_SCALE = 0.6;
 
 // A 44 px rounded square, tinted red or green, holding a thick cross or check. When its pill is marked the button fades
 // away and shrinks while the colour grows over the pill.
-export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, style }: ChoiceButtonProps) {
+export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, style, slotRef }: ChoiceButtonProps) {
   const accent = kind === 'prayed' ? colors.brand.green : colors.state.missed;
   const Icon = kind === 'prayed' ? Check : X;
 
@@ -28,7 +32,7 @@ export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, st
   const scale = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, LEAVE_SCALE] }) : 1;
 
   return (
-    <Animated.View style={[styles.slot, style, { opacity, transform: [{ scale }] }]}>
+    <Animated.View ref={slotRef} collapsable={false} style={[styles.slot, style, { opacity, transform: [{ scale }] }]}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={label}
