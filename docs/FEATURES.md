@@ -44,7 +44,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   button, reaches just past the far corner (`markGeometry.ts`) and grows in scale only, 0 to 1 in 520 ms (cubic-bezier 0.45, 0, 0.2, 1). Over the
   same time the buttons fade and shrink (180 ms from 0 ms) and the name and time slide to 24 px from the left (320 ms from 120 ms, ease-out).
   When the circle has covered the pill, the pill takes that colour as its real background and the circle is removed in the same frame, so the swap
-  is invisible. Prayed is brand/green 30% over white, missed is terracotta 40%. Other pills stay tappable while one plays. With reduce motion on, a
+  is invisible: the animation values are reset only after the filled pill has been drawn, never in the finish callback. Prayed is brand/green 30% over white, missed is terracotta 40%. Other pills stay tappable while one plays. With reduce motion on, a
   150 ms cross-fade to the final colour. Tapping a marked pill opens the log sheet to change or clear the mark (the user chose to keep it).
 - Confetti and sound (only for a check): a burst from the middle of the check button, 30 to 36 pieces (6 px dots, 6x11 px blocks, 3x13 px strips in the
   five Figma colours) fanning up over 150 degrees, flying 35 to 130 px with spin and gravity and fading in about 1 s, drawn in a touch-transparent

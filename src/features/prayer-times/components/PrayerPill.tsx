@@ -1,4 +1,4 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useLayoutEffect, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Text } from '@/shared/ui';
@@ -60,6 +60,14 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onPrayed,
   const [slide] = useState(() => new Animated.Value(0));
   const prayedButton = useRef<ViewHandle>(null);
 
+  // Once the filled pill is on screen, put the animation back to its start for the next mark.
+  useLayoutEffect(() => {
+    if (tapped !== null) return;
+    grow.setValue(0);
+    leave.setValue(0);
+    slide.setValue(0);
+  }, [tapped, grow, leave, slide]);
+
   const upcoming = state === 'upcoming';
   const marked = state === 'prayed' || state === 'missed';
   const showMarked = marked && tapped === null;
@@ -96,11 +104,9 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onPrayed,
         useNativeDriver: true,
       }),
     ]).start(({ finished }) => {
-      if (!finished) return;
-      grow.setValue(0);
-      leave.setValue(0);
-      slide.setValue(0);
-      setTapped(null);
+      // The values stay at 1 here. Resetting them now would shrink the circle on the native side before React has drawn the
+      // filled pill, which shows the old look for a moment. They are reset below, after the pill has been redrawn.
+      if (finished) setTapped(null);
     });
   };
 
