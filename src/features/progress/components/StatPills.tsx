@@ -4,8 +4,8 @@ import { colors, type TextColor } from '@/shared/theme';
 import { formatStreak, type YearStats } from '../stats';
 
 const ICONS = {
-  prayed: require('../../../../assets/images/button-prayed.png'),
-  missed: require('../../../../assets/images/button-missed.png'),
+  prayed: require('../../../../assets/images/stat-prayed.png'),
+  missed: require('../../../../assets/images/stat-missed.png'),
   streak: require('../../../../assets/images/stat-streak.png'),
 } as const;
 
