@@ -27,7 +27,12 @@ export const colors = {
     prayed: '#BCCAC5',
     missed: '#EBC7C0',
     current: '#EFEEED',
+    // The unmarked buttons: brand/green and state/missed at 18% over white (Figma 14034:14).
+    prayedButton: '#D7DFDC',
+    missedButton: '#F6E6E3',
   },
+  // The timeline halo around the current prayer (brand/green at 20%).
+  halo: 'rgba(31,77,63,0.2)',
   heat: ['#ECE8E0', '#C7D8CA', '#94B6A0', '#57856E', '#336654', '#1F4D3F'],
   // Concentric rings on the alarm screen, outer to inner.
   ring: ['rgba(243,241,234,0.14)', 'rgba(243,241,234,0.3)', 'rgba(243,241,234,0.5)'],

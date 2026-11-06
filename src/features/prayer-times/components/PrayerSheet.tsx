@@ -1,45 +1,82 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { colors } from '@/shared/theme';
 import { PRAYER_NAMES, type DayTimes, type PrayerName } from '../calculate';
 import type { LogChoice } from '../logChoice';
 import type { PrayerState } from '../schedule';
-import { PrayerPill } from './PrayerPill';
+import type { TimelineKind } from '../timeline';
+import { DateNavigator } from './DateNavigator';
+import { PrayerPill, PILL_HEIGHT } from './PrayerPill';
+import { Timeline } from './Timeline';
+
+const PADDING_TOP = 10;
+const GAP = 12;
+// Figma: the pills start 48 px from the left to leave room for the timeline, and sit 20 px from the right edge.
+const PADDING_LEFT = 48;
+const PADDING_RIGHT = 20;
+const TIMELINE_X = 24;
 
 interface PrayerSheetProps {
   top: number;
+  dayKey: string;
+  // The long date and the small line under it, for the navigator.
+  dateLabel: string;
+  dateSub: string;
+  canGoBack: boolean;
+  canGoForward: boolean;
+  onBack: () => void;
+  onForward: () => void;
   times: DayTimes;
   states: Record<PrayerName, PrayerState>;
-  currentName: PrayerName;
+  kinds: Record<PrayerName, TimelineKind>;
+  currentName: PrayerName | null;
   onMark: (name: PrayerName, choice: LogChoice) => void;
   onEdit: (name: PrayerName) => void;
-  // Shown above the pills, for example the notice that alarms are off.
+  // Shown above the list, for example the notice that alarms are off.
   notice?: ReactNode;
 }
 
-// The white sheet that holds the five prayers. It runs from just under the hero to the tab bar with no side or bottom margin.
-export function PrayerSheet({ top, times, states, currentName, onMark, onEdit, notice }: PrayerSheetProps) {
+// The white sheet that holds the date navigator, the timeline and the five prayers. It runs from just under the hero
+// to the tab bar with no side or bottom margin. The navigator stays put while the list scrolls.
+export function PrayerSheet({
+  top,
+  dayKey,
+  dateLabel,
+  dateSub,
+  canGoBack,
+  canGoForward,
+  onBack,
+  onForward,
+  times,
+  states,
+  kinds,
+  currentName,
+  onMark,
+  onEdit,
+  notice,
+}: PrayerSheetProps) {
   return (
-    <ScrollView
-      style={[styles.sheet, { top }]}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-      overScrollMode="never"
-    >
+    <View style={[styles.sheet, { top }]}>
+      <View style={styles.navigator}>
+        <DateNavigator date={dateLabel} sub={dateSub} canGoBack={canGoBack} canGoForward={canGoForward} onBack={onBack} onForward={onForward} />
+      </View>
       {notice}
-      {PRAYER_NAMES.map((name, index) => (
-        <PrayerPill
-          key={name}
-          name={name}
-          time={times[name]}
-          index={index}
-          state={states[name]}
-          isCurrent={name === currentName}
-          onMark={(choice) => onMark(name, choice)}
-          onEdit={() => onEdit(name)}
-        />
-      ))}
-    </ScrollView>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} overScrollMode="never">
+        <Timeline kinds={kinds} firstCentre={PADDING_TOP + PILL_HEIGHT / 2} step={PILL_HEIGHT + GAP} centreX={TIMELINE_X} />
+        {PRAYER_NAMES.map((name, index) => (
+          <PrayerPill
+            key={`${dayKey}:${name}`}
+            name={name}
+            time={times[name]}
+            index={index}
+            state={states[name]}
+            isCurrent={name === currentName}
+            onMark={onMark}
+            onEdit={onEdit}
+          />
+        ))}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -57,6 +94,8 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 8 },
     elevation: 6,
+    overflow: 'hidden',
   },
-  content: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: 34, gap: 12 },
+  navigator: { paddingTop: 14 },
+  content: { paddingLeft: PADDING_LEFT, paddingRight: PADDING_RIGHT, paddingTop: PADDING_TOP, paddingBottom: 34, gap: GAP },
 });

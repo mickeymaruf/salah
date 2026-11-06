@@ -15,10 +15,9 @@ export const typography = {
   choice: { fontFamily: fontFamily.medium, fontSize: 56 },
   ask: { fontFamily: fontFamily.regular, fontSize: 22 },
   // Today hero and header.
-  heroName: { fontFamily: fontFamily.semiBold, fontSize: 40 },
-  heroRange: { fontFamily: fontFamily.semiBold, fontSize: 22 },
-  dateLine: { fontFamily: fontFamily.medium, fontSize: 16 },
-  greeting: { fontFamily: fontFamily.regular, fontSize: 15 },
+  heroName: { fontFamily: fontFamily.semiBold, fontSize: 40, lineHeight: 48 },
+  heroCountdown: { fontFamily: fontFamily.semiBold, fontSize: 32, lineHeight: 39 },
+  greeting: { fontFamily: fontFamily.semiBold, fontSize: 22, lineHeight: 27 },
   clock: { fontFamily: fontFamily.semiBold, fontSize: 88, letterSpacing: -3.52 },
   display: { fontFamily: fontFamily.semiBold, fontSize: 56, letterSpacing: -1.68 },
   splash: { fontFamily: fontFamily.semiBold, fontSize: 40, letterSpacing: -1.2 },
@@ -46,6 +45,7 @@ export const typography = {
   label: { fontFamily: fontFamily.medium, fontSize: 15 },
   small: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21 },
   caption: { fontFamily: fontFamily.regular, fontSize: 13 },
+  tiny: { fontFamily: fontFamily.regular, fontSize: 12 },
   tab: { fontFamily: fontFamily.semiBold, fontSize: 12 },
   overline: { fontFamily: fontFamily.semiBold, fontSize: 12, letterSpacing: 1.2 },
 } satisfies Record<string, Style>;

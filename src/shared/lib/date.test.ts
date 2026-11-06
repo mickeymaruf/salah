@@ -2,6 +2,7 @@ import {
   addDays,
   daysInMonth,
   formatCountdown,
+  formatCountdownClock,
   formatDayMonth,
   formatLongDate,
   formatShortDate,
@@ -65,5 +66,17 @@ describe('formatting', () => {
     expect(formatCountdown(59 * 1000)).toBe('in 1m');
     expect(formatCountdown(5 * 60000)).toBe('in 5m');
     expect(formatCountdown(-1000)).toBe('in 0m');
+  });
+
+  it('formats the live countdown by size', () => {
+    expect(formatCountdownClock((3600 + 12 * 60 + 6) * 1000)).toEqual({ lead: '1h 12m', seconds: '06s' });
+    expect(formatCountdownClock((42 * 60 + 6) * 1000)).toEqual({ lead: '42m', seconds: '06s' });
+    expect(formatCountdownClock(6000)).toEqual({ lead: '', seconds: '06s' });
+  });
+
+  it('rounds the live countdown up and never goes below zero', () => {
+    expect(formatCountdownClock(59_001)).toEqual({ lead: '1m', seconds: '00s' });
+    expect(formatCountdownClock(400)).toEqual({ lead: '', seconds: '01s' });
+    expect(formatCountdownClock(-5000)).toEqual({ lead: '', seconds: '00s' });
   });
 });

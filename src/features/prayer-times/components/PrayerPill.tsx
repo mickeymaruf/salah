@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Text } from '@/shared/ui';
@@ -11,12 +11,13 @@ import type { PrayerState } from '../schedule';
 import { ChoiceButton, type ButtonRole } from './ChoiceButton';
 import { PrayerParticles } from './PrayerParticles';
 
-const HEIGHT = 76;
+export const PILL_HEIGHT = 76;
+const HEIGHT = PILL_HEIGHT;
 const BUTTON = 44;
 const BUTTON_INSET = 16;
 const BUTTON_TOP = (HEIGHT - BUTTON) / 2;
 const TEXT_LEFT = 84;
-const MARKED_TEXT_LEFT = 28;
+const MARKED_TEXT_LEFT = 24;
 // The covering circle is big enough to reach the far corner of the pill from either button.
 const CIRCLE = 700;
 const START_SCALE = 0.2;
@@ -30,18 +31,18 @@ interface PrayerPillProps {
   state: PrayerState;
   // The prayer in progress gets a warm grey fill.
   isCurrent: boolean;
-  onMark: (choice: LogChoice) => void;
+  onMark: (name: PrayerName, choice: LogChoice) => void;
   // Opens the log sheet, for changing or clearing a mark that is already there.
-  onEdit: () => void;
+  onEdit: (name: PrayerName) => void;
 }
 
 const FILL: Record<LogChoice, string> = { prayed: colors.pill.prayed, missed: colors.pill.missed };
 
 // One prayer. Before it is due the buttons are dimmed and do nothing. One tap on the cross or check marks it: that button turns
 // solid, a circle grows from it over the pill, the other button fades, and the pill ends fully coloured with no buttons.
-export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit }: PrayerPillProps) {
+function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }: PrayerPillProps) {
   const reduceMotion = useReduceMotion();
-  const [width, setWidth] = useState(350);
+  const [width, setWidth] = useState(322);
   // The choice being animated. While it is set the pill draws the animation even though the log already has the mark.
   const [tapped, setTapped] = useState<LogChoice | null>(null);
   const [progress] = useState(() => new Animated.Value(0));
@@ -57,7 +58,7 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
     setTapped(choice);
     progress.setValue(0);
-    onMark(choice);
+    onMark(name, choice);
     Animated.timing(progress, {
       toValue: 1,
       duration: reduceMotion ? REDUCED_MS : MARK_MS,
@@ -139,12 +140,14 @@ export function PrayerPill({ name, time, index, state, isCurrent, onMark, onEdit
       accessibilityRole="button"
       accessibilityLabel={`${label}, ${clock}, ${state}`}
       accessibilityHint="Opens a sheet to change or clear the mark"
-      onPress={onEdit}
+      onPress={() => onEdit(name)}
     >
       {content}
     </Pressable>
   );
 }
+
+export const PrayerPill = memo(PrayerPillView);
 
 const styles = StyleSheet.create({
   pill: { height: HEIGHT, borderRadius: 16, overflow: 'hidden' },

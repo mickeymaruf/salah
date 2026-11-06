@@ -19,9 +19,9 @@ interface ChoiceButtonProps {
 }
 
 const ICON_SIZE = 22;
-const STROKE = 1.25;
+const STROKE = 2.25;
 
-// A 44 px rounded square holding a thin cross or check. While its pill is being marked, the tapped one turns solid and
+// A 44 px rounded square, tinted red or green, holding a thick cross or check. While its pill is being marked, the tapped one turns solid and
 // then fades with the circle that covers the pill, and the other one fades away.
 export function ChoiceButton({ kind, role, progress, dimmed, disabled, label, onPress, style }: ChoiceButtonProps) {
   const accent = kind === 'prayed' ? colors.brand.green : colors.state.missed;
@@ -45,7 +45,7 @@ export function ChoiceButton({ kind, role, progress, dimmed, disabled, label, on
         accessibilityState={{ disabled }}
         disabled={disabled}
         onPress={onPress}
-        style={styles.button}
+        style={[styles.button, { backgroundColor: kind === 'prayed' ? colors.pill.prayedButton : colors.pill.missedButton }]}
       >
         <Icon size={ICON_SIZE} color={accent} strokeWidth={STROKE} />
         {role === 'tapped' ? (
@@ -63,8 +63,6 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: colors.line.soft,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',

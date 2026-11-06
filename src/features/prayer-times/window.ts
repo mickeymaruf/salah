@@ -43,3 +43,16 @@ export function halfCirclePath(cx: number, cy: number, radius: number): string {
 export function halfCircleLength(radius: number): number {
   return Math.PI * radius;
 }
+
+// How many dots draw the half circle when they are about `spacing` apart, counting both ends.
+export function ringDotCount(radius: number, spacing: number): number {
+  return Math.round(halfCircleLength(radius) / spacing) + 1;
+}
+
+// Where each ring dot sits, and how far along the half circle (0 to 1) it is.
+export function ringDots(count: number, cx: number, cy: number, radius: number): { x: number; y: number; at: number }[] {
+  return Array.from({ length: count }, (_, i) => {
+    const at = count > 1 ? i / (count - 1) : 0;
+    return { ...arcPoint(at, cx, cy, radius), at };
+  });
+}

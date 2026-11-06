@@ -23,22 +23,29 @@ Shipped features, what they do, who owns the code, how to extend them.
 ## Prayer times and Today
 
 - What: computes today's five times offline (or from the Aladhan table) and shows them on the redesigned Today screen. Figma: file
-  OgLgPUUPDO1UindTOIu39O, frame "3 · Today" (14017:14) and "Storyboard · marking a prayer" (14018:20).
-- Layout: a misty mosque picture behind the top, the date and greeting at the left, the user button and two faint sparkles at the right.
-  The hero is a thin half circle with the prayer in progress inside it (name, "3:42 PM – 5:21 PM", "Maghrib in 1h 12m"). A green arc and dot
-  show how far through that prayer's window it is. The text block sits at the bottom of the hero, so it clears the sheet whatever the
-  font's line height. Below it a white sheet, full width, rounded 20 at the top, holds five pills
-  (76 px high, 12 px apart, 24 px from the sheet edges and its top). The buttons sit 16 px in. The user asked for this roomier size over Figma's 66 px
-  pills (14030:14); the name is 18 px and the time 15 px. Buttons and text are centred vertically in the pill. The tab bar is unchanged.
-- Pill: a missed button (thin terracotta cross) on the left, a prayed button (thin green check) on the right, the name and start time between,
-  and faint icons of the prayer behind them (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in
-  progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
+  Kte116ut3xe8wHx5PLDZJT (earlier copies: OgLgPUUPDO1UindTOIu39O), frame "3 · Today" (14017:14), "Storyboard · marking a prayer" (14018:20)
+  and "Confetti · on tick" (18007:14).
+- Hero: a misty mosque picture behind the top, "Assalamu alaikum, <name>" (22 px Semi Bold, one line, no date) at the left and the user button
+  at the right, two faint sparkles. The prayer in progress sits inside a half circle of 3.5 px dots about 9 px apart: green for the part of the
+  window that has passed, pale grey for the rest, a green end dot with a 3 px white border. Inside: the prayer name (40 px), a live countdown to
+  the next prayer (32 px, "1h 12m 06s", "42m 06s", "06s", seconds in muted grey, updated every second) and "until Maghrib". At 0 the name and
+  countdown move to the next prayer. The text block sits at the bottom of the hero, so it clears the sheet whatever the font's line height.
+- Sheet: white, full width, top corners 20 px. The top row is the date navigator: a 40 px arrow on each side and the long date with "Today",
+  "Yesterday", "Tomorrow", "3 days ago" or "In 3 days" under it. The arrows stop at the day tracking began and 14 days ahead. A past day is edited
+  like today. A future day shows its prayers dimmed and cannot be marked. The hero always shows the real current prayer, whatever day the list shows.
+  Left of the pills (x = 24) a timeline runs: green dots and green line for prayers whose time has passed, a larger haloed dot for the one in progress
+  (only when the list shows today and that prayer started today), hollow dots on the grey line for those to come (`timeline.ts`).
+- Pills: 322 px wide (48 px from the left, 20 from the right), 76 px high, 12 px apart, 16 radius. The user asked for this roomier size over Figma's
+  66 px pills (name 18 px, time 15 px, buttons 16 px in). Buttons and text are centred vertically in the pill. The tab bar is unchanged.
+- Pill: a missed button (44 px rounded square, soft red fill, thick terracotta cross) on the left, a prayed button (soft green fill, thick green
+  check) on the right, the name and start time between, and faint icons of the prayer behind them (sunrise, sun, cloud-sun, sunset, moon; green once
+  the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
 - Marking: one tap on the check or cross. The button turns solid, a circle grows from it over the pill (350 ms, ease-out), the other button fades,
   and the pill ends filled (green 30% for prayed, terracotta 40% for missed) with no buttons and the text at the left edge. Light haptic, saved at
   once. With reduce motion on, the fill cross-fades. Tapping a marked pill opens the log sheet to change or clear the mark.
 - Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `window.ts` for the prayer in progress and the ring maths,
-  `useTodayPrayers.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`, `HeroBackdrop`, `PrayerSheet`, `PrayerPill`, `ChoiceButton`,
-  `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
+  `dayNav.ts` and `timeline.ts` for the date arrows and the timeline, `useTodayView.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`,
+  `HeroBackdrop`, `PrayerSheet`, `DateNavigator`, `Timeline`, `PrayerPill`, `ChoiceButton`, `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.
 - Hero picture: `assets/images/today-hero.png`, made by `node scripts/prepare-hero.js <figma export>` (saturation x0.45, contrast -5%). Without
   an argument the script draws a plain stand-in. The current file is the real picture for Figma node 14018:15, supplied by the user.
 - Rules in `schedule.ts`: the user's choice (prayed or missed) wins. With no choice, a passed time is unmarked (an empty circle, never

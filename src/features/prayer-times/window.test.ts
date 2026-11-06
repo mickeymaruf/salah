@@ -1,5 +1,5 @@
 import type { DayTimes } from './calculate';
-import { arcPoint, getPrayerWindow, halfCircleLength, halfCirclePath } from './window';
+import { arcPoint, getPrayerWindow, halfCircleLength, halfCirclePath, ringDotCount, ringDots } from './window';
 
 const day = (d: number): DayTimes => ({
   fajr: new Date(2026, 9, d, 4, 48),
@@ -61,5 +61,22 @@ describe('half circle', () => {
   it('draws the upper half', () => {
     expect(halfCirclePath(180, 190, 160)).toBe('M 20 190 A 160 160 0 0 1 340 190');
     expect(halfCircleLength(160)).toBeCloseTo(502.65, 1);
+  });
+});
+
+describe('ring dots', () => {
+  it('spaces about 9 px apart on a radius of 160, counting both ends', () => {
+    expect(ringDotCount(160, 9)).toBe(57);
+  });
+
+  it('starts at the left end and finishes at the right end of the half circle', () => {
+    const dots = ringDots(5, 100, 100, 50);
+    expect(dots).toHaveLength(5);
+    expect(dots[0].x).toBeCloseTo(50);
+    expect(dots[0].y).toBeCloseTo(100);
+    expect(dots[2].x).toBeCloseTo(100);
+    expect(dots[2].y).toBeCloseTo(50);
+    expect(dots[4].x).toBeCloseTo(150);
+    expect(dots[4].at).toBe(1);
   });
 });

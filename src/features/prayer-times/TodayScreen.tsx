@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, UserButton } from '@/shared/ui';
 import { colors } from '@/shared/theme';
-import { formatLongDate } from '@/shared/lib/date';
+import { formatLongDate, parseDateKey } from '@/shared/lib/date';
 import { useProfileStore } from '@/shared/state/profileStore';
 import type { Profile } from '@/shared/state/profile';
 import { AlarmsOffNotice } from '@/features/alarm/components/AlarmsOffNotice';
@@ -15,11 +15,13 @@ import { PrayerSheet } from './components/PrayerSheet';
 import { TodayHero } from './components/TodayHero';
 import type { PrayerName } from './calculate';
 import { useSaveChoice } from './data/useSaveChoice';
-import { initialChoice, sheetSubtitle } from './logChoice';
-import { useTodayPrayers } from './useTodayPrayers';
+import { dayRange, relativeDayLabel, shiftDayKey } from './dayNav';
+import { initialChoice, sheetSubtitle, type LogChoice } from './logChoice';
+import { timelineKinds } from './timeline';
+import { useTodayView } from './useTodayView';
 
-// Figma "3 · Today": the prayer sheet starts 336 px down a frame whose status bar is 54 px, so 282 px below the status bar.
-const HERO_HEIGHT = 282;
+// Figma "3 · Today": the prayer sheet starts 300 px down a frame whose status bar is 54 px, so 246 px below the status bar.
+const HERO_HEIGHT = 246;
 
 export function TodayScreen() {
   const profile = useProfileStore((state) => state.profile);
@@ -27,21 +29,36 @@ export function TodayScreen() {
 }
 
 function Today({ profile }: { profile: Profile }) {
-  const { at, dayKey, times, states, window } = useTodayPrayers(profile);
+  // The day picked with the arrows. Null follows today, so the screen moves on at midnight by itself.
+  const [picked, setPicked] = useState<string | null>(null);
+  const { at, todayKey, dayKey, times, states, window, currentName } = useTodayView(profile, picked);
   const [editing, setEditing] = useState<PrayerName | null>(null);
   const saveChoice = useSaveChoice();
   const notifications = useNotificationStatus();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const sheetTop = insets.top + HERO_HEIGHT;
+  const range = dayRange(profile.startedOn, todayKey);
+  const kinds = timelineKinds(times, at, currentName);
+
+  const go = (days: number) => {
+    const next = shiftDayKey(dayKey, days);
+    setPicked(next === todayKey ? null : next);
+  };
+  const onMark = useCallback((name: PrayerName, choice: LogChoice) => saveChoice(dayKey, name, choice), [saveChoice, dayKey]);
+  const notice =
+    notifications.status === 'denied' ? (
+      <View style={styles.notice}>
+        <AlarmsOffNotice onFix={notifications.fix} />
+      </View>
+    ) : null;
 
   return (
     <View style={styles.root}>
       <StatusBar style="dark" />
       <HeroBackdrop sheetTop={sheetTop} safeTop={insets.top} />
-      <View style={[styles.header, { top: insets.top + 12 }]}>
-        <Text variant="dateLine">{formatLongDate(at)}</Text>
-        <Text variant="greeting" color="muted">{`Assalamu alaikum, ${profile.name}`}</Text>
+      <View style={[styles.header, { top: insets.top + 13 }]}>
+        <Text variant="greeting" numberOfLines={1}>{`Assalamu alaikum, ${profile.name}`}</Text>
       </View>
       <View style={[styles.user, { top: insets.top + 4 }]}>
         <UserButton />
@@ -49,24 +66,26 @@ function Today({ profile }: { profile: Profile }) {
       <TodayHero window={window} at={at} sheetTop={sheetTop} width={width} />
       <PrayerSheet
         top={sheetTop}
+        dayKey={dayKey}
+        dateLabel={formatLongDate(parseDateKey(dayKey))}
+        dateSub={relativeDayLabel(dayKey, todayKey)}
+        canGoBack={dayKey > range.first}
+        canGoForward={dayKey < range.last}
+        onBack={() => go(-1)}
+        onForward={() => go(1)}
         times={times}
         states={states}
-        currentName={window.name}
-        onMark={(name, choice) => saveChoice(dayKey, name, choice)}
+        kinds={kinds}
+        currentName={currentName}
+        onMark={onMark}
         onEdit={setEditing}
-        notice={
-          notifications.status === 'denied' ? (
-            <View style={styles.notice}>
-              <AlarmsOffNotice onFix={notifications.fix} />
-            </View>
-          ) : null
-        }
+        notice={notice}
       />
       {editing ? (
         <LogPrayerSheet
           key={editing}
           prayer={editing}
-          subtitle={sheetSubtitle(times[editing], dayKey, dayKey)}
+          subtitle={sheetSubtitle(times[editing], dayKey, todayKey)}
           status={states[editing]}
           initial={initialChoice(states[editing])}
           onSave={(choice) => saveChoice(dayKey, editing, choice)}
@@ -80,7 +99,8 @@ function Today({ profile }: { profile: Profile }) {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg.base },
-  header: { position: 'absolute', left: 24, gap: 4 },
+  // The greeting stops short of the user button, which sits 24 px from the right edge.
+  header: { position: 'absolute', left: 24, right: 24 + 44 + 8 },
   user: { position: 'absolute', right: 24 },
-  notice: { marginBottom: 4 },
+  notice: { marginHorizontal: 20, marginTop: 4 },
 });
