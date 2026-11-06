@@ -386,3 +386,4 @@ Format: date, title, context, decision, consequence.
 - Decision: the Today ✕ and ✓ buttons use the original 3D pictures from Figma, not a redraw. The user supplied the Illustrator SVGs, which only wrap one 1024 px PNG each, so
   `scripts/prepare-buttons.js` extracts and crops that PNG into 1x, 2x and 3x files instead of embedding 1 MB SVGs in the app.
 - Decision: the Today pills keep the app's roomier size (76 px high, 12 px gaps, 16 px button insets, name 18 px, time 15 px) over Figma's 64 px, at the user's request. The 26 px gap under the date row, the 3D buttons and the hero sizes still follow Figma.
+- Decision: the Today ✕ and ✓ buttons go back to flat tinted tiles with a plain cross or check, matching Figma frame 18047:13 ("3 · Today · before"), at the user's request. This supersedes the 3D pictures entry above. The picture files and their script stay in the repo, unused.

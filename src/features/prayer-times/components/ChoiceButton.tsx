@@ -1,6 +1,7 @@
 import type { Ref } from 'react';
-import { Animated, Image, Pressable, StyleSheet } from 'react-native';
-import { sizes } from '@/shared/theme';
+import { Animated, Pressable, StyleSheet } from 'react-native';
+import { Check, X } from 'lucide-react-native';
+import { colors, sizes } from '@/shared/theme';
 import type { ViewHandle } from '@/shared/feedback';
 import type { LogChoice } from '../logChoice';
 
@@ -19,15 +20,14 @@ interface ChoiceButtonProps {
 
 const LEAVE_SCALE = 0.6;
 
-// The 3D pictures from Figma (nodes 14034:15 and 14034:31), made by `scripts/prepare-buttons.js`.
-const PICTURES = {
-  missed: require('../../../../assets/images/button-missed.png'),
-  prayed: require('../../../../assets/images/button-prayed.png'),
-} as const;
+const ICON_SIZE = 22;
+const STROKE = 2;
 
-// A 44 px button with 14 px corners showing the 3D cross or check. When its pill is marked the button fades away and
-// shrinks while the colour grows over the pill.
+// A 44 px tile with 14 px corners, tinted red or green, holding a plain cross or check (Figma 18047:13, "3 · Today · before"). When its pill is marked the
+// button fades away and shrinks while the colour grows over the pill.
 export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, style, slotRef }: ChoiceButtonProps) {
+  const Icon = kind === 'prayed' ? Check : X;
+  const accent = kind === 'prayed' ? colors.brand.green : colors.state.missed;
   const opacity = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) : dimmed ? 0.45 : 1;
   const scale = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, LEAVE_SCALE] }) : 1;
 
@@ -39,9 +39,9 @@ export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, st
         accessibilityState={{ disabled }}
         disabled={disabled}
         onPress={onPress}
-        style={styles.button}
+        style={[styles.button, { backgroundColor: kind === 'prayed' ? colors.pill.prayedButton : colors.pill.missedButton }]}
       >
-        <Image source={PICTURES[kind]} style={styles.picture} accessibilityIgnoresInvertColors />
+        <Icon size={ICON_SIZE} color={accent} strokeWidth={STROKE} />
       </Pressable>
     </Animated.View>
   );
@@ -49,6 +49,5 @@ export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, st
 
 const styles = StyleSheet.create({
   slot: { position: 'absolute', width: sizes.iconButton, height: sizes.iconButton },
-  button: { flex: 1, borderRadius: 14, overflow: 'hidden' },
-  picture: { width: '100%', height: '100%' },
+  button: { flex: 1, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
 });
