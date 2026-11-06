@@ -391,3 +391,4 @@ Format: date, title, context, decision, consequence.
 - Decision: the Today hero is shorter: the gap between the greeting and the ring is 26 px, equal to the gap under the date row (was about 43 px), at the user's request. The hero height is now the ring radius plus a fixed amount (`heroHeight`) instead of a scaled 246 px.
 - Decision: the Today prayer sheet's top corners are 32 px (`radii.sheet`), up from Figma's 20, at the user's request ("more cornered"). Change the token to adjust.
 - Decision: the Today prayer sheet's corners go back to 20 px (as Figma). The visible gap under the greeting and the visible gap under the date text are both 32 px (`SECTION_GAP`; was 26 px box to box, about 43 above the ring before that). Figma needs the same two changes: see the note given to the user.
+- Decision: the top banner sparkle is 32 px instead of Figma's 38, around the same centre, at the user's request. Figma needs the same change.

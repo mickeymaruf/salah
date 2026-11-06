@@ -26,7 +26,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   Kte116ut3xe8wHx5PLDZJT (earlier copies: OgLgPUUPDO1UindTOIu39O), frame "3 · Today" (14017:14), "Storyboard · marking a prayer" (14018:20)
   and "Confetti · on tick" (18007:14).
 - Hero: a misty mosque picture behind the top, "Assalamu alaikum, <name>" (22 px Semi Bold, one line, no date) at the left and the user button
-  at the right, two faint sparkles. The prayer in progress sits inside a half circle of 3.5 px dots about 9 px apart: green for the part of the
+  at the right, two faint sparkles (the top one is 32 px, Figma has 38). The prayer in progress sits inside a half circle of 3.5 px dots about 9 px apart: green for the part of the
   window that has passed, pale grey for the rest, a green end dot with a 3 px white border. Inside: the prayer name (40 px), a live countdown to
   the next prayer (32 px, "1h 12m 06s", "42m 06s", "06s", seconds in muted grey, updated every second) and "until Maghrib". At 0 the name and
   countdown move to the next prayer. The text block sits at the bottom of the hero, so it clears the sheet whatever the font's line height.

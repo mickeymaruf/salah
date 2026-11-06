@@ -6,6 +6,8 @@ import { heroScale } from '../heroScale';
 const IMAGE_HEIGHT = 585;
 // Figma places the picture 31 px below the top of the prayer sheet, so the mosque base ends just above the sheet.
 const BELOW_SHEET = 31;
+// Figma draws the top sparkle 38 px; the app uses 32 px, around the same centre, at the user's request.
+const BIG_SPARKLE = 32;
 
 // A four-point star drawn as a thin outline.
 function Sparkle({ size }: { size: number }) {
@@ -36,8 +38,8 @@ export function HeroBackdrop({ sheetTop, safeTop, width }: HeroBackdropProps) {
         resizeMode="cover"
         style={[styles.image, { top: sheetTop + BELOW_SHEET * scale - imageHeight, height: imageHeight }]}
       />
-      <View style={[styles.sparkle, { left: 236 * scale, top: safeTop + 4 * scale }]}>
-        <Sparkle size={38 * scale} />
+      <View style={[styles.sparkle, { left: (236 + (38 - BIG_SPARKLE) / 2) * scale, top: safeTop + (4 + (38 - BIG_SPARKLE) / 2) * scale }]}>
+        <Sparkle size={BIG_SPARKLE * scale} />
       </View>
       <View style={[styles.sparkle, { left: 300 * scale, top: safeTop + 60 * scale }]}>
         <Sparkle size={24 * scale} />
