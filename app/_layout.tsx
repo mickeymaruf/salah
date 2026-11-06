@@ -11,6 +11,7 @@ import { useSettingsStore } from '@/shared/state/settingsStore';
 import { useTimesSync } from '@/features/prayer-times/data/useTimesSync';
 import { useAlarmSync } from '@/features/alarm/useAlarmSync';
 import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
+import { WidgetSync } from '@/features/widget/WidgetSync';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -79,6 +80,7 @@ export default function RootLayout() {
           <Stack.Screen name="help" />
         </Stack.Protected>
       </Stack>
+      <WidgetSync />
     </SafeAreaProvider>
   );
 }

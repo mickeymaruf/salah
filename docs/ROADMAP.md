@@ -17,6 +17,7 @@ Status: done, next, todo.
 | 10 | Polish pass | done |
 | 11 | Manual prayer times | done |
 | 12 | Catch-up on open | removed |
+| 13 | Home screen widget (Android, dev build) | done, not run on a device |
 
 ## Later
 
@@ -26,7 +27,7 @@ Status: done, next, todo.
 - Visual check of every screen against Figma on a device
 - Reduce-motion support for the alarm pulse
 - Android full-screen alarm intent (needs native code)
-- Home screen widgets
+- Widget: a native receiver so taps are saved when the app is not running; an iOS widget
 - Qibla direction
 - Dark mode
 - Backup and sync

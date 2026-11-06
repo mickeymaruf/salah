@@ -62,7 +62,29 @@
           "icon": "./assets/notification-icon.png"
         }
       ],
-      "expo-audio"
+      "expo-audio",
+      [
+        "expo-widgets",
+        {
+          "enableAndroid": true,
+          "widgets": [
+            {
+              "name": "SalahWidget",
+              "displayName": "Salah",
+              "description": "Mark today's prayers from the home screen.",
+              "ios": null,
+              "android": {
+                "minWidth": 250,
+                "minHeight": 110,
+                "targetCellWidth": 4,
+                "targetCellHeight": 2,
+                "resizeMode": "horizontal",
+                "initialLayout": "src/features/widget/salahWidget.tsx"
+              }
+            }
+          ]
+        }
+      ]
     ],
     "description": "A calm prayer tracker: five daily prayer times, an alarm that stops with proof of prayer, and a year at a glance."
   }

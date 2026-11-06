@@ -398,3 +398,8 @@ Format: date, title, context, decision, consequence.
 - Decision: the Progress year chart uses its own colours from Figma 18035:59: prayed #1B6B33, missed #E4583C, upcoming #F5F2EE (`colors.chart`), brighter than `brand.green` and `state.missed`, which the day card, pills and Today keep. The scrollbar track is `line.soft`.
 - Decision: at the user's request the Progress day numbers and the day card arrows are back (they had been dropped to match Figma), and the day card marks are 28 px round 3D pictures (Figma 18035:2310). The user asked for the arrows and day numbers to be added to Figma too.
 - Decision: a marked Today pill shows no check or cross (the 3D result badge from Figma 18066:13 was tried and removed at the user's request). The filled colour is the only mark.
+- Decision: the home screen widget is built with `expo-widgets` (Android Glance) and `@expo/ui`, and `expo-asset` copies its pictures. They need a development or standalone build; `loadWidgetBridge` returns null
+  in Expo Go and on iOS, so the app still runs there. Other options were `react-native-android-widget` (draws the widget as an image, no native Glance) and a hand-written Kotlin widget. `expo-widgets` was chosen
+  because it ships with the SDK. Its limits (no shadows, no custom font, no animation, no write without the app) are listed in `docs/LIMITATIONS.md`. The widget layout cannot import app code, so colours are
+  passed as props (`palette.ts`). `package.json` scripts were left as they were (`expo prebuild` rewrites `android` and `ios`).
+
