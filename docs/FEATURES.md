@@ -45,9 +45,8 @@ Shipped features, what they do, who owns the code, how to extend them.
   beside the date and the calendar share one picked day, so they stay in sync.
   Left of the pills (x = 24) a timeline runs: green dots and green line for prayers whose time has passed, a larger haloed dot for the one in progress
   (only when the list shows today and that prayer started today), hollow dots on the grey line for those to come (`timeline.ts`).
-- Pills (Figma 14030:14): 322 px wide (48 px from the left to leave room for the timeline, 20 from the right), 66 px high, 10 px apart, 16 radius, the first
-  one 10 px below the date row. Buttons sit 14 px in, the name (16 px) and time (13 px) start at 76 px, 24 px once marked. Buttons and text are centred
-  vertically. The earlier roomier 76 px size was dropped at the user's request, to match Figma. The tab bar is unchanged.
+- Pills: 322 px wide (48 px from the left, 20 from the right), 76 px high, 12 px apart, 16 radius. The app's size is the reference: the user asked for this roomier size and wants Figma updated to match it, not the other way round
+  (Figma 14030:14 still has 66 px pills). Name 18 px, time 15 px, buttons 16 px in, text at 84 px, 24 px once marked. Buttons and text are centred vertically in the pill. The tab bar is unchanged.
 - Pill: a missed button (44 px rounded square, soft red fill, thick terracotta cross) on the left, a prayed button (soft green fill, thick green
   check) on the right, the name and start time between, and faint icons of the prayer behind them (sunrise, sun, cloud-sun, sunset, moon; green once
   the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.

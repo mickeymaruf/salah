@@ -13,12 +13,12 @@ import type { PrayerState } from '../schedule';
 import { ChoiceButton } from './ChoiceButton';
 import { PrayerParticles } from './PrayerParticles';
 
-export const PILL_HEIGHT = 66;
+export const PILL_HEIGHT = 76;
 const HEIGHT = PILL_HEIGHT;
 const BUTTON = 44;
-const BUTTON_INSET = 14;
+const BUTTON_INSET = 16;
 const BUTTON_TOP = (HEIGHT - BUTTON) / 2;
-const TEXT_LEFT = 76;
+const TEXT_LEFT = 84;
 const MARKED_TEXT_LEFT = 24;
 
 // The marking animation. The circle grows 0 to 1 in scale only, never in width, height or radius. The buttons leave
