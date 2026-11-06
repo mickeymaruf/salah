@@ -378,3 +378,6 @@ Format: date, title, context, decision, consequence.
   it from the Figma variants "3 · Today · Plus Jakarta Sans / DM Sans / Manrope / Outfit" (the DM Sans one is 18019:271, same layout, only the font differs). All text
   takes its family from the `fontFamily` tokens in `src/shared/theme/typography.ts`, so there is one place to change it. The fixed line heights set in the hero were left
   as they are.
+- Decision: the app font is Plus Jakarta Sans (Regular, Medium, Semi Bold from `@expo-google-fonts/plus-jakarta-sans`), replacing DM Sans, everywhere, on the user's
+  latest request. Every text style takes its family from the `fontFamily` tokens in `src/shared/theme/typography.ts`. Its letters are a little wider than DM Sans, so
+  check long names and the fixed-height hero lines on a device.
