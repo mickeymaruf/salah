@@ -3,14 +3,10 @@ import { Check, X } from 'lucide-react-native';
 import { colors, sizes } from '@/shared/theme';
 import type { LogChoice } from '../logChoice';
 
-export type ButtonRole = 'idle' | 'tapped' | 'other';
-
 interface ChoiceButtonProps {
   kind: LogChoice;
-  // Where this button sits in the pill: the missed button on the left, the prayed one on the right.
-  role: ButtonRole;
-  // Marking progress, 0 to 1. Only read while a mark is animating.
-  progress: Animated.Value;
+  // 0 to 1 while the pill is being marked: the button fades out and shrinks. Null at rest.
+  leave: Animated.Value | null;
   dimmed: boolean;
   disabled: boolean;
   label: string;
@@ -20,25 +16,19 @@ interface ChoiceButtonProps {
 
 const ICON_SIZE = 22;
 const STROKE = 2.25;
+const LEAVE_SCALE = 0.6;
 
-// A 44 px rounded square, tinted red or green, holding a thick cross or check. While its pill is being marked, the tapped one turns solid and
-// then fades with the circle that covers the pill, and the other one fades away.
-export function ChoiceButton({ kind, role, progress, dimmed, disabled, label, onPress, style }: ChoiceButtonProps) {
+// A 44 px rounded square, tinted red or green, holding a thick cross or check. When its pill is marked the button fades
+// away and shrinks while the colour grows over the pill.
+export function ChoiceButton({ kind, leave, dimmed, disabled, label, onPress, style }: ChoiceButtonProps) {
   const accent = kind === 'prayed' ? colors.brand.green : colors.state.missed;
   const Icon = kind === 'prayed' ? Check : X;
 
-  const opacity =
-    role === 'tapped'
-      ? progress.interpolate({ inputRange: [0, 0.6, 1], outputRange: [1, 1, 0] })
-      : role === 'other'
-        ? progress.interpolate({ inputRange: [0, 0.4, 0.8], outputRange: [1, 0.3, 0], extrapolate: 'clamp' })
-        : dimmed
-          ? 0.45
-          : 1;
-  const solid = progress.interpolate({ inputRange: [0, 0.25], outputRange: [0, 1], extrapolate: 'clamp' });
+  const opacity = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) : dimmed ? 0.45 : 1;
+  const scale = leave ? leave.interpolate({ inputRange: [0, 1], outputRange: [1, LEAVE_SCALE] }) : 1;
 
   return (
-    <Animated.View style={[styles.slot, style, { opacity }]}>
+    <Animated.View style={[styles.slot, style, { opacity, transform: [{ scale }] }]}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={label}
@@ -48,11 +38,6 @@ export function ChoiceButton({ kind, role, progress, dimmed, disabled, label, on
         style={[styles.button, { backgroundColor: kind === 'prayed' ? colors.pill.prayedButton : colors.pill.missedButton }]}
       >
         <Icon size={ICON_SIZE} color={accent} strokeWidth={STROKE} />
-        {role === 'tapped' ? (
-          <Animated.View pointerEvents="none" style={[styles.solid, { backgroundColor: accent, opacity: solid }]}>
-            <Icon size={ICON_SIZE} color={colors.bg.surface} strokeWidth={STROKE} />
-          </Animated.View>
-        ) : null}
       </Pressable>
     </Animated.View>
   );
@@ -65,7 +50,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
   },
-  solid: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
 });

@@ -40,9 +40,12 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Pill: a missed button (44 px rounded square, soft red fill, thick terracotta cross) on the left, a prayed button (soft green fill, thick green
   check) on the right, the name and start time between, and faint icons of the prayer behind them (sunrise, sun, cloud-sun, sunset, moon; green once
   the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
-- Marking: one tap on the check or cross. The button turns solid, a circle grows from it over the pill (350 ms, ease-out), the other button fades,
-  and the pill ends filled (green 30% for prayed, terracotta 40% for missed) with no buttons and the text at the left edge. Light haptic, saved at
-  once. With reduce motion on, the fill cross-fades. Tapping a marked pill opens the log sheet to change or clear the mark.
+- Marking: one tap on the check or cross, saved at once, with a light haptic. A circle in the final fill colour starts at the middle of the tapped
+  button, reaches just past the far corner (`markGeometry.ts`) and grows in scale only, 0 to 1 in 520 ms (cubic-bezier 0.45, 0, 0.2, 1). Over the
+  same time the buttons fade and shrink (180 ms from 0 ms) and the name and time slide to 24 px from the left (320 ms from 120 ms, ease-out).
+  When the circle has covered the pill, the pill takes that colour as its real background and the circle is removed in the same frame, so the swap
+  is invisible. Prayed is brand/green 30% over white, missed is terracotta 40%. Other pills stay tappable while one plays. With reduce motion on, a
+  150 ms cross-fade to the final colour. Tapping a marked pill opens the log sheet to change or clear the mark (the user chose to keep it).
 - Owns: `src/features/prayer-times/` (`calculate.ts`, `schedule.ts`, `window.ts` for the prayer in progress and the ring maths,
   `dayNav.ts` and `timeline.ts` for the date arrows and the timeline, `useTodayView.ts`, `TodayScreen.tsx`, `components/`: `TodayHero`,
   `HeroBackdrop`, `PrayerSheet`, `DateNavigator`, `Timeline`, `PrayerPill`, `ChoiceButton`, `PrayerParticles`), `src/shared/lib/useNow.ts`, `app/(tabs)/`.

@@ -7,8 +7,9 @@ import { formatTime } from '@/shared/lib/date';
 import { useReduceMotion } from '@/shared/lib/useReduceMotion';
 import { PRAYER_LABELS, type PrayerName } from '../calculate';
 import type { LogChoice } from '../logChoice';
+import { buttonCentreX, coverRadius } from '../markGeometry';
 import type { PrayerState } from '../schedule';
-import { ChoiceButton, type ButtonRole } from './ChoiceButton';
+import { ChoiceButton } from './ChoiceButton';
 import { PrayerParticles } from './PrayerParticles';
 
 export const PILL_HEIGHT = 76;
@@ -18,10 +19,14 @@ const BUTTON_INSET = 16;
 const BUTTON_TOP = (HEIGHT - BUTTON) / 2;
 const TEXT_LEFT = 84;
 const MARKED_TEXT_LEFT = 24;
-// The covering circle is big enough to reach the far corner of the pill from either button.
-const CIRCLE = 700;
-const START_SCALE = 0.2;
-const MARK_MS = 350;
+
+// The marking animation. The circle grows 0 to 1 in scale only, never in width, height or radius. The buttons leave
+// while it starts, and the text slides left a moment later, so the three overlap.
+const COVER_MS = 520;
+const COVER_EASING = Easing.bezier(0.45, 0, 0.2, 1);
+const LEAVE_MS = 180;
+const SLIDE_MS = 320;
+const SLIDE_DELAY_MS = 120;
 const REDUCED_MS = 150;
 
 interface PrayerPillProps {
@@ -38,14 +43,18 @@ interface PrayerPillProps {
 
 const FILL: Record<LogChoice, string> = { prayed: colors.pill.prayed, missed: colors.pill.missed };
 
-// One prayer. Before it is due the buttons are dimmed and do nothing. One tap on the cross or check marks it: that button turns
-// solid, a circle grows from it over the pill, the other button fades, and the pill ends fully coloured with no buttons.
+// One prayer. Before it is due the buttons are dimmed and do nothing. One tap on the cross or check marks it and saves at
+// once. A circle in the final colour grows from the tapped button over the pill, the buttons shrink away and the text
+// slides left. When the circle has covered the pill the pill takes that colour as its own background and the circle goes,
+// in the same frame, so the swap cannot be seen. Other pills stay tappable while this one plays.
 function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }: PrayerPillProps) {
   const reduceMotion = useReduceMotion();
   const [width, setWidth] = useState(322);
   // The choice being animated. While it is set the pill draws the animation even though the log already has the mark.
   const [tapped, setTapped] = useState<LogChoice | null>(null);
-  const [progress] = useState(() => new Animated.Value(0));
+  const [grow] = useState(() => new Animated.Value(0));
+  const [leave] = useState(() => new Animated.Value(0));
+  const [slide] = useState(() => new Animated.Value(0));
 
   const upcoming = state === 'upcoming';
   const marked = state === 'prayed' || state === 'missed';
@@ -57,32 +66,63 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }:
     if (tapped !== null || upcoming) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
     setTapped(choice);
-    progress.setValue(0);
+    grow.setValue(0);
+    leave.setValue(0);
+    slide.setValue(0);
     onMark(name, choice);
-    Animated.timing(progress, {
-      toValue: 1,
-      duration: reduceMotion ? REDUCED_MS : MARK_MS,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }).start(({ finished }) => {
+    Animated.parallel([
+      Animated.timing(grow, {
+        toValue: 1,
+        duration: reduceMotion ? REDUCED_MS : COVER_MS,
+        easing: reduceMotion ? Easing.linear : COVER_EASING,
+        useNativeDriver: true,
+      }),
+      Animated.timing(leave, {
+        toValue: 1,
+        duration: reduceMotion ? REDUCED_MS : LEAVE_MS,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }),
+      Animated.timing(slide, {
+        toValue: 1,
+        duration: reduceMotion ? 0 : SLIDE_MS,
+        delay: reduceMotion ? 0 : SLIDE_DELAY_MS,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start(({ finished }) => {
       if (!finished) return;
-      progress.setValue(0);
+      grow.setValue(0);
+      leave.setValue(0);
+      slide.setValue(0);
       setTapped(null);
     });
   };
 
-  const roleOf = (kind: LogChoice): ButtonRole => (tapped === null ? 'idle' : tapped === kind ? 'tapped' : 'other');
   const backgroundColor = showMarked ? FILL[state as LogChoice] : isCurrent ? colors.pill.current : colors.bg.base;
-  const circleColor = tapped ? FILL[tapped] : colors.bg.base;
-  // The circle grows from the middle of the tapped button: a check on the right, a cross on the left.
-  const centreX = tapped === 'prayed' ? width - BUTTON_INSET - BUTTON / 2 : BUTTON_INSET + BUTTON / 2;
-  const circleStyle = reduceMotion
-    ? { opacity: progress }
-    : { transform: [{ scale: progress.interpolate({ inputRange: [0, 1], outputRange: [START_SCALE, 1] }) }] };
-  const textShift = progress.interpolate({
-    inputRange: [0, 0.3, 1],
-    outputRange: [0, 0, MARKED_TEXT_LEFT - TEXT_LEFT],
-  });
+  const textShift = slide.interpolate({ inputRange: [0, 1], outputRange: [0, MARKED_TEXT_LEFT - TEXT_LEFT] });
+
+  // The circle is centred on the tapped button and just reaches the far corner. It only ever changes in scale.
+  const cover = (() => {
+    if (!tapped) return null;
+    const centreX = buttonCentreX(tapped === 'prayed' ? 'right' : 'left', width, BUTTON_INSET, BUTTON);
+    const radius = coverRadius(width, HEIGHT, centreX, HEIGHT / 2);
+    const style = reduceMotion
+      ? [StyleSheet.absoluteFill, { backgroundColor: FILL[tapped], opacity: grow }]
+      : [
+          styles.circle,
+          {
+            left: centreX - radius,
+            top: HEIGHT / 2 - radius,
+            width: radius * 2,
+            height: radius * 2,
+            borderRadius: radius,
+            backgroundColor: FILL[tapped],
+            transform: [{ scale: grow }],
+          },
+        ];
+    return <Animated.View pointerEvents="none" style={style} />;
+  })();
 
   const content = (
     <View
@@ -90,18 +130,12 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }:
       style={[styles.pill, { backgroundColor }]}
     >
       <PrayerParticles prayer={name} passed={!upcoming} index={index} />
-      {tapped ? (
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.circle, { left: centreX - CIRCLE / 2, top: HEIGHT / 2 - CIRCLE / 2, backgroundColor: circleColor }, circleStyle]}
-        />
-      ) : null}
+      {cover}
       {showMarked ? null : (
         <>
           <ChoiceButton
             kind="missed"
-            role={roleOf('missed')}
-            progress={progress}
+            leave={tapped ? leave : null}
             dimmed={upcoming}
             disabled={upcoming || tapped !== null}
             label={`Mark ${label} as missed`}
@@ -110,8 +144,7 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onEdit }:
           />
           <ChoiceButton
             kind="prayed"
-            role={roleOf('prayed')}
-            progress={progress}
+            leave={tapped ? leave : null}
             dimmed={upcoming}
             disabled={upcoming || tapped !== null}
             label={`Mark ${label} as prayed`}
@@ -151,7 +184,7 @@ export const PrayerPill = memo(PrayerPillView);
 
 const styles = StyleSheet.create({
   pill: { height: HEIGHT, borderRadius: 16, overflow: 'hidden' },
-  circle: { position: 'absolute', width: CIRCLE, height: CIRCLE, borderRadius: CIRCLE / 2 },
+  circle: { position: 'absolute' },
   // Top and bottom at 0 with centred content keeps the name and time in the middle of the pill whatever the font metrics.
   text: { position: 'absolute', top: 0, bottom: 0, justifyContent: 'center', gap: 2 },
   noPadding: { includeFontPadding: false },
