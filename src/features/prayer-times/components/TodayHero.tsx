@@ -5,11 +5,9 @@ import { Text } from '@/shared/ui';
 import { colors } from '@/shared/theme';
 import { formatCountdown, formatCountdownClock } from '@/shared/lib/date';
 import { PRAYER_LABELS } from '../calculate';
-import { heroScale } from '../heroScale';
+import { RING_RADIUS, heroScale } from '../heroScale';
 import { arcPoint, ringDotCount, ringDots, type PrayerWindow } from '../window';
 
-// Figma's half circle: 160 px radius in a 390 px wide frame. It scales with the screen width (`heroScale`).
-const RADIUS = 160;
 const DOT_SPACING = 9;
 const RING_DOT = 3.5;
 // The end dot is 18 px across in Figma: a 12 px green dot inside a 3 px white border.
@@ -33,7 +31,7 @@ interface TodayHeroProps {
 // The prayer in progress inside a half circle of dots. Green dots show how far through the window it is, and the end
 // dot marks the moment. Under the name a live countdown runs to the next prayer.
 function TodayHeroView({ window, at, sheetTop, width }: TodayHeroProps) {
-  const radius = RADIUS * heroScale(width);
+  const radius = RING_RADIUS * heroScale(width);
   const svgWidth = radius * 2 + SIDE_ROOM * 2;
   const arcBase = radius + BOTTOM_ROOM;
   const svgHeight = arcBase + TOP_ROOM;
