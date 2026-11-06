@@ -53,7 +53,7 @@ Shipped features, what they do, who owns the code, how to extend them.
   tab bar's inactive label is Medium weight; the active one is Semi Bold. The pill size has been 66, 76 and 64 px as the user and Figma changed: 76 px is current.
 - Sheet: the prayer sheet has 20 px top corners (`radii.sheet`, as in Figma).
 - Pill: each button is a round 38 px picture, the 3D cross (orange-red) or check (dark green) from Figma (14034:15 and 14034:31), inside a 44 px touch area, 16 px from the pill's edge. The Illustrator export is a 38 px SVG that only wraps one 1024 px PNG (150% of the button, shifted 25%), so the app uses that PNG cropped as the SVG shows it and shipped at 1x, 2x and 3x (`assets/images/button-missed.png` and `button-prayed.png`, made by `node scripts/prepare-buttons.js Missed_button.svg Prayed_button.svg`). Faint icons of the prayer
-  sit behind (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing.
+  sit behind (sunrise, sun, cloud-sun, sunset, moon; green once the time has come, grey before). The prayer in progress has a warm grey fill. Prayers not yet due are dimmed and do nothing. A marked pill shows the round 38 px 3D check or cross on its right, 16 px from the edge (Figma 18066:13); it fades in as the pill fills.
 - Marking: one tap on the check or cross, saved at once, with a light haptic. A circle in the final fill colour starts at the middle of the tapped
   button, reaches just past the far corner (`markGeometry.ts`) and grows in scale only, 0 to 1 in 520 ms (cubic-bezier 0.45, 0, 0.2, 1). Over the
   same time the buttons fade and shrink (180 ms from 0 ms) and the name and time slide to 24 px from the left (320 ms from 120 ms, ease-out).
@@ -119,10 +119,10 @@ Shipped features, what they do, who owns the code, how to extend them.
 - What: one screen for the whole year (Figma 18035:16, "P-D3 · Year · 3D icons", second version). A "Your year / 2026" header with the user button. Three round white pills
   (32 px corners) with 40 px 3D icons: Prayed (3D check), Missed (3D cross, red number) and Streak (3D flame, best streak in days). Pictures: `assets/images/stat-prayed.png`, `stat-missed.png` and `stat-streak.png`, the whole 3D picture with its shadow (made by
   `node scripts/prepare-stat-icons.js prayed=Prayed_button.svg missed=Missed_button.svg streak=Icon.svg`). Today's round buttons use a tighter crop of the same art.
-  Below, the year chart in a card: 12 month rows by up to 31 day columns, each day a bar of 5 segments of 5.4 px (27 px high, Fajr on top): green prayed (`chart.prayed` #1B6B33), red-orange missed (`chart.missed` #E4583C), pale upcoming (`chart.upcoming`). The scrollbar track is `line.soft`. The grid
+  Below, the year chart in a card: day numbers 1 to 31 above the columns (the selected day's number is dark, they scroll with the grid), then 12 month rows by up to 31 day columns, each day a bar of 5 segments of 5.4 px (27 px high, Fajr on top): green prayed (`chart.prayed` #1B6B33), red-orange missed (`chart.missed` #E4583C), pale upcoming (`chart.upcoming`). The scrollbar track is `line.soft`. The grid
   scrolls horizontally with a thin custom scrollbar and opens with today at the right edge. Month letters stay fixed on the left. Tapping a day shows its five prayers in the day card
-  (20 px corners): the date, "4 of 5 prayed", and five 24 px marks with the prayer names (a missed prayer's name is red). Swiping the card moves to the next or previous day.
-  There is no percent card, legend, day-number row, hint line or day arrows: the second Figma version dropped them.
+  (20 px corners): previous and next arrows around the date, "4 of 5 prayed", and five 28 px round 3D marks (the Today button pictures) with the prayer names (a missed prayer's name is red; a prayer not yet marked is an empty ring). Swiping the card also moves to the next or previous day.
+  There is no percent card, legend or hint line: the second Figma version dropped them. The arrows and day numbers are the app's own and were added to Figma later.
 - Owns: `src/features/progress/` (`model.ts` builds the grid, `stats.ts`, `useYearProgress.ts`,
   `ProgressScreen.tsx`, `components/`), `app/(tabs)/progress.tsx`.
 - Data: one query for the year (`getYear`). Past days need no prayer times: no row means unmarked. Only today

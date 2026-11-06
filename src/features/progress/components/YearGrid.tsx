@@ -10,6 +10,8 @@ const LABEL_WIDTH = 12;
 const LABEL_GAP = 6;
 const GRID_WIDTH = 31 * DAY_STEP - (DAY_STEP - DAY_WIDTH);
 const TRACK_HEIGHT = 4;
+const NUMBER_HEIGHT = 12;
+const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 
 interface YearGridProps {
   grid: YearGridData;
@@ -68,6 +70,7 @@ export function YearGrid({ grid, selectedDate, focusDay, onSelect }: YearGridPro
     <Card style={styles.card}>
       <View style={styles.chart}>
         <View style={styles.labels}>
+          <View style={styles.numberSpacer} />
           {MONTH_LETTERS.map((letter, month) => (
             <View key={month} style={styles.label}>
               <Text variant="monthLetter" color="muted">
@@ -101,6 +104,19 @@ export function YearGrid({ grid, selectedDate, focusDay, onSelect }: YearGridPro
           }}
         >
           <View style={styles.grid}>
+            <View style={styles.numbers} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+              {DAYS.map((day) => (
+                <Text
+                  key={day}
+                  variant="tab"
+                  color={day === selectedDay ? 'primary' : 'muted'}
+                  allowFontScaling={false}
+                  style={styles.number}
+                >
+                  {String(day)}
+                </Text>
+              ))}
+            </View>
             {grid.map((month, monthIndex) => (
               <View key={monthIndex} style={styles.monthRow}>
                 {month.map((cell) => (
@@ -127,6 +143,9 @@ const styles = StyleSheet.create({
   label: { height: ROW_HEIGHT, justifyContent: 'center' },
   viewport: { flex: 1 },
   grid: { gap: ROW_GAP },
+  numbers: { height: NUMBER_HEIGHT, flexDirection: 'row', gap: DAY_STEP - DAY_WIDTH },
+  number: { width: DAY_WIDTH, fontSize: 9, lineHeight: NUMBER_HEIGHT, textAlign: 'center' },
+  numberSpacer: { height: NUMBER_HEIGHT },
   monthRow: { flexDirection: 'row', gap: DAY_STEP - DAY_WIDTH },
   scrollbar: { marginTop: 10, paddingLeft: LABEL_WIDTH + LABEL_GAP },
   track: { height: TRACK_HEIGHT, borderRadius: 2, backgroundColor: colors.line.soft, overflow: 'hidden' },
