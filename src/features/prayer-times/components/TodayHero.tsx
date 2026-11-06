@@ -18,7 +18,7 @@ const SVG_WIDTH = 360;
 const ARC_BASE = 190;
 const SVG_HEIGHT = ARC_BASE + 10;
 const CX = SVG_WIDTH / 2;
-// Figma: the last line ends 17 px above the sheet. Lines use Inter's normal height so Android lays the block out the same.
+// Figma: the last line ends 17 px above the sheet. Line heights are fixed so Android lays the block out the same.
 const TEXT_GAP = 17;
 
 const DOTS = ringDots(ringDotCount(RADIUS, DOT_SPACING), CX, ARC_BASE, RADIUS);
