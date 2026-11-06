@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { colors, radii } from '@/shared/theme';
 import type { ViewHandle } from '@/shared/feedback';
 import { PRAYER_NAMES, type DayTimes, type PrayerName } from '../calculate';
+import { SECTION_GAP } from '../heroScale';
 import type { LogChoice } from '../logChoice';
 import type { PrayerState } from '../schedule';
 import type { TimelineKind } from '../timeline';
@@ -10,8 +11,10 @@ import { DateNavigator } from './DateNavigator';
 import { PrayerPill, PILL_HEIGHT } from './PrayerPill';
 import { Timeline } from './Timeline';
 
-// Figma 14030:14: the date row is 12 px from the top of the sheet and the first pill starts 26 px below it.
-const PADDING_TOP = 26;
+// The visible gap between the date text and the first pill equals the one between the greeting and the ring (`SECTION_GAP` in heroScale.ts). The date
+// row is 12 px from the top of the sheet and 48 px high; its two text lines end about 5 px above the bottom of the row.
+const DATE_TEXT_TO_ROW_END = 5;
+const PADDING_TOP = SECTION_GAP - DATE_TEXT_TO_ROW_END;
 const GAP = 12;
 // Figma: the pills start 48 px from the left to leave room for the timeline, and sit 20 px from the right edge.
 const PADDING_LEFT = 48;

@@ -10,13 +10,13 @@ export function heroScale(width: number): number {
 }
 
 export const RING_RADIUS = 160;
-// Space between the bottom of the greeting and the top of the ring. It matches the 26 px between the date row and the first pill.
-const GREETING_TO_RING = 26;
+// The visible gap between the bottom of the greeting and the top of the ring. The gap between the date text and the first pill is the same (`PrayerSheet`).
+export const SECTION_GAP = 32;
 // Below the status bar: the greeting starts 13 px down and is 28 px high; the top ring dot sticks out 1.75 px above the arc.
 const GREETING_BOTTOM = 41;
 const RING_DOT_OVERHANG = 1.75;
 
 // Height of the hero below the status bar. The ring rests on the sheet, so this keeps a fixed gap under the greeting at any width.
 export function heroHeight(width: number): number {
-  return Math.round(RING_RADIUS * heroScale(width) + GREETING_BOTTOM + GREETING_TO_RING + RING_DOT_OVERHANG);
+  return Math.round(RING_RADIUS * heroScale(width) + GREETING_BOTTOM + SECTION_GAP + RING_DOT_OVERHANG);
 }

@@ -21,8 +21,8 @@ describe('heroScale', () => {
 });
 
 describe('heroHeight', () => {
-  it('leaves 26 px between the greeting and the ring at the Figma width', () => {
-    expect(heroHeight(390)).toBe(229);
+  it('leaves 32 px between the greeting and the ring at the Figma width', () => {
+    expect(heroHeight(390)).toBe(235);
   });
 
   it('grows by the ring radius only', () => {
