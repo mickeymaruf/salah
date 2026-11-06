@@ -7,6 +7,9 @@ import { getRange } from '@/features/prayer-times/data/prayerLog';
 import { useCatchUpStore } from './catchUpStore';
 import { buildCatchUpQueue, queueStartKey } from './queue';
 
+// Catch-up is switched off for now. The screen, queue and store stay in place so it can come back or be removed later.
+export const CATCH_UP_ENABLED = false;
+
 // Alarm screens have their own flow, so the prompt waits for the next open instead of covering them.
 const BUSY_PATHS = ['/alarm', '/proof', '/verified', '/catch-up'];
 // Gives a notification tap that cold-started the app time to open its alarm before this checks the screen.
@@ -26,7 +29,7 @@ export function useCatchUp(profile: Profile | null, ready: boolean): void {
   }, [pathname, profile]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !CATCH_UP_ENABLED) return;
     const timers: ReturnType<typeof setTimeout>[] = [];
 
     const onOpen = async () => {

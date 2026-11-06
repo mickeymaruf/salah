@@ -370,3 +370,5 @@ Format: date, title, context, decision, consequence.
 - Consequence: the Catch-up animation timings stay at the slower values the user asked for earlier, not the 350 ms in the brief.
 - Decision: the pop sound has its own setting, `markSound` ("Sound when marking a prayer", default on), because the app had no general sound switch to
   respect. It only controls the pop; confetti and haptics always play. The pop is a synthesised tone (`scripts/make-pop.js`), like the alarm tones.
+- Decision: Catch-up on open is switched off (`CATCH_UP_ENABLED = false`) because Today's one-tap buttons and date arrows now cover logging past prayers.
+  The code stays so it can be turned back on or removed later.

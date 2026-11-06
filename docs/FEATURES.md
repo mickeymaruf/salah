@@ -222,6 +222,8 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Catch-up on open
 
+- Status: switched off. `CATCH_UP_ENABLED` is `false` in `src/features/catch-up/useCatchUp.ts`, so the prompt never opens. Everything below describes how it works when
+  the flag is turned back on; the code can also be removed later.
 - What: a full-screen prompt (no tab bar) that asks "Did you pray?" about one unlogged prayer at a time, oldest first. Figma:
   file OgLgPUUPDO1UindTOIu39O, section "Proposals · D. Catch-up on open", frames P-D1 to P-D6.
 - Question order follows Figma P-D1: the prayer name, the time with "1 of 3", then "Did you pray?". The three stay over the growing colour and fade out as the tick or cross fades in.
