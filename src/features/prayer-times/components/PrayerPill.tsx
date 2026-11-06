@@ -13,12 +13,14 @@ import type { PrayerState } from '../schedule';
 import { ChoiceButton } from './ChoiceButton';
 import { PrayerParticles } from './PrayerParticles';
 
-export const PILL_HEIGHT = 76;
+export const PILL_HEIGHT = 64;
 const HEIGHT = PILL_HEIGHT;
 const BUTTON = 44;
-const BUTTON_INSET = 16;
+// Figma: the cross is 17 px from the left edge and the check 11 px from the right edge.
+const BUTTON_LEFT = 17;
+const BUTTON_RIGHT = 11;
 const BUTTON_TOP = (HEIGHT - BUTTON) / 2;
-const TEXT_LEFT = 84;
+const TEXT_LEFT = 76;
 const MARKED_TEXT_LEFT = 24;
 
 // The marking animation. The circle grows 0 to 1 in scale only, never in width, height or radius. The buttons leave
@@ -116,7 +118,7 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onPrayed,
   // The circle is centred on the tapped button and just reaches the far corner. It only ever changes in scale.
   const cover = (() => {
     if (!tapped) return null;
-    const centreX = buttonCentreX(tapped === 'prayed' ? 'right' : 'left', width, BUTTON_INSET, BUTTON);
+    const centreX = buttonCentreX(tapped === 'prayed' ? 'right' : 'left', width, tapped === 'prayed' ? BUTTON_RIGHT : BUTTON_LEFT, BUTTON);
     const radius = coverRadius(width, HEIGHT, centreX, HEIGHT / 2);
     const style = reduceMotion
       ? [StyleSheet.absoluteFill, { backgroundColor: FILL[tapped], opacity: grow }]
@@ -151,7 +153,7 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onPrayed,
             disabled={upcoming || tapped !== null}
             label={`Mark ${label} as missed`}
             onPress={() => mark('missed')}
-            style={{ left: BUTTON_INSET, top: BUTTON_TOP }}
+            style={{ left: BUTTON_LEFT, top: BUTTON_TOP }}
           />
           <ChoiceButton
             kind="prayed"
@@ -160,7 +162,7 @@ function PrayerPillView({ name, time, index, state, isCurrent, onMark, onPrayed,
             disabled={upcoming || tapped !== null}
             label={`Mark ${label} as prayed`}
             onPress={() => mark('prayed')}
-            style={{ right: BUTTON_INSET, top: BUTTON_TOP }}
+            style={{ right: BUTTON_RIGHT, top: BUTTON_TOP }}
             slotRef={prayedButton}
           />
         </>
@@ -198,6 +200,6 @@ const styles = StyleSheet.create({
   pill: { height: HEIGHT, borderRadius: 16, overflow: 'hidden' },
   circle: { position: 'absolute' },
   // Top and bottom at 0 with centred content keeps the name and time in the middle of the pill whatever the font metrics.
-  text: { position: 'absolute', top: 0, bottom: 0, justifyContent: 'center', gap: 2 },
+  text: { position: 'absolute', top: 0, bottom: 0, justifyContent: 'center' },
   noPadding: { includeFontPadding: false },
 });

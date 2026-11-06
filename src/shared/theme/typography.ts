@@ -11,9 +11,9 @@ type Style = Pick<TextStyle, 'fontFamily' | 'fontSize' | 'lineHeight' | 'letterS
 // Sizes, line heights and tracking are taken from the Figma frames.
 export const typography = {
   // Today hero and header.
-  heroName: { fontFamily: fontFamily.semiBold, fontSize: 40, lineHeight: 48 },
-  heroCountdown: { fontFamily: fontFamily.semiBold, fontSize: 32, lineHeight: 39 },
-  greeting: { fontFamily: fontFamily.semiBold, fontSize: 22, lineHeight: 27 },
+  heroName: { fontFamily: fontFamily.semiBold, fontSize: 40, lineHeight: 50 },
+  heroCountdown: { fontFamily: fontFamily.semiBold, fontSize: 32, lineHeight: 40 },
+  greeting: { fontFamily: fontFamily.semiBold, fontSize: 22, lineHeight: 28 },
   clock: { fontFamily: fontFamily.semiBold, fontSize: 88, letterSpacing: -3.52 },
   display: { fontFamily: fontFamily.semiBold, fontSize: 56, letterSpacing: -1.68 },
   splash: { fontFamily: fontFamily.semiBold, fontSize: 40, letterSpacing: -1.2 },
@@ -35,8 +35,8 @@ export const typography = {
   body: { fontFamily: fontFamily.regular, fontSize: 17 },
   lead: { fontFamily: fontFamily.regular, fontSize: 16, lineHeight: 24 },
   row: { fontFamily: fontFamily.regular, fontSize: 16 },
-  pillName: { fontFamily: fontFamily.semiBold, fontSize: 18, lineHeight: 22 },
-  pillTime: { fontFamily: fontFamily.regular, fontSize: 15, lineHeight: 19 },
+  pillName: { fontFamily: fontFamily.semiBold, fontSize: 16, lineHeight: 20 },
+  pillTime: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 16 },
   rowStrong: { fontFamily: fontFamily.semiBold, fontSize: 16 },
   label: { fontFamily: fontFamily.medium, fontSize: 15 },
   small: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 21 },
@@ -45,6 +45,7 @@ export const typography = {
   tinyMedium: { fontFamily: fontFamily.medium, fontSize: 12, lineHeight: 15 },
   labelSmall: { fontFamily: fontFamily.medium, fontSize: 14 },
   tab: { fontFamily: fontFamily.semiBold, fontSize: 12 },
+  tabInactive: { fontFamily: fontFamily.medium, fontSize: 12 },
   overline: { fontFamily: fontFamily.semiBold, fontSize: 12, letterSpacing: 1.2 },
 } satisfies Record<string, Style>;
 

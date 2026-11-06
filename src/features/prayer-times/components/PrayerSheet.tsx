@@ -12,7 +12,7 @@ import { Timeline } from './Timeline';
 
 // Figma 14030:14: the date row is 12 px from the top of the sheet and the first pill starts 26 px below it.
 const PADDING_TOP = 26;
-const GAP = 12;
+const GAP = 8;
 // Figma: the pills start 48 px from the left to leave room for the timeline, and sit 20 px from the right edge.
 const PADDING_LEFT = 48;
 const PADDING_RIGHT = 20;
@@ -113,5 +113,5 @@ const styles = StyleSheet.create({
   },
   // The row is 48 px high, with the 40 px arrows centred in it, 20 px from each side.
   navigator: { marginTop: 12, height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 },
-  content: { paddingLeft: PADDING_LEFT, paddingRight: PADDING_RIGHT, paddingTop: PADDING_TOP, paddingBottom: 34, gap: GAP },
+  content: { paddingLeft: PADDING_LEFT, paddingRight: PADDING_RIGHT, paddingTop: PADDING_TOP, paddingBottom: 18, gap: GAP },
 });

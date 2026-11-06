@@ -18,8 +18,8 @@ const SVG_WIDTH = 360;
 const ARC_BASE = 190;
 const SVG_HEIGHT = ARC_BASE + 10;
 const CX = SVG_WIDTH / 2;
-// Figma: the last line ends 17 px above the sheet. Line heights are fixed so Android lays the block out the same.
-const TEXT_GAP = 17;
+// Figma: the last line ends 16 px above the sheet. The lines have fixed heights (50, 40, 20), so Android lays the block out the same.
+const TEXT_GAP = 16;
 
 const DOTS = ringDots(ringDotCount(RADIUS, DOT_SPACING), CX, ARC_BASE, RADIUS);
 
@@ -96,6 +96,6 @@ const styles = StyleSheet.create({
   text: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: TEXT_GAP },
   name: { includeFontPadding: false },
   // Digits keep one width so the countdown does not shake as the seconds change.
-  countdown: { includeFontPadding: false, fontVariant: ['tabular-nums'] },
-  until: { lineHeight: 19, marginTop: 1, includeFontPadding: false },
+  countdown: { marginTop: -2, includeFontPadding: false, fontVariant: ['tabular-nums'] },
+  until: { lineHeight: 20, includeFontPadding: false },
 });

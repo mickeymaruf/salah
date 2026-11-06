@@ -29,7 +29,7 @@ export function TabBar({ state, descriptors, navigateToTab }: MaterialTopTabBarP
             style={styles.tab}
           >
             {Icon ? <Icon size={24} color={color} strokeWidth={1.75} /> : null}
-            <Text variant="tab" style={{ color }}>
+            <Text variant={active ? 'tab' : 'tabInactive'} style={{ color }}>
               {title}
             </Text>
           </Pressable>
