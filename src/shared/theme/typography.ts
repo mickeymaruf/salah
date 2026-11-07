@@ -28,6 +28,8 @@ export const typography = {
   monthLetter: { fontFamily: fontFamily.medium, fontSize: 10, lineHeight: 12 },
   dayTitle: { fontFamily: fontFamily.semiBold, fontSize: 15 },
   daySummary: { fontFamily: fontFamily.medium, fontSize: 13 },
+  // Tree (Figma P-I1): the perfect-day count on the goal card.
+  treeCount: { fontFamily: fontFamily.semiBold, fontSize: 30, lineHeight: 38 },
   // Log a prayer sheet (Figma 18083:18).
   logName: { fontFamily: fontFamily.semiBold, fontSize: 28, letterSpacing: -0.56 },
   logSubtitle: { fontFamily: fontFamily.regular, fontSize: 14 },

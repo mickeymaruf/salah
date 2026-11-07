@@ -18,6 +18,7 @@ Status: done, next, todo.
 | 11 | Manual prayer times | done |
 | 12 | Catch-up on open | removed |
 | 13 | Home screen widget (Android, dev build) | done, not run on a device |
+| 14 | Tree screen and Tree tab | done, not run on a device |
 
 ## Later
 

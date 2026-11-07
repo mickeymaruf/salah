@@ -215,8 +215,9 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Tab swiping
 
-- Today and Progress are pages of one pager (`expo-router/js-top-tabs`, `react-native-pager-view`). Swiping between them is
+- Today, Progress and Tree are pages of one pager (`expo-router/js-top-tabs`, `react-native-pager-view`). Swiping between them is
   off; tap the bottom bar. Taps switch with no animation and the neighbouring page is rendered ahead, so both feel instant.
+  The bar has three tabs, each a third wide: Today (Clock), Progress (ChartColumn), Tree (TreePine, Lucide, 24 px, stroke 1.75).
 - The bar adds the system navigation bar height (the bottom safe-area inset) below itself, so it sits above a three-button or
   gesture bar and sits at the very bottom on phones without one. Its content area is 62 px, 8 more than Figma, for icon spacing.
 - Owns: `app/(tabs)/_layout.tsx`, `src/shared/ui/TabBar.tsx` (the bar, drawn like the Figma tab bar).
@@ -260,3 +261,21 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Not verified: nothing here ran on a device or emulator. Checked: types, lint, tests, the Android bundle, `expo prebuild` (it generates the provider and resources) and the widget layout compiling
   into the layout registry. See `docs/LIMITATIONS.md` for what differs from Figma and from the brief.
 
+
+## Tree
+
+- What: "Your tree" (Figma file 9Y8zdXos1XOnfJrDXEvRXZ, page Screens, frames P-I1 to P-I6, asset 22035:4088). A tree that fills with leaves as the user
+  prays all five prayers every day. It is the third tab. No user icon here; Settings still opens from Today and Progress.
+- Rules (`treeProgress.ts`): `perfectDays` = days among the last 40 (today included) with all five prayed. Today is open: it counts `prayed / 5` of a day, and 0 once a prayer
+  was marked missed or its window ended unmarked (a window ends when the next prayer starts; Isha's at tomorrow's Fajr). `fullness = min(1, (perfectDays + todayFraction) / 40)`.
+  `streak` = consecutive perfect days up to yesterday, plus today once all five are prayed (read from the last 366 days, so it can pass 40). `daysToGo = 40 - perfectDays`.
+- Leaves (`leaves.ts`, `leafData.ts`): 696 leaves with a rank from 0 to 1. A leaf is on the tree when `rank >= 1 - fullness`, so every fullness shows the same leaves; low ranks (outer and top) fall first.
+  The bare tree (trunk, grass, branches) is `assets/images/tree-bare.png`. The leaves are drawn as polygons in one `react-native-svg` view.
+- Animation (`useTreeAnimation.ts`, `transition.ts`, `components/TreeCanvas.tsx`): on every open, and when a prayer is logged while the screen is open, the tree is compared with the last seen one
+  (`lastSeen.ts`, AsyncStorage key `salah.tree.lastSeen`: fullness, perfect days, streak). Less: the old tree shows, 500 ms hold, then the lowest-rank leaves fall (stagger 0 to 900 ms, 1.1 to 1.8 s each,
+  down to the grass band with a 10 to 40 px sway and a 60 to 240 degree spin, fading to 85%, then settling at a random angle of -80 to 80 degrees); at most 34 stay on the grass, the oldest fade out over 300 ms.
+  More (and the first ever open, from 0): leaves fade and scale in with a light spring (stiffness 220, damping 18, stagger 0 to 700 ms, inner first) and the leaves on the grass fade out over 300 ms. Same: no animation.
+  The card numbers count over 400 ms (ease-out). One soft haptic when the streak went from above 0 to 0 and the first leaf lands. Reduce Motion skips all of it.
+- Card (`components/LeafCard.tsx`): glass goal card with the title and a "N% full" chip, the perfect-day count, a progress bar, the streak with the flame (`assets/images/tree-flame.png`, Multiply blend), and "N days to go" (or "Tree is full").
+- Owns: `src/features/tree/`, `app/(tabs)/tree.tsx`, `assets/images/tree-bare.png`, `assets/images/tree-flame.png`. Reads the log through `getRange`, the optimistic overrides and `useTodayPrayers`.
+- Not run on a device: checked with types, lint, tests (logic), the Android bundle, and a still render of the leaf data over the bare tree.

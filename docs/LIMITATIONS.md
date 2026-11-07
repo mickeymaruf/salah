@@ -164,3 +164,20 @@ Differs from the Figma frames and the brief:
 - **Right-aligned items** (the question's time, the countdown) sit in a full-width box on top of the left content, because the layout has no spacer weights.
 - Widget support in `expo-widgets` for Android is marked as opt-in (`enableAndroid`) and is expected to change.
 
+
+## Tree
+
+Differs from the Figma frames and the brief:
+
+- **Artwork was exported as a picture, not SVG.** The tools in the build environment cannot download files, so the bare tree is a 1086 px PNG made from a Figma render of layer 22035:4089 (`assets/images/tree-bare.png`), not the SVG.
+- **Leaves are thinned and redrawn.** The 3,830 vectors were cut to 700 (every 5.47th in rank order, so ranks stay evenly spread; 696 are in `leafData.ts` because 4 rows were lost while copying the data, and 8 big
+  shading shapes over 150 px were left out). Each leaf is its outline cut to 8 points and filled with the average of its gradient, and the kept leaves are enlarged (2.8x small, 1.8x middling) to make up for the missing ones.
+  The crown reads as a full tree but is flatter and more angular than the Figma render (no per-leaf gradients), and the leaf shapes are not the originals. Rerun the export from Figma to change this.
+- **Leaves grow in groups.** A grow of more than 24 leaves animates in up to 24 groups (each group fades and springs in together, scaling about its own centre) instead of every leaf alone. A small grow, such as one prayer, is one leaf per animation as in the brief.
+- **A big fall is not all falling.** At most 60 leaves fall one by one; if more go (days of missed prayers), the rest fade out together at the start.
+- **Ground leaves are not saved.** The leaves lying on the grass live in memory, so after the app restarts they are gone until the next fall.
+- **Glass card.** No background blur (React Native has no backdrop blur without a new package, and there is almost nothing behind the card to blur), no inner shadows, and the 7% drop shadow is drawn on iOS only (Android elevation is too hard). The two glows and the halo behind the tree are radial fades, not blurred shapes. The gradient edge is a 1.25 px stroke.
+- **Colours not in the Colors variables.** The leaf greens belong to the artwork, and the warm glow is the confetti orange (`colors.glowWarm`, `#D9826B`); Figma only says "warm orange".
+- **Flame blend.** The flame uses `mixBlendMode: 'multiply'` to hide its white background. It was not seen on a device.
+- **Layout is not fixed at 390 x 844.** The tree is centred between the subtitle and the card and scaled down (never up past 0.205) on shorter or narrower screens, so it is not pixel-equal to Figma on a Poco F1.
+- **Day boundary.** A missed prayer today takes today's share of leaves away at once and resets the streak; Figma and the brief give both rules ("counts as prayed / 5 while open" and "a missed prayer makes the day not perfect"), and this is how they were combined.

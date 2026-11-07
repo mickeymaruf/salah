@@ -1,11 +1,11 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import type { MaterialTopTabBarProps } from 'expo-router/js-top-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChartColumn, Clock } from 'lucide-react-native';
+import { ChartColumn, Clock, TreePine } from 'lucide-react-native';
 import { colors, sizes } from '@/shared/theme';
 import { Text } from './Text';
 
-const ICONS = { today: Clock, progress: ChartColumn } as const;
+const ICONS = { today: Clock, progress: ChartColumn, tree: TreePine } as const;
 
 // Bottom bar for the swipeable tabs. It matches the Figma tab bar: icon over label, green when active.
 // The bottom inset is the system navigation bar (three buttons or the gesture line) on phones that have one, so the

@@ -30,6 +30,10 @@ export const colors = {
   choiceMissed: '#FAE6E0',
   // The timeline halo around the current prayer (brand/green at 20%).
   halo: 'rgba(31,77,63,0.2)',
+  // Tree screen (Figma P-I1): the glass card is bg/surface at 34% with an edge that runs from 95% to 18% white.
+  // The warm glow behind it is the confetti orange.
+  glass: { fill: 'rgba(255,255,255,0.34)', edgeStart: 'rgba(255,255,255,0.95)', edgeEnd: 'rgba(255,255,255,0.18)', shadow: '#000000' },
+  glowWarm: '#D9826B',
   // Confetti pieces when a prayer is marked as prayed (Figma 18007:14).
   confetti: ['#1F4D3F', '#6FA58B', '#C9A54A', '#D9826B', '#A9CDB8'],
   // The year chart on Progress (Figma 18035:59): brighter than brand/green and state/missed. Upcoming is heat/0 at 55% over white.
