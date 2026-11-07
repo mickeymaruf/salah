@@ -31,7 +31,7 @@ export function TreeCanvas({ scale, staticFullness, hidden, groups, drops, onLan
   );
   return (
     <View style={{ width: size, height: size }} pointerEvents="none">
-      <Image source={BARE_TREE} style={StyleSheet.absoluteFill} resizeMode="contain" />
+      <Image source={BARE_TREE} style={{ position: 'absolute', left: 0, top: 0, width: size, height: size }} resizeMode="stretch" />
       <LeafLayer leaves={still} size={size} />
       {groups.map((group) => (
         <LeafGroup key={group.key} group={group} scale={scale} size={size} />
