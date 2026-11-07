@@ -83,11 +83,9 @@ function SalahWidget(props: SalahWidgetProps, environment: WidgetEnvironment) {
   // An invisible button. A button cannot be told "half the row", so the row is covered by buttons of a fixed width that start at the left edge, at the right edge and
   // on each side of the centre. Together they cover each half. Tapping answers inside the widget at once (the next question moves up) and the app writes the log.
   const tap = (choice: 'missed' | 'prayed', tapWidth: number) => {
-    const targets = card.targets;
-    if (!targets) return <Spacer modifiers={[width(tapWidth)]} />;
     return (
       <Button
-        {...{ target: targets[choice] }}
+        {...{ target: card.targets[choice] }}
         onClick={() => ({ queue: props.queue.slice(1) })}
         modifiers={[width(tapWidth), height(44)]}
       >

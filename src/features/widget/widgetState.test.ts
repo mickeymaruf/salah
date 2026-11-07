@@ -47,7 +47,7 @@ describe('widget state', () => {
   it('keeps the next prayer ready behind the questions, with a countdown', () => {
     const { queue, next } = build(new Date(2026, 9, 26, 13, 0), {});
     expect(queue).toHaveLength(2);
-    expect(next).toMatchObject({ mode: 'next', prayer: 'asr', dayKey: '2026-10-26', lead: 'Next prayer', name: 'Asr', time: '3:42 PM', countdown: 'in 2h 42m', targets: null });
+    expect(next).toMatchObject({ mode: 'next', prayer: 'asr', dayKey: '2026-10-26', lead: 'Next prayer', name: 'Asr', time: '3:42 PM', countdown: 'in 2h 42m', targets: { missed: '', prayed: '' } });
   });
 
   it('has an empty queue when everything passed is marked', () => {
@@ -72,6 +72,17 @@ describe('widget state', () => {
     const { queue, next } = build(new Date(2026, 9, 26, 21, 0), all);
     expect(queue).toEqual([]);
     expect(next).toMatchObject({ mode: 'next', prayer: 'fajr', dayKey: '2026-10-27', name: 'Fajr', time: '4:48 AM', countdown: 'in 7h 48m' });
+  });
+});
+
+describe('widget props', () => {
+  const hasNull = (value: unknown): boolean =>
+    value === null || value === undefined || (typeof value === 'object' && Object.values(value).some(hasNull));
+
+  it('contains no null or undefined anywhere, because the widget bridge cannot convert them', () => {
+    for (const marked of [{}, { fajr: 'prayed', dhuhr: 'prayed' }, { fajr: 'prayed', dhuhr: 'prayed', asr: 'prayed', maghrib: 'prayed', isha: 'prayed' }] as const) {
+      expect(hasNull(build(new Date(2026, 9, 26, 14, 30), marked))).toBe(false);
+    }
   });
 });
 

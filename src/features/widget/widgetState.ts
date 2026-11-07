@@ -17,8 +17,8 @@ export interface WidgetCard {
   time: string;
   // "in 1h 12m" in the next state, empty in the question state.
   countdown: string;
-  // The ids of the Missed and Prayed buttons (see `answerTarget`). Null in the next state, which has no buttons.
-  targets: { missed: string; prayed: string } | null;
+  // The ids of the Missed and Prayed buttons (see `answerTarget`). Empty strings in the next state, which has no buttons. Never null: the widget bridge cannot convert a null.
+  targets: { missed: string; prayed: string };
 }
 
 export interface WidgetState {
@@ -72,7 +72,7 @@ export function buildWidgetState({ at, today, tomorrow, outcomes }: WidgetInput)
       name: PRAYER_LABELS[next],
       time: formatTime(time),
       countdown: formatCountdown(time.getTime() - at.getTime()),
-      targets: null,
+      targets: { missed: '', prayed: '' },
     },
   };
 }
