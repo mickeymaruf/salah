@@ -14,11 +14,11 @@ import { useCountTo } from './useCountTo';
 import { useTreeAnimation } from './useTreeAnimation';
 import { useTreeProgress } from './useTreeProgress';
 
-// Figma draws the 1810 px asset at 0.205 (371 px) on a 390 px screen. Smaller or shorter screens scale it down.
-const FIGMA_SCALE = 0.205;
+// Figma draws the 1810 px asset at 371 px on a 390 px screen, so the tree is 95% of the screen width. That ratio is kept on
+// every screen; only a short screen makes it smaller, so the tree still fits above the card.
+const FIGMA_WIDTH_RATIO = 371 / 390;
 const ART_HEIGHT = ART_BOTTOM - ART_TOP;
 const ART_CENTER = (ART_TOP + ART_BOTTOM) / 2;
-const SIDE_MARGIN = 19;
 const TOP_GAP = 8;
 
 export function TreeScreen() {
@@ -44,8 +44,8 @@ function Tree({ profile }: { profile: Profile }) {
   };
 
   const scale = area
-    ? Math.min(FIGMA_SCALE, (area.width - SIDE_MARGIN) / ASSET_SIZE, (area.height - TOP_GAP) / ART_HEIGHT)
-    : FIGMA_SCALE;
+    ? Math.min((area.width * FIGMA_WIDTH_RATIO) / ASSET_SIZE, (area.height - TOP_GAP) / ART_HEIGHT)
+    : 0;
   const centre = area ? { x: area.width / 2, y: area.height / 2 } : { x: 0, y: 0 };
   const label = `Your tree is ${Math.round(fullness * 100)}% full`;
 
