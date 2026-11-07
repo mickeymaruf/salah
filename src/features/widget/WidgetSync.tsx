@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { addDays, now, parseDateKey, toDateKey } from '@/shared/lib/date';
 import { useNow } from '@/shared/lib/useNow';
 import { useProfileStore } from '@/shared/state/profileStore';
@@ -8,7 +8,7 @@ import { useSaveChoice } from '@/features/prayer-times/data/useSaveChoice';
 import { useTimesStore } from '@/features/prayer-times/data/useTimesSync';
 import { darkPalette, lightPalette } from './palette';
 import { loadWidgetBridge, type WidgetBridge } from './widgetBridge';
-import { buildWidgetState, nextRefreshAt, type WidgetState } from './widgetState';
+import { buildWidgetState, nextRefreshAt } from './widgetState';
 
 // Keeps the home screen widget in step with the log. It draws nothing. It redraws the widget on every change to today's log, when the day or the prayer times
 // change, at every prayer time and at least once a minute (the countdown). A tap on Missed or Prayed is written to the log here, the same way the Today screen writes it.
@@ -21,7 +21,6 @@ export function WidgetSync() {
   const entries = useDayLog(todayKey);
   const timesRevision = useTimesStore((state) => state.revision);
   const saveChoice = useSaveChoice();
-  const latest = useRef<WidgetState | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,7 +46,6 @@ export function WidgetSync() {
   }, [profile, todayKey, entries, at, tick, timesRevision]);
 
   useEffect(() => {
-    latest.current = view?.state ?? null;
     if (!bridge || !view) return;
     bridge.update({ ...view.state, ...bridge.images, light: lightPalette, dark: darkPalette });
   }, [bridge, view]);
@@ -62,10 +60,7 @@ export function WidgetSync() {
 
   useEffect(() => {
     if (!bridge) return;
-    return bridge.onAnswer((choice) => {
-      const card = latest.current?.card;
-      if (card?.mode === 'question') saveChoice(card.dayKey, card.prayer, choice);
-    });
+    return bridge.onAnswer((answer) => saveChoice(answer.dayKey, answer.prayer, answer.choice));
   }, [bridge, saveChoice]);
 
   return null;

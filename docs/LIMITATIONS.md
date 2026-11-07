@@ -144,17 +144,21 @@ real drawing still needs the widget's JavaScript engine to start, which the app 
 
 Differs from the Figma frames and the brief:
 
-- **Taps are written only while the app is running.** A tap on Missed or Prayed reaches the app as an event, and `WidgetSync` writes it to the log. If Android has stopped the app's JavaScript, the tap is not
-  written and the widget does not change. `expo-widgets` has no way to run the write without the app. Doing it properly needs a small native receiver that writes to the SQLite log directly.
-- **No transition.** Android widgets cannot animate content. The front card does not slide or fade, the cards behind do not move or scale, and no new card fades in. The widget just redraws with the new
+- **A tap changes the widget at once, but the log is written only while the app's JavaScript is running.** The tap runs inside the widget (the next question moves up with no wait) and is then sent to
+  the app as an event, where `WidgetSync` writes it to the log. If Android has stopped the app's JavaScript, the widget still moves on but nothing is saved, and the next time the app opens the widget
+  shows the real log again, so the question comes back. `expo-widgets` cannot read the widget's props from the app or write the log without it. Doing it properly needs a small native receiver that
+  writes to the SQLite log directly.
+- **No transition.** Android widgets cannot animate content: a widget is a set of remote views that the launcher redraws, `expo-widgets` exposes no animation, and redrawing frame by frame would be slow and flicker. The front card does not slide back, the cards behind do not come up, and no new card fades in. The widget just redraws with the new
   front card. iOS has a content transition, but the iOS widget is not set up.
 - **Shadows, borders and rounded corners are pictures.** Widget corner radius only works on Android 12 and newer, and there is no border or shadow. So the card stack (with its shadows), the Missed
   border and the pill buttons are PNG pieces (`scripts/prepare-widget-shapes.js`): a left end, a one pixel middle that is stretched, and a right end. Corners stay round at any width. The pieces are drawn
   for the light and the dark scheme at fixed colours, so a colour change in the theme needs the script run again.
 - **System font.** The widget cannot load Plus Jakarta Sans (text takes only a weight and a size). It uses the system font at weights 500 and 600.
-- **Width follows the launcher.** The widget is 4 cells wide (at least 250 dp), not exactly 342 pt. The cards and the time bar fill the width. The layout has no weights, so Missed is a fixed 148 dp and Prayed takes the rest of the row. At 342 dp that is
-  the Figma split (148 and 146); on a wider widget Prayed is wider than Missed.
-- **Header text sizes.** The new Figma file (9Y8zdXos1XOnfJrDXEvRXZ) has 14 and 13, and the widget follows it.
-- **Right-aligned items** (the counter, the question's time, the countdown) sit in a full-width box on top of the left content, because the layout has no spacer weights.
+- **Width follows the launcher.** The widget is 4 cells wide (at least 250 dp), not exactly 342 pt. The cards and the time bar fill the width. Missed and Prayed are one picture row that is stretched, so they are always the same width. The layout has no weights, so each icon and label sits at a fixed distance from the
+  outer edge (the Figma position at 342 dp) and is up to about 14 dp off centre between 306 and 408 dp of card width. A button cannot be told "half the row" either, so each half is covered by invisible
+  tap areas (two 100 dp areas at the edges and two in the middle). Above about 410 dp of card width a thin strip in the middle of each button does not react to a tap.
+- **Tap highlight.** Android flashes a rectangle over a tapped button and the widget cannot turn it off. The pieces at the button ends are drawn in the card colour outside the pill, so the flash stays inside the rounded shape.
+- **No header.** The "Today" and "N of 5" labels were removed at the user's request.
+- **Right-aligned items** (the question's time, the countdown) sit in a full-width box on top of the left content, because the layout has no spacer weights.
 - Widget support in `expo-widgets` for Android is marked as opt-in (`enableAndroid`) and is expected to change.
 

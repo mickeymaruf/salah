@@ -17,12 +17,16 @@ export interface WidgetCard {
   time: string;
   // "in 1h 12m" in the next state, empty in the question state.
   countdown: string;
+  // The ids of the Missed and Prayed buttons (see `answerTarget`). Null in the next state, which has no buttons.
+  targets: { missed: string; prayed: string } | null;
 }
 
 export interface WidgetState {
-  // "2 of 5": the prayers marked today, prayed or missed.
-  counter: string;
-  card: WidgetCard;
+  // Every question still waiting, oldest first. The widget shows the first one, and a tap on Missed or Prayed drops it inside the widget at once, so the next one is
+  // already there and the answer never waits for the app.
+  queue: WidgetCard[];
+  // What the front card shows when the queue is empty: the next prayer, or tomorrow's Fajr.
+  next: WidgetCard;
 }
 
 interface WidgetInput {
@@ -38,34 +42,29 @@ export function widgetQueue(today: DayTimes, outcomes: ReadonlyMap<PrayerName, O
   return PRAYER_NAMES.filter((name) => !outcomes.has(name) && today[name].getTime() <= at.getTime());
 }
 
-// The front card: the oldest unanswered prayer, else the next upcoming one, else tomorrow's Fajr.
+// The queue of questions plus the card to show once it is empty.
 export function buildWidgetState({ at, today, tomorrow, outcomes }: WidgetInput): WidgetState {
-  const counter = `${PRAYER_NAMES.filter((name) => outcomes.has(name)).length} of 5`;
   const todayKey = toDateKey(at);
-
-  const [asked] = widgetQueue(today, outcomes, at);
-  if (asked) {
-    return {
-      counter,
-      card: {
-        mode: 'question',
-        prayer: asked,
-        dayKey: todayKey,
-        lead: 'Did you pray',
-        name: `${PRAYER_LABELS[asked]}?`,
-        time: formatTime(today[asked]),
-        countdown: '',
-      },
-    };
-  }
+  const queue = widgetQueue(today, outcomes, at).map(
+    (prayer): WidgetCard => ({
+      mode: 'question',
+      prayer,
+      dayKey: todayKey,
+      lead: 'Did you pray',
+      name: `${PRAYER_LABELS[prayer]}?`,
+      time: formatTime(today[prayer]),
+      countdown: '',
+      targets: { missed: answerTarget('missed', todayKey, prayer), prayed: answerTarget('prayed', todayKey, prayer) },
+    }),
+  );
 
   const upcoming = PRAYER_NAMES.find((name) => !outcomes.has(name) && today[name].getTime() > at.getTime());
   const next = upcoming ?? 'fajr';
   const time = upcoming ? today[upcoming] : tomorrow.fajr;
   const nextDay = new Date(at.getFullYear(), at.getMonth(), at.getDate() + 1);
   return {
-    counter,
-    card: {
+    queue,
+    next: {
       mode: 'next',
       prayer: next,
       dayKey: upcoming ? todayKey : toDateKey(nextDay),
@@ -73,14 +72,33 @@ export function buildWidgetState({ at, today, tomorrow, outcomes }: WidgetInput)
       name: PRAYER_LABELS[next],
       time: formatTime(time),
       countdown: formatCountdown(time.getTime() - at.getTime()),
+      targets: null,
     },
   };
+}
+
+// The id a tap on Missed or Prayed carries, so the app logs exactly the prayer the widget showed even if two taps come close together.
+export function answerTarget(choice: 'missed' | 'prayed', dayKey: string, prayer: PrayerName): string {
+  return `${choice}:${dayKey}:${prayer}`;
+}
+
+export interface WidgetAnswer {
+  choice: 'missed' | 'prayed';
+  dayKey: string;
+  prayer: PrayerName;
+}
+
+export function parseAnswerTarget(target: string): WidgetAnswer | null {
+  const [choice, dayKey, prayer] = target.split(':');
+  if (choice !== 'missed' && choice !== 'prayed') return null;
+  if (!dayKey || !PRAYER_NAMES.some((name) => name === prayer)) return null;
+  return { choice, dayKey, prayer: prayer as PrayerName };
 }
 
 // When the widget must be drawn again without any log change: the next prayer time, or the next minute while a countdown is on show.
 export function nextRefreshAt(state: WidgetState, today: DayTimes, tomorrow: DayTimes, at: Date): Date {
   const minute = new Date(at.getTime() + 60_000 - (at.getTime() % 60_000));
   const upcoming = [...PRAYER_NAMES.map((name) => today[name]), tomorrow.fajr].find((time) => time.getTime() > at.getTime());
-  if (state.card.mode === 'next') return upcoming && upcoming.getTime() < minute.getTime() ? upcoming : minute;
+  if (state.queue.length === 0) return upcoming && upcoming.getTime() < minute.getTime() ? upcoming : minute;
   return upcoming ?? minute;
 }

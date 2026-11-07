@@ -40,12 +40,27 @@ function stackSvg(theme) {
   </svg>`;
 }
 
-function pillSvg(fill, stroke) {
+function pillSvg(fill) {
   const { width, height, radius } = PILL;
-  const border = stroke ? 1.5 : 0;
-  const inset = border / 2;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-    <rect x="${inset}" y="${inset}" width="${width - border}" height="${height - border}" rx="${radius - inset}" fill="${fill}" ${stroke ? `stroke="${stroke}" stroke-width="${border}"` : ''}/>
+    <rect x="0" y="0" width="${width}" height="${height}" rx="${radius}" fill="${fill}"/>
+  </svg>`;
+}
+
+// The Missed and Prayed buttons share one row so they are always the same width. Figma 18077:24 and 18077:27: Missed is the surface colour with a 1.5 px line, Prayed is
+// solid. Corners outside the pill are drawn in the surface colour (the front card is flat), which hides the square tap highlight Android draws over a button.
+const LINE = 1.5;
+function missedRect(x, width, theme) {
+  const t = THEMES[theme];
+  const inset = LINE / 2;
+  return `<rect x="${x + inset}" y="${inset}" width="${width - inset}" height="${PILL.height - LINE}" rx="${PILL.radius - inset}" fill="${t.surface}" stroke="${t.line}" stroke-width="${LINE}"/>`;
+}
+function prayedRect(x, width, theme) {
+  return `<rect x="${x}" y="0" width="${width}" height="${PILL.height}" rx="${PILL.radius}" fill="${THEMES[theme].prayedFill}"/>`;
+}
+function answersSvg(theme, width, body) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${PILL.height}" viewBox="0 0 ${width} ${PILL.height}">
+    <rect width="${width}" height="${PILL.height}" fill="${THEMES[theme].surface}"/>${body}
   </svg>`;
 }
 
@@ -64,6 +79,11 @@ async function cut(svg, width, height, cap, name, theme) {
   }
 }
 
+async function draw(svg, width, name, theme) {
+  const file = path.join(outDir, `widget-shape-${name}-${theme}.png`);
+  await sharp(Buffer.from(svg), { density: 72 * SCALE }).resize(width * SCALE, PILL.height * SCALE).png({ compressionLevel: 9 }).toFile(file);
+}
+
 async function round(source, name) {
   const size = 24 * SCALE;
   const mask = Buffer.from(`<svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size * 0.47}" fill="#fff"/></svg>`);
@@ -74,9 +94,20 @@ async function main() {
   for (const theme of Object.keys(THEMES)) {
     const t = THEMES[theme];
     await cut(stackSvg(theme), STACK.width, STACK.height, 48, 'stack', theme);
-    await cut(pillSvg(t.surface, t.line), PILL.width, PILL.height, PILL.radius, 'missed', theme);
-    await cut(pillSvg(t.prayedFill), PILL.width, PILL.height, PILL.radius, 'prayed', theme);
     await cut(pillSvg(t.base), PILL.width, PILL.height, PILL.radius, 'bar', theme);
+    // Left end of Missed, right end of Prayed, a stretched middle that is Missed on the left half and Prayed on the right half, and the 134 dp centre where the two meet.
+    const cap = PILL.radius;
+    await draw(answersSvg(theme, cap, missedRect(0, 200, theme)), cap, 'answers-left', theme);
+    await draw(answersSvg(theme, cap, prayedRect(-200, 200 + cap, theme)), cap, 'answers-right', theme);
+    const half = 20;
+    const strip = `<rect x="0" y="0" width="${half}" height="${PILL.height}" fill="${t.surface}"/>
+      <rect x="0" y="0" width="${half}" height="${LINE}" fill="${t.line}"/><rect x="0" y="${PILL.height - LINE}" width="${half}" height="${LINE}" fill="${t.line}"/>
+      <rect x="${half}" y="0" width="${half}" height="${PILL.height}" fill="${t.prayedFill}"/>`;
+    await draw(answersSvg(theme, half * 2, strip), half * 2, 'answers-mid', theme);
+    const centre = 134;
+    const gap = 10;
+    const missedEnd = (centre - gap) / 2;
+    await draw(answersSvg(theme, centre, missedRect(-200, 200 + missedEnd, theme) + prayedRect(missedEnd + gap, 200, theme)), centre, 'answers-center', theme);
   }
   await round(path.join(outDir, 'button-prayed@3x.png'), 'tick');
   await round(path.join(outDir, 'button-missed@3x.png'), 'cross');

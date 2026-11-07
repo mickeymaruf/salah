@@ -1,6 +1,6 @@
 import type { DayTimes, PrayerName } from '@/features/prayer-times/calculate';
 import type { Outcome } from '@/features/prayer-times/data/prayerLog';
-import { buildWidgetState, nextRefreshAt, widgetQueue } from './widgetState';
+import { answerTarget, buildWidgetState, nextRefreshAt, parseAnswerTarget, widgetQueue } from './widgetState';
 
 function times(day: number): DayTimes {
   const at = (hour: number, minute: number) => new Date(2026, 9, day, hour, minute);
@@ -32,39 +32,64 @@ describe('widget queue', () => {
 });
 
 describe('widget state', () => {
-  it('asks about the oldest unmarked prayer', () => {
-    const { card, counter } = build(new Date(2026, 9, 26, 13, 0), {});
-    expect(card).toMatchObject({ mode: 'question', prayer: 'fajr', dayKey: '2026-10-26', lead: 'Did you pray', name: 'Fajr?', time: '4:48 AM', countdown: '' });
-    expect(counter).toBe('0 of 5');
+  it('queues every unmarked passed prayer, oldest first', () => {
+    const { queue } = build(new Date(2026, 9, 26, 13, 0), {});
+    expect(queue.map((card) => card.prayer)).toEqual(['fajr', 'dhuhr']);
+    expect(queue[0]).toMatchObject({ mode: 'question', prayer: 'fajr', dayKey: '2026-10-26', lead: 'Did you pray', name: 'Fajr?', time: '4:48 AM', countdown: '' });
   });
 
-  it('moves to the next unanswered prayer after an answer and updates the counter', () => {
-    const { card, counter } = build(new Date(2026, 9, 26, 13, 0), { fajr: 'missed' });
-    expect(card).toMatchObject({ mode: 'question', prayer: 'dhuhr', name: 'Dhuhr?', time: '12:02 PM' });
-    expect(counter).toBe('1 of 5');
+  it('drops a marked prayer from the queue', () => {
+    const { queue } = build(new Date(2026, 9, 26, 13, 0), { fajr: 'missed' });
+    expect(queue).toHaveLength(1);
+    expect(queue[0]).toMatchObject({ prayer: 'dhuhr', name: 'Dhuhr?', time: '12:02 PM' });
   });
 
-  it('shows the next prayer with a countdown when everything passed is marked', () => {
-    const { card, counter } = build(new Date(2026, 9, 26, 14, 30), { fajr: 'prayed', dhuhr: 'prayed' });
-    expect(card).toMatchObject({ mode: 'next', prayer: 'asr', dayKey: '2026-10-26', lead: 'Next prayer', name: 'Asr', time: '3:42 PM', countdown: 'in 1h 12m' });
-    expect(counter).toBe('2 of 5');
+  it('keeps the next prayer ready behind the questions, with a countdown', () => {
+    const { queue, next } = build(new Date(2026, 9, 26, 13, 0), {});
+    expect(queue).toHaveLength(2);
+    expect(next).toMatchObject({ mode: 'next', prayer: 'asr', dayKey: '2026-10-26', lead: 'Next prayer', name: 'Asr', time: '3:42 PM', countdown: 'in 2h 42m', targets: null });
+  });
+
+  it('has an empty queue when everything passed is marked', () => {
+    const { queue, next } = build(new Date(2026, 9, 26, 14, 30), { fajr: 'prayed', dhuhr: 'prayed' });
+    expect(queue).toEqual([]);
+    expect(next).toMatchObject({ mode: 'next', prayer: 'asr', time: '3:42 PM', countdown: 'in 1h 12m' });
   });
 
   it('shows Fajr before dawn on a fresh day', () => {
-    const { card } = build(new Date(2026, 9, 26, 3, 0), {});
-    expect(card).toMatchObject({ mode: 'next', prayer: 'fajr', time: '4:48 AM', countdown: 'in 1h 48m' });
+    const { queue, next } = build(new Date(2026, 9, 26, 3, 0), {});
+    expect(queue).toEqual([]);
+    expect(next).toMatchObject({ mode: 'next', prayer: 'fajr', time: '4:48 AM', countdown: 'in 1h 48m' });
   });
 
   it('skips an upcoming prayer the user marked early', () => {
-    const { card } = build(new Date(2026, 9, 26, 14, 30), { fajr: 'prayed', dhuhr: 'prayed', asr: 'prayed' });
-    expect(card).toMatchObject({ mode: 'next', prayer: 'maghrib' });
+    const { next } = build(new Date(2026, 9, 26, 14, 30), { fajr: 'prayed', dhuhr: 'prayed', asr: 'prayed' });
+    expect(next).toMatchObject({ mode: 'next', prayer: 'maghrib' });
   });
 
   it("shows tomorrow's Fajr when all five are marked", () => {
     const all = { fajr: 'prayed', dhuhr: 'prayed', asr: 'missed', maghrib: 'prayed', isha: 'prayed' } as const;
-    const { card, counter } = build(new Date(2026, 9, 26, 21, 0), all);
-    expect(card).toMatchObject({ mode: 'next', prayer: 'fajr', dayKey: '2026-10-27', name: 'Fajr', time: '4:48 AM', countdown: 'in 7h 48m' });
-    expect(counter).toBe('5 of 5');
+    const { queue, next } = build(new Date(2026, 9, 26, 21, 0), all);
+    expect(queue).toEqual([]);
+    expect(next).toMatchObject({ mode: 'next', prayer: 'fajr', dayKey: '2026-10-27', name: 'Fajr', time: '4:48 AM', countdown: 'in 7h 48m' });
+  });
+});
+
+describe('widget answer target', () => {
+  it('carries the choice, the day and the prayer', () => {
+    const { queue } = build(new Date(2026, 9, 26, 13, 0), {});
+    expect(answerTarget('missed', '2026-10-26', 'fajr')).toBe('missed:2026-10-26:fajr');
+    expect(queue[0].targets).toEqual({ missed: 'missed:2026-10-26:fajr', prayed: 'prayed:2026-10-26:fajr' });
+  });
+
+  it('reads a target back', () => {
+    expect(parseAnswerTarget('prayed:2026-10-26:asr')).toEqual({ choice: 'prayed', dayKey: '2026-10-26', prayer: 'asr' });
+  });
+
+  it('refuses a target it does not know', () => {
+    expect(parseAnswerTarget('maybe:2026-10-26:asr')).toBeNull();
+    expect(parseAnswerTarget('missed:2026-10-26:duha')).toBeNull();
+    expect(parseAnswerTarget('missed')).toBeNull();
   });
 });
 

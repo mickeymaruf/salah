@@ -245,14 +245,14 @@ Shipped features, what they do, who owns the code, how to extend them.
 
 ## Home screen widget (Android, development or standalone build only)
 
-- What: one widget, "Salah" (Figma file 9Y8zdXos1XOnfJrDXEvRXZ, frame 6020:272). A header ("Today", "N of 5"), then a stack of three white cards. The front card asks "Did you pray <Prayer>?" about the
+- What: one widget, "Salah" (Figma file 9Y8zdXos1XOnfJrDXEvRXZ, frame 6020:272). No header: just a stack of three white cards. The front card asks "Did you pray <Prayer>?" about the
   oldest prayer whose time has passed and that is not marked, with Missed and Prayed buttons and the prayer time. When nothing is waiting it shows "Next prayer <Prayer>" with a time bar
-  (the time and "in 1h 12m"). After Isha is marked it shows tomorrow's Fajr. The two cards behind it peek 14 and 28 px and are 85% and 60% white, all with the Figma shadows.
-- Owns: `src/features/widget/`: `widgetState.ts` (the queue, the front card, the counter, the countdown text and the next refresh time: plain functions, tested), `palette.ts` (light and dark
+  (the time and "in 1h 12m"). After Isha is marked it shows tomorrow's Fajr. A tap on Missed or Prayed runs inside the widget (the `onClick` handler drops the first question from the `queue` prop), so the next card shows at once; the app then writes the log. The two cards behind it peek 14 and 28 px and are 85% and 60% white, all with the Figma shadows.
+- Owns: `src/features/widget/`: `widgetState.ts` (the queue of questions, the next-prayer card, the countdown text, the tap ids and the next refresh time: plain functions, tested), `palette.ts` (light and dark
   colours from the theme, passed to the widget as props), `salahWidget.tsx` (the layout, written with Expo UI components and run by the widget in its own runtime), `widgetBridge.ts` (loads
   the widget only when its native module exists, copies the pictures to the widgets directory), `WidgetSync.tsx` (mounted in `app/_layout.tsx`: redraws the widget on every log change, at every
   prayer time and every minute, and writes a tapped answer to the log with `useSaveChoice`, the same call as Today). `app.json` registers it with the `expo-widgets` plugin (`enableAndroid`).
-- Shapes: the card stack, the pill buttons and the time bar are PNG pieces, `assets/images/widget-shape-<shape>-<left|mid|right>-<light|dark>.png`, made by `node scripts/prepare-widget-shapes.js`
+- Shapes: the card stack, the Missed and Prayed row (one shape, so both buttons are always the same width) and the time bar are PNG pieces, `assets/images/widget-shape-<shape>-<left|mid|right>-<light|dark>.png`, made by `node scripts/prepare-widget-shapes.js`
   (the widget cannot round, outline or shadow a view on Android 11 and older). `plugins/withWidgetPlaceholder.js` draws a still copy of the widget as the placeholder while Android loads it.
 - Pictures: `assets/images/widget-<prayer>.png`, round 3D prayer icons (`node scripts/prepare-widget-icons.js fajr=Fajr.png ...`, from the Figma Asset images 18039:13 to 18039:17, zoomed 1.3x),
   and `widget-tick.png` and `widget-cross.png` (round cuts of `button-prayed` and `button-missed`).

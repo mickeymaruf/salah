@@ -1,6 +1,6 @@
-// Replaces the "Loading widget" text that Android shows between adding the widget and its first real drawing. The placeholder is a still copy of the widget (header,
-// card and two buttons) made of plain shapes, so it appears at once and the first real drawing replaces it without a jump. The colours repeat the theme tokens
-// bg.surface, ink.primary, line.soft, camera.photoBackground and brand.onDark, because a config plugin cannot import the app's TypeScript theme.
+// Replaces the "Loading widget" text that Android shows between adding the widget and its first real drawing. The placeholder is a still copy of the widget (the card
+// and two buttons) made of plain shapes, so it appears at once and the first real drawing replaces it without a jump. The colours repeat the theme tokens
+// bg.surface, ink.primary (the Prayed fill), line.soft, camera.photoBackground and brand.onDark, because a config plugin cannot import the app's TypeScript theme.
 const fs = require('fs');
 const path = require('path');
 const { withDangerousMod } = require('@expo/config-plugins');
@@ -13,22 +13,11 @@ const LAYOUT = `<?xml version="1.0" encoding="utf-8"?>
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
     android:orientation="vertical">
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="18dp"
-      android:layout_marginStart="6dp"
-      android:text="Today"
-      android:textColor="@color/salah_widget_ink"
-      android:textSize="14sp"
-      android:textStyle="bold" />
 
     <FrameLayout
       android:layout_width="match_parent"
-      android:layout_height="152dp"
-      android:layout_marginTop="16dp">
+      android:layout_height="152dp">
 
       <FrameLayout
         android:layout_width="match_parent"
@@ -116,7 +105,6 @@ const LIGHT = {
   salah_widget_surface_85: '#D9FFFFFF',
   salah_widget_surface_60: '#99FFFFFF',
   salah_widget_line: '#E8E4DB',
-  salah_widget_ink: '#1C1B19',
   salah_widget_ink_fill: '#1C1B19',
 };
 
@@ -125,7 +113,6 @@ const DARK = {
   salah_widget_surface_85: '#D91A211C',
   salah_widget_surface_60: '#991A211C',
   salah_widget_line: '#29332E',
-  salah_widget_ink: '#F3F1EA',
   salah_widget_ink_fill: '#F3F1EA',
 };
 
