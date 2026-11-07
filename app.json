@@ -84,7 +84,8 @@
             }
           ]
         }
-      ]
+      ],
+      "./plugins/withWidgetPlaceholder"
     ],
     "description": "A calm prayer tracker: five daily prayer times, an alarm that stops with proof of prayer, and a year at a glance."
   }

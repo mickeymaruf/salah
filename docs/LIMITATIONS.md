@@ -139,17 +139,22 @@
 
 Built with `expo-widgets` (Android Glance, Expo UI components). Needs a development or standalone build; in Expo Go and on iOS the app runs as before and the widget is absent. Not run on a device.
 
+While the widget loads for the first time Android shows `expo_widgets_initial_layout`. `plugins/withWidgetPlaceholder.js` replaces the stock "Loading widget" text with a still copy of the widget. The first
+real drawing still needs the widget's JavaScript engine to start, which the app cannot speed up.
+
 Differs from the Figma frames and the brief:
 
 - **Taps are written only while the app is running.** A tap on Missed or Prayed reaches the app as an event, and `WidgetSync` writes it to the log. If Android has stopped the app's JavaScript, the tap is not
   written and the widget does not change. `expo-widgets` has no way to run the write without the app. Doing it properly needs a small native receiver that writes to the SQLite log directly.
 - **No transition.** Android widgets cannot animate content. The front card does not slide or fade, the cards behind do not move or scale, and no new card fades in. The widget just redraws with the new
   front card. iOS has a content transition, but the iOS widget is not set up.
-- **No shadows.** The widget layout supports only size, padding, background colour and corner radius. The front card and the two cards behind have no shadow.
+- **Shadows, borders and rounded corners are pictures.** Widget corner radius only works on Android 12 and newer, and there is no border or shadow. So the card stack (with its shadows), the Missed
+  border and the pill buttons are PNG pieces (`scripts/prepare-widget-shapes.js`): a left end, a one pixel middle that is stretched, and a right end. Corners stay round at any width. The pieces are drawn
+  for the light and the dark scheme at fixed colours, so a colour change in the theme needs the script run again.
 - **System font.** The widget cannot load Plus Jakarta Sans (text takes only a weight and a size). It uses the system font at weights 500 and 600.
-- **Width follows the launcher.** The widget is 4 cells wide (at least 250 dp), not exactly 342 pt. The cards and the time bar fill the width. Missed and Prayed are fixed at 148 dp each because the layout has no
-  weights, so on a widget narrower than 342 dp they can be clipped.
-- **Header text sizes.** The brief says 15 and 15; the first Figma frame has 14 and 13. The brief was followed.
+- **Width follows the launcher.** The widget is 4 cells wide (at least 250 dp), not exactly 342 pt. The cards and the time bar fill the width. The layout has no weights, so Missed is a fixed 148 dp and Prayed takes the rest of the row. At 342 dp that is
+  the Figma split (148 and 146); on a wider widget Prayed is wider than Missed.
+- **Header text sizes.** The new Figma file (9Y8zdXos1XOnfJrDXEvRXZ) has 14 and 13, and the widget follows it.
 - **Right-aligned items** (the counter, the question's time, the countdown) sit in a full-width box on top of the left content, because the layout has no spacer weights.
 - Widget support in `expo-widgets` for Android is marked as opt-in (`enableAndroid`) and is expected to change.
 

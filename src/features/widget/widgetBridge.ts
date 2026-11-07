@@ -3,7 +3,7 @@ import { requireOptionalNativeModule } from 'expo';
 import { Asset } from 'expo-asset';
 import { Directory, File } from 'expo-file-system';
 import type { PrayerName } from '@/features/prayer-times/calculate';
-import type { SalahWidgetProps } from './salahWidget';
+import type { SalahWidgetProps, ShapeParts, ShapeSet } from './salahWidget';
 
 // Everything the widget needs from the native side, behind one object so the rest of the app never imports the widget packages.
 export interface WidgetBridge {
@@ -13,11 +13,7 @@ export interface WidgetBridge {
   images: WidgetImages;
 }
 
-export interface WidgetImages {
-  icons: Record<PrayerName, string>;
-  tick: string;
-  cross: string;
-}
+export type WidgetImages = Pick<SalahWidgetProps, 'icons' | 'tick' | 'cross' | 'shapes'>;
 
 const PICTURES = {
   fajr: require('../../../assets/images/widget-fajr.png'),
@@ -25,25 +21,101 @@ const PICTURES = {
   asr: require('../../../assets/images/widget-asr.png'),
   maghrib: require('../../../assets/images/widget-maghrib.png'),
   isha: require('../../../assets/images/widget-isha.png'),
-  tick: require('../../../assets/images/button-prayed.png'),
-  cross: require('../../../assets/images/button-missed.png'),
+  tick: require('../../../assets/images/widget-tick.png'),
+  cross: require('../../../assets/images/widget-cross.png'),
 } as const;
 
-// The widget draws in another process, so it can only read files from the widgets directory. The bundled pictures are copied there once per launch.
+// Made by `scripts/prepare-widget-shapes.js`.
+const SHAPES = {
+  light: {
+    stack: {
+      left: require('../../../assets/images/widget-shape-stack-left-light.png'),
+      mid: require('../../../assets/images/widget-shape-stack-mid-light.png'),
+      right: require('../../../assets/images/widget-shape-stack-right-light.png'),
+    },
+    missed: {
+      left: require('../../../assets/images/widget-shape-missed-left-light.png'),
+      mid: require('../../../assets/images/widget-shape-missed-mid-light.png'),
+      right: require('../../../assets/images/widget-shape-missed-right-light.png'),
+    },
+    prayed: {
+      left: require('../../../assets/images/widget-shape-prayed-left-light.png'),
+      mid: require('../../../assets/images/widget-shape-prayed-mid-light.png'),
+      right: require('../../../assets/images/widget-shape-prayed-right-light.png'),
+    },
+    bar: {
+      left: require('../../../assets/images/widget-shape-bar-left-light.png'),
+      mid: require('../../../assets/images/widget-shape-bar-mid-light.png'),
+      right: require('../../../assets/images/widget-shape-bar-right-light.png'),
+    },
+  },
+  dark: {
+    stack: {
+      left: require('../../../assets/images/widget-shape-stack-left-dark.png'),
+      mid: require('../../../assets/images/widget-shape-stack-mid-dark.png'),
+      right: require('../../../assets/images/widget-shape-stack-right-dark.png'),
+    },
+    missed: {
+      left: require('../../../assets/images/widget-shape-missed-left-dark.png'),
+      mid: require('../../../assets/images/widget-shape-missed-mid-dark.png'),
+      right: require('../../../assets/images/widget-shape-missed-right-dark.png'),
+    },
+    prayed: {
+      left: require('../../../assets/images/widget-shape-prayed-left-dark.png'),
+      mid: require('../../../assets/images/widget-shape-prayed-mid-dark.png'),
+      right: require('../../../assets/images/widget-shape-prayed-right-dark.png'),
+    },
+    bar: {
+      left: require('../../../assets/images/widget-shape-bar-left-dark.png'),
+      mid: require('../../../assets/images/widget-shape-bar-mid-dark.png'),
+      right: require('../../../assets/images/widget-shape-bar-right-dark.png'),
+    },
+  },
+} as const;
+
+type Source = number;
+
+// The widget draws in another process, so it can only read files from the widgets directory. A bundled picture is copied there only when it is missing or its size
+// changed, so a launch never deletes a file the widget is drawing with.
+async function copyPicture(folder: Directory, name: string, source: Source): Promise<string> {
+  const asset = Asset.fromModule(source);
+  await asset.downloadAsync();
+  if (!asset.localUri) throw new Error(`Widget picture ${name} has no local file`);
+  const original = new File(asset.localUri);
+  const target = new File(folder, `${name}.png`);
+  if (!target.exists || target.size !== original.size) {
+    if (target.exists) target.delete();
+    original.copy(target);
+  }
+  return target.uri;
+}
+
 async function copyImages(directory: string): Promise<WidgetImages> {
   const folder = new Directory(directory);
-  const uris: Record<string, string> = {};
-  for (const [name, source] of Object.entries(PICTURES)) {
-    const asset = Asset.fromModule(source);
-    await asset.downloadAsync();
-    if (!asset.localUri) throw new Error(`Widget picture ${name} has no local file`);
-    const target = new File(folder, `widget-${name}.png`);
-    if (target.exists) target.delete();
-    new File(asset.localUri).copy(target);
-    uris[name] = target.uri;
-  }
-  const { tick, cross, ...icons } = uris;
-  return { icons: icons as Record<PrayerName, string>, tick, cross };
+  const copy = (name: string, source: Source) => copyPicture(folder, `widget-${name}`, source);
+  const copyParts = async (name: string, parts: Record<keyof ShapeParts, Source>): Promise<ShapeParts> => {
+    const [left, mid, right] = await Promise.all([copy(`${name}-left`, parts.left), copy(`${name}-mid`, parts.mid), copy(`${name}-right`, parts.right)]);
+    return { left, mid, right };
+  };
+  const copySet = async (theme: 'light' | 'dark'): Promise<ShapeSet> => {
+    const set = SHAPES[theme];
+    const [stack, missed, prayed, bar] = await Promise.all([
+      copyParts(`stack-${theme}`, set.stack),
+      copyParts(`missed-${theme}`, set.missed),
+      copyParts(`prayed-${theme}`, set.prayed),
+      copyParts(`bar-${theme}`, set.bar),
+    ]);
+    return { stack, missed, prayed, bar };
+  };
+  const names = Object.keys(PICTURES) as (keyof typeof PICTURES)[];
+  const [uris, light, dark] = await Promise.all([
+    Promise.all(names.map((name) => copy(name, PICTURES[name]))),
+    copySet('light'),
+    copySet('dark'),
+  ]);
+  const byName = Object.fromEntries(names.map((name, index) => [name, uris[index]])) as Record<keyof typeof PICTURES, string>;
+  const { tick, cross, ...icons } = byName;
+  return { icons: icons as Record<PrayerName, string>, tick, cross, shapes: { light, dark } };
 }
 
 // The widget needs a development or standalone build. Expo Go has no widget module, and iOS widgets are not set up, so there the bridge is null and the app runs as before.
