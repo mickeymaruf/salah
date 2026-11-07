@@ -63,6 +63,7 @@
         }
       ],
       "expo-audio",
+      "./plugins/withWidgetAnswerReceiver",
       [
         "expo-widgets",
         {

@@ -406,3 +406,8 @@ Format: date, title, context, decision, consequence.
 - Decision: the Log a prayer sheet follows Figma "F. Log a prayer, kawaii" (18083:18, 18083:123, 18083:219). The choice is written 600 ms after the tap, when the sheet closes (or at once if the sheet is dismissed), not at the
   tap, so that tapping the chosen card again can cancel it. The Save button was already gone (see above). "Clear mark" stays for marked prayers, although the Figma frames do not show it. The sheet keeps the 32 px top corners
   of the shared `BottomSheet`, which is what Figma draws (the brief said 20). The bottom gap is 6 px plus the safe area, as the brief says; Figma has 28 px.
+
+- Decision: a tap on the widget is saved by a small native Kotlin receiver, not only by the app's JavaScript, at the user's request ("instantly fast"). `plugins/withWidgetAnswerReceiver.js` replaces the generated
+  `SalahWidgetProvider` with a subclass that writes the answer into `salah.db` and then calls `expo-widgets`, which updates the widget. It is a config plugin, so `android/` stays uncommitted. The plugin is listed
+  before `expo-widgets` in `app.json` because the later plugin's file wins. The SQL lives in `plugins/widgetAnswerSql.js`, is generated into the Kotlin and is tested in `nativeAnswer.test.ts`. The widget's own
+  `onClick` handler drops the first question from the `queue` prop, so the next card shows with no wait.

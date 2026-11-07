@@ -27,7 +27,7 @@ Status: done, next, todo.
 - Visual check of every screen against Figma on a device
 - Reduce-motion support for the alarm pulse
 - Android full-screen alarm intent (needs native code)
-- Widget: a native receiver so taps are saved when the app is not running; an iOS widget
+- Widget: a native refresh at each prayer time and every minute so it stays right while the app is stopped; an iOS widget
 - Qibla direction
 - Dark mode
 - Backup and sync

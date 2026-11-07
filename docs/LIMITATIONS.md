@@ -144,10 +144,12 @@ real drawing still needs the widget's JavaScript engine to start, which the app 
 
 Differs from the Figma frames and the brief:
 
-- **A tap changes the widget at once, but the log is written only while the app's JavaScript is running.** The tap runs inside the widget (the next question moves up with no wait) and is then sent to
-  the app as an event, where `WidgetSync` writes it to the log. If Android has stopped the app's JavaScript, the widget still moves on but nothing is saved, and the next time the app opens the widget
-  shows the real log again, so the question comes back. `expo-widgets` cannot read the widget's props from the app or write the log without it. Doing it properly needs a small native receiver that
-  writes to the SQLite log directly.
+- **The native receiver was not run on a device.** A tap on Missed or Prayed is saved by Kotlin in the app's own process (`SalahWidgetProvider` and `SalahPrayerLog`, written into the Android project by
+  `plugins/withWidgetAnswerReceiver.js`), so it is saved even when the app's JavaScript is not running. It writes the log only if `files/SQLite/salah.db` already exists (the app has been opened once) and
+  it ignores a tap id it does not understand. If the app is running it saves the same answer again, which changes nothing. The Kotlin was compiled against stubs of the Android classes and its SQL is tested
+  against the real schema, but it was never built into the app or run on a phone.
+- **The widget redraws only when the app's JavaScript runs.** A tap updates the widget at once, but the countdown, a prayer time that passes and a new day are drawn by the app (`WidgetSync`). With the app
+  stopped the widget keeps what it last showed until a tap or the next app start.
 - **No transition.** Android widgets cannot animate content: a widget is a set of remote views that the launcher redraws, `expo-widgets` exposes no animation, and redrawing frame by frame would be slow and flicker. The front card does not slide back, the cards behind do not come up, and no new card fades in. The widget just redraws with the new
   front card. iOS has a content transition, but the iOS widget is not set up.
 - **Shadows, borders and rounded corners are pictures.** Widget corner radius only works on Android 12 and newer, and there is no border or shadow. So the card stack (with its shadows), the Missed
