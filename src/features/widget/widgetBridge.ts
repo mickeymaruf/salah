@@ -68,13 +68,19 @@ const SHAPES = {
 
 type Source = number;
 
-// The widget draws in another process, so it can only read files from the widgets directory. A bundled picture is copied there only when it is missing or its size
-// changed, so a launch never deletes a file the widget is drawing with. Copies run one after another: about thirty at once is more than the file API handles reliably.
+// How the widget gets a bundled picture. In a release build the bundler turns it into a drawable resource and `Asset` reports the resource name (no ":" in it), which the
+// widget can draw as it is. Anywhere else (a development server) the picture is a web address, so it is copied into the widgets directory, the one folder the widget process can
+// read files from, and only when it is missing or its size changed. Copies run one after another: about thirty at once is more than the file API handles reliably.
 let copying: Promise<unknown> = Promise.resolve();
+
+function isFileUri(uri: string): boolean {
+  return uri.startsWith('file:');
+}
 
 function copyPicture(folder: Directory, name: string, source: Source): Promise<string> {
   const job = copying.then(async () => {
     const asset = Asset.fromModule(source);
+    if (!asset.uri.includes(':')) return asset.uri;
     await asset.downloadAsync();
     if (!asset.localUri) throw new Error(`Widget picture ${name} has no local file`);
     const original = new File(asset.localUri);
@@ -82,7 +88,7 @@ function copyPicture(folder: Directory, name: string, source: Source): Promise<s
     if (target.exists && target.size === original.size) return target.uri;
     if (target.exists) target.delete();
     original.copy(target);
-    if (!target.exists) throw new Error(`Widget picture ${name} was not copied`);
+    if (!target.exists) throw new Error(`Widget picture ${name} was not copied from ${asset.localUri}`);
     return target.uri;
   });
   copying = job.catch(() => undefined);
@@ -120,7 +126,7 @@ async function copyImages(directory: string): Promise<WidgetImages> {
 
 function pictureUris(images: WidgetImages): string[] {
   const shapes = [images.shapes.light, images.shapes.dark].flatMap((set) => [...Object.values(set.stack), ...Object.values(set.bar), ...Object.values(set.answers)]);
-  return [...Object.values(images.icons), images.tick, images.cross, ...shapes];
+  return [...Object.values(images.icons), images.tick, images.cross, ...shapes].filter(isFileUri);
 }
 
 // The widget needs a development or standalone build. Expo Go has no widget module, and iOS widgets are not set up, so there the bridge is null and the app runs as before.

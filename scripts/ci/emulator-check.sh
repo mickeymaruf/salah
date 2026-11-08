@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs inside the emulator job. Installs the APK, gives the app a profile (so it skips onboarding), starts it, and checks that it handed the home screen widget its data
-# without an error and copied the widget pictures. Everything it saw goes to ./report, and the job fails if the widget did not get its data.
+# without an error. Everything it saw goes to ./report, and the job fails if the widget did not get its data.
 set -u
 APK="$1"
 PKG=app.salah.prayertracker
@@ -33,17 +33,35 @@ PREFS=/data/data/$PKG/shared_prefs/expo.modules.widgets.xml
 adb shell cat "$PREFS" > report/widget-prefs.xml 2>&1
 adb shell ls -la "/data/data/$PKG/files/ExpoWidgets" > report/widget-files.txt 2>&1
 
-echo "=== widget pictures ==="; wc -l < report/widget-files.txt
-echo "=== widget prefs (first 1500 chars) ==="; head -c 1500 report/widget-prefs.xml; echo
+python3 - <<'PY' > report/widget-props.txt
+import re
+s = open('report/widget-prefs.xml').read()
+m = re.search(r'name="__expo_widgets_SalahWidget_props">(.*?)</string>', s, re.S)
+print(m.group(1) if m else 'NO PROPS')
+PY
+echo "=== widget props (first 1200 chars) ==="; head -c 1200 report/widget-props.txt; echo
 echo "=== app errors in the log ==="
 grep -E "AndroidRuntime|FATAL|ReactNativeJS.*(Error|error)|ExpoWidgets|SalahPrayerLog" report/logcat.txt | tail -40
 
 STATUS=0
+# Every picture the widget is given must be a drawable in the APK (a release build gives names, not files).
+AAPT2=$(ls "$ANDROID_HOME"/build-tools/*/aapt2 2>/dev/null | tail -1)
+if [ -n "$AAPT2" ]; then
+  "$AAPT2" dump resources "$APK" > report/resources.txt 2>&1
+  python3 - <<'PY' > report/pictures.txt
+import re
+props = open('report/widget-props.txt').read()
+names = sorted(set(re.findall(r'(?:left|mid|right|center|tick|cross|fajr|dhuhr|asr|maghrib|isha)&quot;:&quot;([^&]+?)&quot;', props)))
+resources = open('report/resources.txt').read()
+for n in names:
+    print(('ok      ' if re.search(r'drawable/' + re.escape(n) + r'\b', resources) else 'MISSING ') + n)
+PY
+  cat report/pictures.txt
+  grep -q "^MISSING" report/pictures.txt && { echo "FAIL: the widget names a picture that is not in the APK"; STATUS=1; }
+  [ -s report/pictures.txt ] || { echo "FAIL: no pictures found in the widget data"; STATUS=1; }
+fi
 if ! grep -q "__expo_widgets_SalahWidget_props" report/widget-prefs.xml; then echo "FAIL: the app never gave the widget any data"; STATUS=1
 elif grep -q "&quot;error&quot;" report/widget-prefs.xml; then echo "FAIL: the widget was given an error instead of data"; STATUS=1
 elif ! grep -q "queue" report/widget-prefs.xml; then echo "FAIL: the widget data has no queue"; STATUS=1
 else echo "OK: the widget has its data"; fi
-FILES=$(grep -c "widget-" report/widget-files.txt)
-echo "widget pictures copied: $FILES"
-[ "$FILES" -ge 27 ] || { echo "FAIL: expected 27 widget pictures"; STATUS=1; }
 exit $STATUS
