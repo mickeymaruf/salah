@@ -38,7 +38,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: npm ci
       - run: npx expo prebuild --platform android --no-install
-      - name: Build the release APK (phone: arm64, emulator: x86_64)
+      - name: "Build the release APK (arm64 for the phone, x86_64 for the emulator)"
         working-directory: android
         run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,x86_64 --no-daemon
       - uses: actions/upload-artifact@v4
