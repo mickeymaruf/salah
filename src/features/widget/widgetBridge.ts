@@ -126,23 +126,36 @@ function pictureUris(images: WidgetImages): string[] {
 // The widget needs a development or standalone build. Expo Go has no widget module, and iOS widgets are not set up, so there the bridge is null and the app runs as before.
 export async function loadWidgetBridge(): Promise<WidgetBridge | null> {
   if (Platform.OS !== 'android' || !requireOptionalNativeModule('ExpoWidgets')) return null;
-  try {
-    const [{ default: widget }, widgets] = await Promise.all([import('./salahWidget'), import('expo-widgets')]);
-    let images = await copyImages(widgets.widgetsDirectory);
-    return {
-      update: async (props) => {
-        if (!pictureUris(images).every((uri) => new File(uri).exists)) images = await copyImages(widgets.widgetsDirectory);
+  const modules = await Promise.all([import('./salahWidget'), import('expo-widgets')]).catch(() => null);
+  if (!modules) return null;
+  const [{ default: widget }, widgets] = modules;
+  let images: WidgetImages | null = null;
+
+  // If the widget cannot be drawn, it shows why, so a screenshot of it is enough to find the problem.
+  const report = (error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    try {
+      widget.updateSnapshot({ error: message.slice(0, 400) });
+    } catch {
+      return;
+    }
+  };
+
+  return {
+    update: async (props) => {
+      try {
+        if (!images || !pictureUris(images).every((uri) => new File(uri).exists)) images = await copyImages(widgets.widgetsDirectory);
         widget.updateSnapshot({ ...props, ...images });
-      },
-      onAnswer: (listener) => {
-        const subscription = widgets.addUserInteractionListener((event) => {
-          const answer = event.source === 'SalahWidget' ? parseAnswerTarget(event.target) : null;
-          if (answer) listener(answer);
-        });
-        return () => subscription.remove();
-      },
-    };
-  } catch {
-    return null;
-  }
+      } catch (error) {
+        report(error);
+      }
+    },
+    onAnswer: (listener) => {
+      const subscription = widgets.addUserInteractionListener((event) => {
+        const answer = event.source === 'SalahWidget' ? parseAnswerTarget(event.target) : null;
+        if (answer) listener(answer);
+      });
+      return () => subscription.remove();
+    },
+  };
 }

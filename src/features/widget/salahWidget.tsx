@@ -37,14 +37,22 @@ export interface SalahWidgetProps {
   dark: WidgetPalette;
 }
 
+// What the widget gets when the app could not draw it: the reason, shown instead of the card so a problem on the phone can be read without a computer.
+export interface WidgetFailure {
+  error: string;
+}
+
 // The Today widget (Figma 6020:272). This function is copied into the widget's own runtime as text, so it may only use the globals the widget runtime provides
 // (the Expo UI components and modifiers above) and its two arguments: no module-level helpers, and every colour and picture arrives in the props.
-function SalahWidget(props: SalahWidgetProps, environment: WidgetEnvironment) {
+function SalahWidget(props: SalahWidgetProps | WidgetFailure, environment: WidgetEnvironment) {
   'widget';
-  if (!props || !props.queue || !props.next) {
+  if (!props || !('queue' in props) || !props.queue || !props.next) {
+    const message = props && 'error' in props ? props.error : 'Open Salah to set up this widget';
     return (
       <Box modifiers={[fillMaxWidth(), height(60)]} contentAlignment="center">
-        <Text maxLines={1}>Open Salah to set up this widget</Text>
+        <Text maxLines={6} style={{ fontSize: 11, fontWeight: '500' }}>
+          {message}
+        </Text>
       </Box>
     );
   }
@@ -177,4 +185,4 @@ function SalahWidget(props: SalahWidgetProps, environment: WidgetEnvironment) {
   return <Column modifiers={[fillMaxWidth()]}>{shape(shapes.stack, 152, 48, 'topStart', front)}</Column>;
 }
 
-export default createWidget('SalahWidget', SalahWidget);
+export default createWidget<SalahWidgetProps | WidgetFailure>('SalahWidget', SalahWidget);
