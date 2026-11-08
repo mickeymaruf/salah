@@ -415,3 +415,9 @@ Format: date, title, context, decision, consequence.
 - Decision: the Tree screen (2026-11-07). The tree is drawn from a PNG of the bare tree plus 696 polygon leaves in one `react-native-svg` view, not 3,830 vectors, so it stays light on a phone. Leaves keep their Figma rank, so a
   leaf is shown when `rank >= 1 - fullness`. Falling leaves are `Animated` views with the native driver (no new animation package); big grows are batched into 24 groups. `lastSeen` (fullness, perfect days, streak) is kept
   in AsyncStorage under `salah.tree.lastSeen`, not in the settings store, because it is a view memory and not a setting. A missed prayer today drops today's share at once (see `docs/LIMITATIONS.md`).
+
+- Decision: the Android APK is also built on GitHub Actions (`.github/workflows/android.yml`), because EAS builds queue for hours and nothing here can run Android. A push to `main` runs `expo prebuild`, `gradlew assembleRelease`
+  (arm64 for the phone, x86_64 for the emulator) and uploads `salah-apk`. A second job installs it on an emulator, gives it a profile, starts it and checks (`scripts/ci/emulator-check.sh`) that the home screen widget was
+  given its data, has no error and has its 27 pictures; the screenshot, log and widget storage go to the `emulator-report` artifact. The real Gradle build also compiles the Kotlin receiver and the Android resources.
+  The APK is signed with the debug key, not the EAS key, so a phone with an EAS build installed must uninstall it once (the app's data is lost). EAS builds (`npm run build:apk`) are unchanged.
+

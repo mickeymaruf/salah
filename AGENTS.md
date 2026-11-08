@@ -54,4 +54,5 @@ Body: two or three plain lines on what and why. Do not rewrite history.
 | Why a choice was made | `docs/DECISIONS.md` |
 | Platform limits | `docs/LIMITATIONS.md` |
 | What each feature owns | `docs/FEATURES.md` |
+| Android build and emulator check on GitHub | `.github/workflows/android.yml`, `docs/DECISIONS.md` |
 | Design source | Figma file referenced in `docs/DECISIONS.md` |
