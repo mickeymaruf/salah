@@ -47,11 +47,8 @@ export function WidgetSync() {
 
   useEffect(() => {
     if (!bridge || !view) return;
-    try {
-      bridge.update({ ...view.state, ...bridge.images, light: lightPalette, dark: darkPalette });
-    } catch {
-      // A widget that cannot be drawn must never take the app down. The next change tries again.
-    }
+    // A widget that cannot be drawn must never take the app down. The next change tries again.
+    bridge.update({ ...view.state, light: lightPalette, dark: darkPalette }).catch(() => undefined);
   }, [bridge, view]);
 
   // A second timer for the exact prayer time, so the widget does not wait for the next minute.
