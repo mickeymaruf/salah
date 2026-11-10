@@ -294,3 +294,13 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Notifications carry `sound: false`, `interruptionLevel: 'timeSensitive'` and `data.kind = 'ask'`. Tapping one opens `/remind`; while the app is open the screen
   opens by itself.
 
+## Dhikr and deeds
+
+- Figma NImPMew1LcjsfrKgOh5Ulj, page "Screens": P-H1 · Dhikr · list (30007:18), P-H2 · Dhikr · counter (30007:61), P-H2b · tap (roll) (30007:74), P-H3 · Deeds (30007:88). The old "Flow note · Dhikr" is outdated and not followed.
+- Routes: `app/dhikr/index.tsx` (list), `app/dhikr/[key].tsx` (counter), `app/dhikr/deeds.tsx` (deeds). Temporary entry: a "Dhikr" row in Settings, About.
+- No target and no limit. A tap anywhere on the counter adds one recitation, shows at once, rolls the number (280 ms, ease-out, a plain crossfade with Reduce Motion) and is written to SQLite about 500 ms after the last tap, on close and when the app goes to the background.
+  The screen stays awake while it is open (`expo-keep-awake`).
+- Deeds = recitations x deed value, from one table (`config.ts`). A value counts only when `verified` is true; otherwise one recitation adds 1 deed. All values and sources are placeholders and `verified` is false everywhere.
+- Data: table `dhikr_log` (migration 3), one row per dhikr per day, updated in place. Plain tested functions in `deeds.ts` (day, month, all time, last days, count today), `counter.ts` (a tap, and midnight while open) and `chart.ts` (smooth line, scale, sparkline).
+- Owns: `src/features/dhikr/`, `app/dhikr/`, `dhikr_log`, `formatWeekday` in `src/shared/lib/date.ts`.
+

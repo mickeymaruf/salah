@@ -436,3 +436,13 @@ Format: date, title, context, decision, consequence.
 - Decision: the "heads-up" before each prayer (Settings, "Remind me before") stays, now silent, and only opens the app.
 - Not done: the brief asks to flag the log entry "self-reported, from reminder". The log has no column for it and a new migration would also touch the widget's native SQL, so a Yes from the reminder is stored like a Yes on Today.
 
+- Decision (2026-11-10): the Dhikr feature follows the new Figma design (P-H1, P-H2, P-H2b, P-H3). There was no earlier Dhikr code in the repository, so nothing was replaced. The user's brief wins over Figma where they differ: the chart draws every day of the
+  month and leaves the days to come empty (Figma stops at today), the strip's sparkline box is 120 x 44 (Figma draws 25 px high), and the counter's tap area is the whole screen apart from the close button.
+- Decision: `expo-keep-awake` (`~58.0.3`, installed with `npx expo install`) keeps the screen on while the counter is open. Nothing else uses it.
+- Decision: a reward value counts only when its `verified` flag is true. Every entry is `verified: false`, so for now one recitation adds one deed. Durood Ibrahim carries a placeholder value of 10 with a hadith reference that nobody has checked, the others have none. Set `verified`
+  to true in `src/features/dhikr/config.ts` once a scholar has checked a value and its source.
+- Decision: no haptics on the counter, because the design has none. This is an open question for the user.
+- Decision: the counter keeps its count in a ref and writes the whole number for the day (not "+1"), so a late write never loses a tap. Taps made before the stored count has loaded are ignored. If midnight passes while the screen is open the old day is saved as it was and the new day starts at 1.
+- Decision: the type styles `pageTitle`, `deedsToday`, `deedsAllTime`, `tapCount`, `counterName`, `arabicHero`, `arabicRow`, `arabicRowSign` and `eyebrow` were added. The Arabic line heights are larger than the font sizes so Android does not clip Amiri's marks. The Figma positions are kept
+  by margins (the Arabic box is taller than the glyph).
+

@@ -58,6 +58,10 @@ export function formatWeekdayDate(date: Date): string {
   return `${WEEKDAYS[date.getDay()]} ${date.getDate()} ${MONTHS[date.getMonth()]}`;
 }
 
+export function formatWeekday(date: Date): string {
+  return WEEKDAYS[date.getDay()];
+}
+
 export function formatMonthYear(year: number, monthIndex: number): string {
   return `${MONTHS[monthIndex]} ${year}`;
 }

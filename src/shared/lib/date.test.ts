@@ -6,6 +6,7 @@ import {
   formatDayMonth,
   formatLongDate,
   formatMonthYear,
+  formatWeekday,
   formatWeekdayDate,
   formatShortDate,
   formatTime,
@@ -85,5 +86,12 @@ describe('formatting', () => {
     expect(formatCountdownClock(59_001)).toEqual({ lead: '00:01:', seconds: '00' });
     expect(formatCountdownClock(400)).toEqual({ lead: '00:00:', seconds: '01' });
     expect(formatCountdownClock(-5000)).toEqual({ lead: '00:00:', seconds: '00' });
+  });
+});
+
+describe('formatWeekday', () => {
+  it('names the day of the week', () => {
+    expect(formatWeekday(new Date(2026, 9, 26))).toBe('Monday');
+    expect(formatWeekday(new Date(2026, 9, 25))).toBe('Sunday');
   });
 });

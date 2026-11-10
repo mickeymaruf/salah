@@ -52,3 +52,26 @@ describe('prayer_log schema', () => {
     expect(db.prepare('SELECT prayer FROM prayer_log').all()).toEqual([{ prayer: 'fajr' }]);
   });
 });
+
+describe('dhikr_log schema', () => {
+  const upsert =
+    'INSERT INTO dhikr_log (dhikr_key, day, count) VALUES (?, ?, ?) ON CONFLICT (dhikr_key, day) DO UPDATE SET count = excluded.count';
+
+  it('keeps one row per dhikr per day and updates it in place', () => {
+    const db = freshDb();
+    db.prepare(upsert).run('subhanallah', '2026-10-26', 5);
+    db.prepare(upsert).run('subhanallah', '2026-10-26', 9);
+    db.prepare(upsert).run('subhanallah', '2026-10-27', 2);
+    db.prepare(upsert).run('durood', '2026-10-26', 1);
+    expect(db.prepare('SELECT dhikr_key, day, count FROM dhikr_log ORDER BY id').all()).toEqual([
+      { dhikr_key: 'subhanallah', day: '2026-10-26', count: 9 },
+      { dhikr_key: 'subhanallah', day: '2026-10-27', count: 2 },
+      { dhikr_key: 'durood', day: '2026-10-26', count: 1 },
+    ]);
+  });
+
+  it('refuses a negative count', () => {
+    const db = freshDb();
+    expect(() => db.prepare(upsert).run('durood', '2026-10-26', -1)).toThrow();
+  });
+});

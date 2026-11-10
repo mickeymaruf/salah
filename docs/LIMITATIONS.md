@@ -189,3 +189,15 @@ Differs from the Figma frames and the brief:
 - **Flame blend.** The flame uses `mixBlendMode: 'multiply'` to hide its white background. It was not seen on a device.
 - **Layout is not fixed at 390 x 844.** The tree is centred between the subtitle and the card and is 371/390 (95%) of the screen width on every screen, as in Figma. Only a screen too short to fit it above the card makes it smaller. Text, the card and spacing stay in fixed points, so they do not grow with a wide screen.
 - **Day boundary.** A missed prayer today takes today's share of leaves away at once and resets the streak; Figma and the brief give both rules ("counts as prayed / 5 while open" and "a missed prayer makes the day not perfect"), and this is how they were combined.
+
+## Dhikr
+
+- Nothing here has been run on a device. The roll animation, the chart text and the Amiri rendering still need a look on the phone.
+- All reward values are placeholders and unverified, so one recitation adds 1 deed (see `docs/DECISIONS.md`). The numbers in the Figma frames (200 deeds today, 12,480 all time) are examples and cannot be reproduced.
+- The deeds chart shows a whole month. In a 31-day month the days are about 11 px apart on a 390 px screen (Figma's 26 days are 13.2 px apart). The rotated counts fit. The two-digit day numbers (9 px) nearly touch their neighbours.
+  All of them are drawn; none are dropped. Counts of 100,000 or more would not fit in the band above the plot.
+- The month arrows are two 44 px touch areas, so their icons are 44 px apart where Figma has them 28 px apart.
+- The chart's y-axis lines sit on round numbers below the top of the plot (the highest day plus 20%), so 240 draws lines at 0, 100 and 200 as in Figma, but other months get 0 / 50 / 100 and so on.
+- Counting with the screen off is not possible. The counter stays on while it is open.
+- The previous-month arrow has no limit, so it can go back to empty months.
+

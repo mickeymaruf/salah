@@ -83,6 +83,9 @@ export default function RootLayout() {
               <Stack.Screen name="verified" options={{ gestureEnabled: false, animation: 'fade' }} />
             </>
           ) : null}
+          <Stack.Screen name="dhikr/index" />
+          <Stack.Screen name="dhikr/[key]" options={{ animation: 'fade' }} />
+          <Stack.Screen name="dhikr/deeds" />
           <Stack.Screen name="settings" />
           <Stack.Screen name="edit-times" />
           <Stack.Screen name="privacy" />

@@ -105,6 +105,7 @@ function Settings({ profile }: { profile: Profile }) {
           />
         </SettingsGroup>
         <SettingsGroup title="About">
+          <SettingsRow label="Dhikr" onPress={() => router.push('/dhikr')} />
           <SettingsRow label="Privacy" onPress={() => router.push('/privacy')} />
           <SettingsRow label="Help & feedback" onPress={() => router.push('/help')} />
         </SettingsGroup>

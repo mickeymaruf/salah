@@ -66,6 +66,16 @@ export const typography = {
   askQuestionLong: { fontFamily: fontFamily.semiBold, fontSize: 28 },
   verseArabic: { fontFamily: fontFamily.quran, fontSize: 28, lineHeight: 50.4 },
   verseTranslation: { fontFamily: fontFamily.medium, fontSize: 18, lineHeight: 27 },
+  // Dhikr (Figma P-H1, P-H2, P-H3). Arabic line heights leave room for Amiri's tall marks so Android does not clip them.
+  pageTitle: { fontFamily: fontFamily.semiBold, fontSize: 32, lineHeight: 40 },
+  deedsToday: { fontFamily: fontFamily.semiBold, fontSize: 48, lineHeight: 60 },
+  deedsAllTime: { fontFamily: fontFamily.semiBold, fontSize: 64, lineHeight: 80 },
+  tapCount: { fontFamily: fontFamily.semiBold, fontSize: 120, lineHeight: 150 },
+  counterName: { fontFamily: fontFamily.medium, fontSize: 20, lineHeight: 25 },
+  arabicHero: { fontFamily: fontFamily.quran, fontSize: 64, lineHeight: 110 },
+  arabicRow: { fontFamily: fontFamily.quran, fontSize: 26, lineHeight: 44 },
+  arabicRowSign: { fontFamily: fontFamily.quran, fontSize: 30, lineHeight: 50 },
+  eyebrow: { fontFamily: fontFamily.medium, fontSize: 12, letterSpacing: 1 },
   overline: { fontFamily: fontFamily.semiBold, fontSize: 12, letterSpacing: 1.2 },
 } satisfies Record<string, Style>;
 
