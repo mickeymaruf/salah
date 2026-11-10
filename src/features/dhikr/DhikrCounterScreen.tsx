@@ -9,11 +9,13 @@ import { Text } from '@/shared/ui';
 import { colors, sizes, spacing } from '@/shared/theme';
 import { todayKey } from '@/shared/lib/date';
 import { useReduceMotion } from '@/shared/lib/useReduceMotion';
+import { useSettingsStore } from '@/shared/state/settingsStore';
 import { RollingCount } from './components/RollingCount';
 import { findDhikr, type DhikrEntry } from './config';
 import { registerTap, type CounterState } from './counter';
 import { getDhikrDay, setDhikrCount } from './data/dhikrLog';
 import { countForKey } from './deeds';
+import { useScreenOffCounting } from './useScreenOffCounting';
 
 // Writes are batched: a tap changes the screen at once and the database about this long after the last tap.
 export const SAVE_DELAY_MS = 500;
@@ -30,6 +32,7 @@ function Counter({ entry }: { entry: DhikrEntry }) {
   useKeepAwake();
   const insets = useSafeAreaInsets();
   const reduceMotion = useReduceMotion();
+  const settings = useSettingsStore((state) => state.settings);
   const state = useRef<CounterState>({ day: todayKey(), count: 0 });
   const dirty = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -92,6 +95,15 @@ function Counter({ entry }: { entry: DhikrEntry }) {
       Animated.timing(hint, { toValue: 0, duration: reduceMotion ? 0 : 200, useNativeDriver: true }).start();
     }
   };
+
+  // Taps felt through the phone while the screen is off (experimental, Android) count like taps on the screen.
+  useScreenOffCounting({
+    enabled: settings.screenOffCounting,
+    sensitivity: settings.tapSensitivity,
+    title: `Counting ${entry.name}`,
+    text: `${count} so far. Tap the phone to count.`,
+    onTap: tap,
+  });
 
   return (
     <Pressable

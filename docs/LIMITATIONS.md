@@ -201,3 +201,12 @@ Differs from the Figma frames and the brief:
 - Counting with the screen off is not possible. The counter stays on while it is open.
 - The previous-month arrow has no limit, so it can go back to empty months.
 
+## Dhikr with the screen off
+
+- Experimental and never run on a device. The Kotlin was compiled only by the GitHub build. How well a fingernail tap is told from a knock, a step or a bump on a table is unknown: the thresholds (m/s2) are a first guess. Test with the phone lying still, held in one hand and in a pocket, and compare the count with your own.
+- Android only. iPhone suspends an app and its sensors when the screen is off, so nothing like this is possible there. Expo Go has no native module either.
+- Phone makers' battery savers (MIUI on a Poco F1 especially) can stop the service or the app. Set Salah to "No restrictions" in the phone's battery settings and allow autostart. A running service shows a notification; if it is gone, counting has stopped.
+- Reading the accelerometer 200 times a second with the CPU awake uses noticeable battery. The wake lock lets go after 3 hours.
+- The count is saved from JavaScript. If Android kills the app while it counts, taps made since the last save (up to about half a second) are lost.
+- Swiping the app away stops the service. The Stop button and closing the counter also stop it.
+

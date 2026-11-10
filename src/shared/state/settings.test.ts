@@ -8,12 +8,26 @@ describe('parseSettings', () => {
   });
 
   it('keeps valid stored values', () => {
-    const stored = { requireProof: false, markSound: false, alarmSound: 'bell', reminderMinutesBefore: 0 };
+    const stored = {
+      requireProof: false,
+      markSound: false,
+      alarmSound: 'bell',
+      reminderMinutesBefore: 0,
+      screenOffCounting: true,
+      tapSensitivity: 'high',
+    };
     expect(parseSettings(JSON.stringify(stored))).toEqual(stored);
   });
 
   it('replaces invalid fields with defaults and keeps the valid ones', () => {
     const parsed = parseSettings(JSON.stringify({ requireProof: false, alarmSound: 'adhan', reminderMinutesBefore: 7 }));
     expect(parsed).toEqual({ ...DEFAULT_SETTINGS, requireProof: false });
+  });
+
+  it('turns screen-off counting off and sets medium sensitivity for settings saved before they existed', () => {
+    const parsed = parseSettings(JSON.stringify({ requireProof: true }));
+    expect(parsed.screenOffCounting).toBe(false);
+    expect(parsed.tapSensitivity).toBe('medium');
+    expect(parseSettings(JSON.stringify({ tapSensitivity: 'extreme', screenOffCounting: 'yes' }))).toEqual(DEFAULT_SETTINGS);
   });
 });

@@ -1,5 +1,9 @@
 export type AlarmSoundId = 'chime' | 'bell' | 'soft';
 
+export type TapSensitivity = 'low' | 'medium' | 'high';
+
+export const TAP_SENSITIVITIES: readonly TapSensitivity[] = ['low', 'medium', 'high'];
+
 export const ALARM_SOUNDS: readonly AlarmSoundId[] = ['chime', 'bell', 'soft'];
 
 export interface Settings {
@@ -9,6 +13,9 @@ export interface Settings {
   alarmSound: AlarmSoundId;
   // 0 turns the reminder off.
   reminderMinutesBefore: number;
+  // Experimental, Android only: keep counting a dhikr by fingernail taps on the phone while the screen is off.
+  screenOffCounting: boolean;
+  tapSensitivity: TapSensitivity;
 }
 
 export const REMINDER_OPTIONS: readonly number[] = [0, 5, 10, 15, 30];
@@ -18,6 +25,8 @@ export const DEFAULT_SETTINGS: Settings = {
   markSound: true,
   alarmSound: 'chime',
   reminderMinutesBefore: 10,
+  screenOffCounting: false,
+  tapSensitivity: 'medium',
 };
 
 // Field by field so an older stored shape still yields a complete, valid object.
@@ -36,6 +45,8 @@ export function parseSettings(raw: string | null): Settings {
       reminderMinutesBefore: REMINDER_OPTIONS.includes(s.reminderMinutesBefore as number)
         ? (s.reminderMinutesBefore as number)
         : DEFAULT_SETTINGS.reminderMinutesBefore,
+      screenOffCounting: typeof s.screenOffCounting === 'boolean' ? s.screenOffCounting : DEFAULT_SETTINGS.screenOffCounting,
+      tapSensitivity: TAP_SENSITIVITIES.includes(s.tapSensitivity as TapSensitivity) ? (s.tapSensitivity as TapSensitivity) : DEFAULT_SETTINGS.tapSensitivity,
     };
   } catch {
     return DEFAULT_SETTINGS;

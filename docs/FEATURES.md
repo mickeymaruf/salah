@@ -304,3 +304,11 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Data: table `dhikr_log` (migration 3), one row per dhikr per day, updated in place. Plain tested functions in `deeds.ts` (day, month, all time, last days, count today), `counter.ts` (a tap, and midnight while open) and `chart.ts` (smooth line, scale, sparkline).
 - Owns: `src/features/dhikr/`, `app/dhikr/`, `dhikr_log`, `formatWeekday` in `src/shared/lib/date.ts`.
 
+## Dhikr with the screen off (experimental, Android)
+
+- With Settings, "Count with the screen off" on, a dhikr counter that is open keeps counting after the phone is locked: a gentle fingernail tap on the phone adds one recitation, saved like a tap on the screen.
+  A notification ("Counting SubhanAllah", "21 so far") shows while it runs and has a Stop button. Closing the counter stops it. "Tap sensitivity" (Low, Medium, High) is in the same Settings group.
+- How it works: a local Expo module (`modules/screen-off-counter/`, Kotlin) runs a foreground service that holds a partial wake lock and reads the accelerometer at 200 samples a second, sending batches to JavaScript every 50 ms.
+  `tapDetector.ts` (plain, tested) counts a tap when the reading changes by more than the threshold between two samples, with a 150 ms refractory time. `useScreenOffCounting.ts` counts taps only while the app is not in the foreground.
+- Owns: `modules/screen-off-counter/`, `src/features/dhikr/tapDetector.ts`, `screenOff.ts`, `useScreenOffCounting.ts`, the `screenOffCounting` and `tapSensitivity` settings.
+

@@ -11,6 +11,7 @@ on:
       - 'src/**'
       - 'assets/**'
       - 'plugins/**'
+      - 'modules/**'
       - 'scripts/**'
       - 'app.json'
       - 'package.json'

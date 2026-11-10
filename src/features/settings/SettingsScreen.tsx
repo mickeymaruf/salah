@@ -4,12 +4,13 @@ import { router } from 'expo-router';
 import { Screen, ScreenHeader, Toggle } from '@/shared/ui';
 import type { AsrMethod, CalculationMethodId, Profile } from '@/shared/state/profile';
 import { useProfileStore } from '@/shared/state/profileStore';
-import { ALARM_SOUNDS, REMINDER_OPTIONS, type AlarmSoundId } from '@/shared/state/settings';
+import { ALARM_SOUNDS, REMINDER_OPTIONS, TAP_SENSITIVITIES, type AlarmSoundId, type TapSensitivity } from '@/shared/state/settings';
 import { useSettingsStore } from '@/shared/state/settingsStore';
 import { hasManualTimes } from '@/features/prayer-times/manualTimes';
 import { proofFlowEnabled } from '@/shared/lib/features';
 import { previewSound } from '@/features/alarm/previewSound';
 import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
+import { screenOffAvailable } from '@/features/dhikr/screenOff';
 import { EditNameSheet } from './components/EditNameSheet';
 import { OptionSheet } from './components/OptionSheet';
 import { ProfileCard } from './components/ProfileCard';
@@ -21,10 +22,11 @@ import {
   CALCULATION_METHOD_LABELS,
   formatReminder,
   labelEntries,
+  TAP_SENSITIVITY_LABELS,
 } from './options';
 import { useRefreshLocation } from './useRefreshLocation';
 
-type Sheet = 'name' | 'method' | 'asr' | 'sound' | 'reminder' | null;
+type Sheet = 'name' | 'method' | 'asr' | 'sound' | 'reminder' | 'tap' | null;
 
 export function SettingsScreen() {
   const profile = useProfileStore((state) => state.profile);
@@ -104,6 +106,21 @@ function Settings({ profile }: { profile: Profile }) {
             onPress={() => setSheet('reminder')}
           />
         </SettingsGroup>
+        {screenOffAvailable ? (
+          <SettingsGroup title="Dhikr (experimental)">
+            <SettingsRow
+              label="Count with the screen off"
+              right={
+                <Toggle
+                  accessibilityLabel="Count with the screen off"
+                  value={settings.screenOffCounting}
+                  onValueChange={(screenOffCounting) => updateSettings({ screenOffCounting })}
+                />
+              }
+            />
+            <SettingsRow label="Tap sensitivity" value={TAP_SENSITIVITY_LABELS[settings.tapSensitivity]} onPress={() => setSheet('tap')} />
+          </SettingsGroup>
+        ) : null}
         <SettingsGroup title="About">
           <SettingsRow label="Dhikr" onPress={() => router.push('/dhikr')} />
           <SettingsRow label="Privacy" onPress={() => router.push('/privacy')} />
@@ -141,6 +158,15 @@ function Settings({ profile }: { profile: Profile }) {
             previewSound(alarmSound);
             updateSettings({ alarmSound });
           }}
+          onClose={close}
+        />
+      ) : null}
+      {sheet === 'tap' ? (
+        <OptionSheet<TapSensitivity>
+          title="Tap sensitivity"
+          options={TAP_SENSITIVITIES.map((value) => ({ value, label: TAP_SENSITIVITY_LABELS[value] }))}
+          selected={settings.tapSensitivity}
+          onSelect={(tapSensitivity) => updateSettings({ tapSensitivity })}
           onClose={close}
         />
       ) : null}

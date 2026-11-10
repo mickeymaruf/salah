@@ -446,3 +446,9 @@ Format: date, title, context, decision, consequence.
 - Decision: the type styles `pageTitle`, `deedsToday`, `deedsAllTime`, `tapCount`, `counterName`, `arabicHero`, `arabicRow`, `arabicRowSign` and `eyebrow` were added. The Arabic line heights are larger than the font sizes so Android does not clip Amiri's marks. The Figma positions are kept
   by margins (the Arabic box is taller than the glyph).
 
+- Decision (2026-11-10): counting with the screen off (idea 5) is built as an experiment, Android only. Android gives sensor data to a background app only while it runs a foreground service, and it stops the CPU unless a wake lock is held, so it needs native code: a local Expo module
+  (`modules/`, autolinked, no config plugin) with a foreground service of type `specialUse`, a partial wake lock (3 hours at most) and an accelerometer listener on its own thread. The tap detection stays in TypeScript so Jest can test it; the thresholds in `tapDetector.ts` are a first guess to be tuned from the user's tests.
+- Decision: the counter screen keeps its clean design. The feature is switched on in Settings (Dhikr, experimental), not on the counter, because the counter's design says "nothing else on the screen". The service starts when the counter opens (the app must be in the foreground to start it on Android 12 and later) and stops when it closes.
+- Decision: taps are counted only while the app is not in the foreground, so a touch on the screen, which also shakes the phone, is never counted twice. The `stopWithTask` flag stops the service if the app is swiped away.
+- Decision: the GitHub Android workflow also runs when `modules/**` changes.
+
