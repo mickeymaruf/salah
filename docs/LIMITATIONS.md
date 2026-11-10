@@ -27,6 +27,8 @@
 
 ## Alarm
 
+- The proof-first alarm below is disabled (`proofFlowEnabled = false`). Until the reminder flow replaces it, no prayer notification is scheduled.
+
 - iOS has no alarm API for normal apps. Alarms are local notifications. They respect the silent switch,
   Focus modes and Do Not Disturb. Notification sounds are capped at 30 seconds, the tones here are 4 seconds.
   The user can swipe them away. The alarm screen with its looping sound only appears after a tap or

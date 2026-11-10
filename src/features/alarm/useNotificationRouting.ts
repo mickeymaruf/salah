@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { router, usePathname } from 'expo-router';
 import * as Notifications from 'expo-notifications';
+import { proofFlowEnabled } from '@/shared/lib/features';
 import { alarmTargetFromData, type AlarmTarget } from './notificationData';
 
 Notifications.setNotificationHandler({
@@ -17,6 +18,7 @@ Notifications.setNotificationHandler({
 });
 
 function openAlarm({ prayer, date }: AlarmTarget): void {
+  if (!proofFlowEnabled) return;
   router.push({ pathname: '/alarm', params: { prayer, date } });
 }
 

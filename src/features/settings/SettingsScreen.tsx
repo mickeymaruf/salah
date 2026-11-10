@@ -7,6 +7,7 @@ import { useProfileStore } from '@/shared/state/profileStore';
 import { ALARM_SOUNDS, REMINDER_OPTIONS, type AlarmSoundId } from '@/shared/state/settings';
 import { useSettingsStore } from '@/shared/state/settingsStore';
 import { hasManualTimes } from '@/features/prayer-times/manualTimes';
+import { proofFlowEnabled } from '@/shared/lib/features';
 import { previewSound } from '@/features/alarm/previewSound';
 import { useNotificationStatus } from '@/features/alarm/useNotificationStatus';
 import { EditNameSheet } from './components/EditNameSheet';
@@ -68,21 +69,25 @@ function Settings({ profile }: { profile: Profile }) {
             value={notifications.status === 'denied' ? 'Off' : 'On'}
             onPress={notifications.status === 'denied' ? notifications.fix : () => Linking.openSettings()}
           />
-          <SettingsRow
-            label="Alarm sound"
-            value={ALARM_SOUND_LABELS[settings.alarmSound]}
-            onPress={() => setSheet('sound')}
-          />
-          <SettingsRow
-            label="Require photo proof"
-            right={
-              <Toggle
-                accessibilityLabel="Require photo proof"
-                value={settings.requireProof}
-                onValueChange={(requireProof) => updateSettings({ requireProof })}
-              />
-            }
-          />
+          {proofFlowEnabled ? (
+            <>
+            <SettingsRow
+              label="Alarm sound"
+              value={ALARM_SOUND_LABELS[settings.alarmSound]}
+              onPress={() => setSheet('sound')}
+            />
+            <SettingsRow
+              label="Require photo proof"
+              right={
+                <Toggle
+                  accessibilityLabel="Require photo proof"
+                  value={settings.requireProof}
+                  onValueChange={(requireProof) => updateSettings({ requireProof })}
+                />
+              }
+            />
+            </>
+          ) : null}
           <SettingsRow
             label="Sound when marking a prayer"
             right={
@@ -126,7 +131,7 @@ function Settings({ profile }: { profile: Profile }) {
           onClose={close}
         />
       ) : null}
-      {sheet === 'sound' ? (
+      {proofFlowEnabled && sheet === 'sound' ? (
         <OptionSheet<AlarmSoundId>
           title="Alarm sound"
           options={ALARM_SOUNDS.map((value) => ({ value, label: ALARM_SOUND_LABELS[value] }))}

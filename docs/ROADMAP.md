@@ -19,6 +19,8 @@ Status: done, next, todo.
 | 12 | Catch-up on open | removed |
 | 13 | Home screen widget (Android, dev build) | done, not run on a device |
 | 14 | Tree screen and Tree tab | done, not run on a device |
+| 15 | Proof flow switched off behind a flag | done |
+| 16 | Silent prayer-time reminder flow (screens 4, 5, 6, 6b) | next |
 
 ## Later
 

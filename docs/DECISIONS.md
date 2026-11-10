@@ -421,3 +421,5 @@ Format: date, title, context, decision, consequence.
   given its data, has no error; the screenshot, log and widget storage go to the `emulator-report` artifact. The real Gradle build also compiles the Kotlin receiver and the Android resources.
   The APK is signed with the debug key, not the EAS key, so a phone with an EAS build installed must uninstall it once (the app's data is lost). EAS builds (`npm run build:apk`) are unchanged.
 
+- Decision (2026-11-10): the proof-first alarm is switched off behind `proofFlowEnabled = false` in `src/shared/lib/features.ts`, at the user's request. `app/alarm.tsx`, `app/proof.tsx` and `app/verified.tsx` redirect to Today and are not registered in the stack, the old planner schedules nothing, the "Alarm sound" and "Require photo proof" rows are hidden, and notification taps no longer open the alarm. The camera is only requested by the proof screen and the ML Kit check only runs from it, so neither happens. Nothing was deleted. The `requireProof` and `alarmSound` settings keep their stored values.
+

@@ -11,6 +11,7 @@ import { useSettingsStore } from '@/shared/state/settingsStore';
 import { useTimesSync } from '@/features/prayer-times/data/useTimesSync';
 import { useAlarmSync } from '@/features/alarm/useAlarmSync';
 import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
+import { proofFlowEnabled } from '@/shared/lib/features';
 import { WidgetSync } from '@/features/widget/WidgetSync';
 
 export { ErrorBoundary } from 'expo-router';
@@ -71,9 +72,13 @@ export default function RootLayout() {
         </Stack.Protected>
         <Stack.Protected guard={hasProfile}>
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="alarm" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />
-          <Stack.Screen name="proof" options={{ gestureEnabled: false }} />
-          <Stack.Screen name="verified" options={{ gestureEnabled: false, animation: 'fade' }} />
+          {proofFlowEnabled ? (
+            <>
+              <Stack.Screen name="alarm" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />
+              <Stack.Screen name="proof" options={{ gestureEnabled: false }} />
+              <Stack.Screen name="verified" options={{ gestureEnabled: false, animation: 'fade' }} />
+            </>
+          ) : null}
           <Stack.Screen name="settings" />
           <Stack.Screen name="edit-times" />
           <Stack.Screen name="privacy" />

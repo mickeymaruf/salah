@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import { proofFlowEnabled } from '@/shared/lib/features';
 import { addDays, now, toDateKey } from '@/shared/lib/date';
 import type { Profile } from '@/shared/state/profile';
 import type { Settings } from '@/shared/state/settings';
@@ -30,6 +31,7 @@ function toRequest(alarm: PlannedAlarm, settings: Settings): Notifications.Notif
 
 async function run(profile: Profile, settings: Settings): Promise<void> {
   await Notifications.cancelAllScheduledNotificationsAsync();
+  if (!proofFlowEnabled) return;
   if (!(await hasNotificationPermission())) return;
   await ensureChannels();
 
