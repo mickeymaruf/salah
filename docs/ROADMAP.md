@@ -20,9 +20,11 @@ Status: done, next, todo.
 | 13 | Home screen widget (Android, dev build) | done, not run on a device |
 | 14 | Tree screen and Tree tab | done, not run on a device |
 | 15 | Proof flow switched off behind a flag | done |
-| 16 | Silent prayer-time reminder flow (screens 4, 5, 6, 6b) | next |
+| 16 | Silent prayer-time reminder flow (screens 4, 5, 6, 6b) | done, not run on a device |
 
 ## Later
+
+- Reminder: verify the verses and translations with a scholar; decide when the asking stops; flag a log entry as "from reminder"; a native iOS or Android surface that shows the ask over the lock screen without a tap
 
 - Manual city entry when location is denied
 - Per-day or seasonal manual times (edits are one fixed time today)

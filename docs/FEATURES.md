@@ -279,3 +279,18 @@ Shipped features, what they do, who owns the code, how to extend them.
 - Card (`components/LeafCard.tsx`): glass goal card with the title and a "N% full" chip, the perfect-day count, a progress bar, the streak with the flame (`assets/images/tree-flame.png`, Multiply blend), and "N days to go" (or "Tree is full").
 - Owns: `src/features/tree/`, `app/(tabs)/tree.tsx`, `assets/images/tree-bare.png`, `assets/images/tree-flame.png`. Reads the log through `getRange`, the optimistic overrides and `useTodayPrayers`.
 - Not run on a device: checked with types, lint, tests (logic), the Android bundle, and a still render of the leaf data over the bare tree.
+
+## Prayer-time reminder (silent)
+
+- At each prayer time the app asks "Did you pray?" with no sound. Figma file NImPMew1LcjsfrKgOh5Ulj, page "Screens": 4 · Time to pray
+  (26005:14), 5 · Reward verse (26005:45), 6 · Have you prayed already? (26005:65), 6b · Marked as prayed (26005:97), rules in the
+  Flow note (26005:176).
+- Yes (any screen) marks the prayer prayed through the same store as Today and shows 6b. "Not yet" shows a random verse (never the same
+  one twice in a row). A close, "Not yet" or the Android back button sets the next ask to 10 minutes from then. The asks repeat until Yes or until
+  the next prayer begins (`REMINDER_STOPS_AT_NEXT_PRAYER`, then the prayer is logged as missed on the next open).
+- Owns: `src/features/reminder/` (`askPlan.ts` planner and missed rule, `scheduleAsks.ts` native scheduling, `channels.ts` silent
+  Android channel, `verses.ts` and generated `verseData.ts`, `memory.ts` and `memoryStorage.ts` for the last answer and last verse,
+  `ReminderScreen.tsx` and `components/`), `app/remind.tsx`, `scripts/make-verses.js`, `scripts/prepare-tick.js`, `assets/images/tick-white*.png`.
+- Notifications carry `sound: false`, `interruptionLevel: 'timeSensitive'` and `data.kind = 'ask'`. Tapping one opens `/remind`; while the app is open the screen
+  opens by itself.
+

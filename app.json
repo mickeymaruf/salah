@@ -10,7 +10,10 @@
     "backgroundColor": "#F7F5F0",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.salah.prayertracker"
+      "bundleIdentifier": "app.salah.prayertracker",
+      "entitlements": {
+        "com.apple.developer.usernotifications.time-sensitive": true
+      }
     },
     "android": {
       "package": "app.salah.prayertracker",

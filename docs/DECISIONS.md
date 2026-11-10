@@ -423,3 +423,16 @@ Format: date, title, context, decision, consequence.
 
 - Decision (2026-11-10): the proof-first alarm is switched off behind `proofFlowEnabled = false` in `src/shared/lib/features.ts`, at the user's request. `app/alarm.tsx`, `app/proof.tsx` and `app/verified.tsx` redirect to Today and are not registered in the stack, the old planner schedules nothing, the "Alarm sound" and "Require photo proof" rows are hidden, and notification taps no longer open the alarm. The camera is only requested by the proof screen and the ML Kit check only runs from it, so neither happens. Nothing was deleted. The `requireProof` and `alarmSound` settings keep their stored values.
 
+- Decision (2026-11-10): the silent reminder flow replaces the alarm (Figma NImPMew1LcjsfrKgOh5Ulj, nodes 26005:14, 26005:45, 26005:65, 26005:97). The user's brief wins over Figma where they differ: the moon is 32 px (Figma draws 23), the close
+  X has stroke 1.75 (Figma 1.46). "Asked at" always names the prayer time, so a later ask reads "Asked at 3:42 PM · 30 min ago".
+- Decision: nothing in the flow makes a sound or vibrates. Notifications are `sound: false` with a no-sound, no-vibration Android channel (`ask-silent`), and the foreground handler never plays a sound. On iPhone they are
+  Time Sensitive (entitlement `com.apple.developer.usernotifications.time-sensitive` in `app.json`).
+- Decision: the next ask is "10 minutes after the last answer". The last answer per prayer is kept in AsyncStorage (`salah.reminder`) and the planner restarts its 10 minute grid from it; with no answer the grid starts at the prayer time.
+  Planning covers 3 days. Each prayer window always keeps its next ask, and the rest of the 60 (iOS) or 250 (Android) slots go to the soonest repeats.
+- Decision: when the next prayer begins with no mark, the prayer is logged as missed the next time the app opens (`REMINDER_STOPS_AT_NEXT_PRAYER`, one constant, open question for the product owner). This reverses "Missed is a choice, not a default" (2026-11-05)
+  for prayers after the reminders first ran (`since` in the memory); older days stay unmarked. Set the constant to false to ask for 12 hours instead and never log a miss by itself.
+- Decision: the verses come from the Al Quran Cloud API by surah:ayah (Tanzil Uthmani text, Sahih International) through `scripts/make-verses.js`, not typed by hand. The leading section sign of 19:59 is dropped. They are placeholders until a scholar checks them. The
+  Sahih International text differs in punctuation from the Figma sample for 23:9-11.
+- Decision: the "heads-up" before each prayer (Settings, "Remind me before") stays, now silent, and only opens the app.
+- Not done: the brief asks to flag the log entry "self-reported, from reminder". The log has no column for it and a new migration would also touch the widget's native SQL, so a Yes from the reminder is stored like a Yes on Today.
+

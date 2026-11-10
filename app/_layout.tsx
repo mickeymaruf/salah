@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
+import { AmiriQuran_400Regular } from '@expo-google-fonts/amiri-quran';
 import { PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold } from '@expo-google-fonts/plus-jakarta-sans';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SplashView } from '@/shared/ui';
@@ -12,6 +13,7 @@ import { useTimesSync } from '@/features/prayer-times/data/useTimesSync';
 import { useAlarmSync } from '@/features/alarm/useAlarmSync';
 import { useNotificationRouting } from '@/features/alarm/useNotificationRouting';
 import { proofFlowEnabled } from '@/shared/lib/features';
+import { useReminderSync } from '@/features/reminder/useReminderSync';
 import { WidgetSync } from '@/features/widget/WidgetSync';
 
 export { ErrorBoundary } from 'expo-router';
@@ -21,7 +23,7 @@ const SPLASH_MIN_MS = 900;
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({ PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold });
+  const [fontsLoaded] = useFonts({ AmiriQuran_400Regular, PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold });
   const profile = useProfileStore((state) => state.profile);
   const profileHydrated = useProfileStore((state) => state.hydrated);
   const hydrateProfile = useProfileStore((state) => state.hydrate);
@@ -46,6 +48,7 @@ export default function RootLayout() {
 
   useTimesSync(profile);
   useAlarmSync(settingsHydrated ? profile : null, settings);
+  useReminderSync(settingsHydrated ? profile : null);
   useNotificationRouting(ready && hasProfile);
 
   // The native splash image has no text, so hand over to the in-app splash as soon as fonts exist.
@@ -72,6 +75,7 @@ export default function RootLayout() {
         </Stack.Protected>
         <Stack.Protected guard={hasProfile}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="remind" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />
           {proofFlowEnabled ? (
             <>
               <Stack.Screen name="alarm" options={{ presentation: 'fullScreenModal', animation: 'fade', gestureEnabled: false }} />

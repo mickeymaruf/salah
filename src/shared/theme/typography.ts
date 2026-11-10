@@ -4,6 +4,7 @@ export const fontFamily = {
   regular: 'PlusJakartaSans_400Regular',
   medium: 'PlusJakartaSans_500Medium',
   semiBold: 'PlusJakartaSans_600SemiBold',
+  quran: 'AmiriQuran_400Regular',
 } as const;
 
 type Style = Pick<TextStyle, 'fontFamily' | 'fontSize' | 'lineHeight' | 'letterSpacing'>;
@@ -59,6 +60,12 @@ export const typography = {
   labelSmall: { fontFamily: fontFamily.medium, fontSize: 14 },
   tab: { fontFamily: fontFamily.semiBold, fontSize: 12 },
   tabInactive: { fontFamily: fontFamily.medium, fontSize: 12 },
+  // Reminder screens (Figma 26005:14, 26005:45).
+  askName: { fontFamily: fontFamily.semiBold, fontSize: 38 },
+  askQuestion: { fontFamily: fontFamily.semiBold, fontSize: 30 },
+  askQuestionLong: { fontFamily: fontFamily.semiBold, fontSize: 28 },
+  verseArabic: { fontFamily: fontFamily.quran, fontSize: 28, lineHeight: 50.4 },
+  verseTranslation: { fontFamily: fontFamily.medium, fontSize: 18, lineHeight: 27 },
   overline: { fontFamily: fontFamily.semiBold, fontSize: 12, letterSpacing: 1.2 },
 } satisfies Record<string, Style>;
 

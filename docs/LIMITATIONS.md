@@ -27,7 +27,13 @@
 
 ## Alarm
 
-- The proof-first alarm below is disabled (`proofFlowEnabled = false`). Until the reminder flow replaces it, no prayer notification is scheduled.
+- The proof-first alarm below is disabled (`proofFlowEnabled = false`). The silent reminder flow replaced it; the notes below describe the old alarm.
+- Reminder, iPhone: a normal app cannot draw a full screen over a locked or sleeping iPhone. The ask is a Time Sensitive local notification (breaks through Focus, lights the lock screen, no sound).
+  Tapping it opens screen 4 or 6. The screens themselves appear on their own only while the app is open. AlarmKit (iOS 26) can show on the lock screen and the Dynamic Island but its alarms
+  are built to ring and need a native Swift module, so it is not used. Critical Alerts need an Apple entitlement and are loud. None of this has been run on a device.
+- Reminder: iOS keeps 64 pending notifications, so only about 60 asks are planned and repeats are topped up each time the app opens. If the app is not opened for a day, only the first ask of each prayer is left.
+- Reminder: a notification can be swiped away, and a repeat is then only a notification again 10 minutes later. Closing a screen that was opened by tapping an ask moves the next ask to 10 minutes from the close.
+- Reminder: a prayer is logged as missed only when the app next opens after the next prayer began.
 
 - iOS has no alarm API for normal apps. Alarms are local notifications. They respect the silent switch,
   Focus modes and Do Not Disturb. Notification sounds are capped at 30 seconds, the tones here are 4 seconds.

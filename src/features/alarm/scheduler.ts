@@ -6,6 +6,7 @@ import type { Profile } from '@/shared/state/profile';
 import type { Settings } from '@/shared/state/settings';
 import { getRange } from '@/features/prayer-times/data/prayerLog';
 import { alarmChannel, ensureChannels, hasCustomSounds, REMINDER_CHANNEL, soundFile } from './channels';
+import { scheduleReminderAsks } from '@/features/reminder/scheduleAsks';
 import { hasNotificationPermission } from './permission';
 import { ANDROID_BUDGET, DAYS_AHEAD, IOS_BUDGET, planAlarms, prayedKey, type PlannedAlarm } from './schedule';
 
@@ -31,8 +32,11 @@ function toRequest(alarm: PlannedAlarm, settings: Settings): Notifications.Notif
 
 async function run(profile: Profile, settings: Settings): Promise<void> {
   await Notifications.cancelAllScheduledNotificationsAsync();
-  if (!proofFlowEnabled) return;
   if (!(await hasNotificationPermission())) return;
+  if (!proofFlowEnabled) {
+    await scheduleReminderAsks(profile, settings);
+    return;
+  }
   await ensureChannels();
 
   const from = now();

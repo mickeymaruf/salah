@@ -42,6 +42,8 @@ export const colors = {
     missed: '#E4583C',
     upcoming: '#F5F2EE',
   },
+  // The reminder screens (Figma 26005:14): close button fill, outline of the ghost button, the yellow marker under the line.
+  reminder: { closeFill: 'rgba(255,255,255,0.12)', ghostBorder: 'rgba(243,241,234,0.4)', marker: 'rgba(245,204,77,0.7)' },
   heat: ['#ECE8E0', '#C7D8CA', '#94B6A0', '#57856E', '#336654', '#1F4D3F'],
   // Concentric rings on the alarm screen, outer to inner.
   ring: ['rgba(243,241,234,0.14)', 'rgba(243,241,234,0.3)', 'rgba(243,241,234,0.5)'],
